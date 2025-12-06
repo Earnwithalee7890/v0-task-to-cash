@@ -10,7 +10,7 @@ import { ThemeToggle } from "./theme-toggle"
 import { AppFooter } from "./app-footer"
 import { ClickSpark } from "./click-spark"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Plus, Share2 } from "lucide-react"
+import { Plus, Share2, User } from "lucide-react"
 import sdk, { type FrameContext } from "@farcaster/frame-sdk"
 
 export interface UserData {
@@ -147,7 +147,7 @@ export function TrueScoreApp() {
           <div className="flex items-center justify-between mb-4">
             <div className="w-10" />
             <div className="inline-flex items-center gap-2">
-              <img src="/trustscore-logo.png" alt="TrustScore" className="h-10 w-auto" />
+              <img src="/premium-logo.png" alt="TrueScore" className="h-14 w-auto drop-shadow-lg" />
             </div>
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
           </div>
@@ -194,24 +194,36 @@ export function TrueScoreApp() {
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-4 opacity-0 animate-slide-up stagger-4">
+        <div className="grid grid-cols-1 gap-3 opacity-0 animate-slide-up stagger-4">
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={addToMiniApp}
+              className="group flex items-center justify-center gap-2 h-12 rounded-xl bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground font-semibold shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border border-border/50"
+            >
+              <div className="p-1 rounded-full bg-background/50 group-hover:bg-background/80 transition-colors">
+                <Plus className="h-4 w-4" />
+              </div>
+              Add App
+            </button>
+            <button
+              onClick={shareApp}
+              className="group flex items-center justify-center gap-2 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/90 text-primary-foreground font-semibold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <div className="p-1 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors">
+                <Share2 className="h-4 w-4 text-white" />
+              </div>
+              Share
+            </button>
+          </div>
+
           <button
-            onClick={addToMiniApp}
-            className="group flex items-center justify-center gap-2 h-12 rounded-xl bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground font-semibold shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border border-border/50"
+            onClick={() => sdk.actions.openUrl("https://warpcast.com/earnwithalee7890")}
+            className="group flex items-center justify-center gap-2 h-12 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 text-primary font-semibold shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:bg-white/80"
           >
-            <div className="p-1 rounded-full bg-background/50 group-hover:bg-background/80 transition-colors">
-              <Plus className="h-4 w-4" />
+            <div className="p-1 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+              <User className="h-4 w-4" />
             </div>
-            Add Mini App
-          </button>
-          <button
-            onClick={shareApp}
-            className="group flex items-center justify-center gap-2 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/90 text-primary-foreground font-semibold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <div className="p-1 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors">
-              <Share2 className="h-4 w-4 text-white" />
-            </div>
-            Share Score
+            Follow Owner
           </button>
         </div>
 
