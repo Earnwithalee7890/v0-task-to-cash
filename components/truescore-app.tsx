@@ -223,7 +223,7 @@ export function TrueScoreApp() {
           </div>
 
           <button
-            onClick={() => sdk.actions.openUrl("https://warpcast.com/earnwithalee7890")}
+            onClick={() => sdk.actions.openUrl("https://warpcast.com/aleekhoso")}
             className="group relative flex items-center justify-center gap-2 h-14 rounded-xl bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 border border-primary/20 text-primary font-bold shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] overflow-hidden"
           >
             <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors" />
