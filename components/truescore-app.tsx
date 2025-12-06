@@ -64,7 +64,7 @@ export function TrueScoreApp() {
 
   const shareApp = useCallback(() => {
     const text = `Check out my TrueScore! My Neynar reputation is ${userData?.score}.`
-    const url = "https://example.com" // Replace with actual app URL if known, or leave generic
+    const url = "https://v0-task-to-cash-seven.vercel.app"
     sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(url)}`)
   }, [userData])
 

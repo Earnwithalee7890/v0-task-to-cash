@@ -8,7 +8,7 @@ import "./globals.css"
 const _inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
-const appUrl = process.env.NEXT_PUBLIC_URL || "https://truescore.vercel.app"
+const appUrl = "https://v0-task-to-cash-seven.vercel.app"
 
 export const metadata: Metadata = {
   title: "TrueScore - Your Real Neynar Reputation",
@@ -17,12 +17,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "TrueScore",
     description: "Your Real Neynar Reputation Score",
-    images: [`${appUrl}/og-image.jpg`],
+    images: [`${appUrl}/opengraph-image`],
   },
   other: {
     "fc:frame": "vNext",
-    "fc:frame:image": `${appUrl}/og-image.jpg`,
+    "fc:frame:image": `${appUrl}/opengraph-image`,
+    "fc:frame:image:aspect_ratio": "1:1",
     "fc:frame:button:1": "View My Score",
+    "fc:frame:button:1:action": "post",
     "fc:frame:post_url": `${appUrl}/api/frame`,
   },
   icons: {
