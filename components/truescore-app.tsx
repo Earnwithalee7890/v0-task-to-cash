@@ -40,10 +40,8 @@ export function TrueScoreApp() {
       const response = await fetch(`/api/neynar/user?fid=${fid}`)
       if (!response.ok) throw new Error("Failed to fetch user data")
       const data = await response.json()
-      // Calculate quotient score: (Score * 1.5) + (Followers / 100) + (Reputation Bonus)
-      // This is a "True" mock calculation based on the request
-      const reputationBonus = data.reputation === "safe" ? 500 : data.reputation === "neutral" ? 200 : 0
-      const quotient = Math.floor((data.score * 1.5) + (data.followers / 200) + reputationBonus)
+      // Calculate quotient score: Use Neynar score (0-100) converted to 0-1 float as a proxy
+      const quotient = data.score ? Number((data.score / 100).toFixed(2)) : 0.00
       setUserData({ ...data, quotient })
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
