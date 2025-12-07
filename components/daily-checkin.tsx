@@ -137,7 +137,7 @@ export function DailyCheckin() {
 
   return (
     <Card className="glass-card p-5 space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center">
             <CalendarCheck className="h-5 w-5 text-primary" />
@@ -148,40 +148,6 @@ export function DailyCheckin() {
           </div>
         </div>
 
-        {/* Goal Circle for streak */}
-        <div className="relative h-14 w-14">
-          <svg className="transform -rotate-90" viewBox="0 0 56 56">
-            {/* Background circle */}
-            <circle
-              cx="28"
-              cy="28"
-              r="24"
-              stroke="currentColor"
-              strokeWidth="4"
-              fill="none"
-              className="text-secondary/30"
-            />
-            {/* Progress circle */}
-            <circle
-              cx="28"
-              cy="28"
-              r="24"
-              stroke="url(#checkinGradient)"
-              strokeWidth="4"
-              fill="none"
-              strokeDasharray={`${2.4 * Math.PI * 24} ${2.4 * Math.PI * 24}`}
-              strokeDashoffset={2.4 * Math.PI * 24 * (1 - 0.5)}
-              className="transition-all duration-500"
-              strokeLinecap="round"
-            />
-            <defs>
-              <linearGradient id="checkinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#8b5cf6" />
-                <stop offset="100%" stopColor="#ec4899" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
       </div>
 
       <div className="flex gap-3">
