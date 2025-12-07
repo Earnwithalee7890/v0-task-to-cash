@@ -1,4 +1,5 @@
 "use client"
+import { useState, useEffect } from "react"
 
 import { ScoreDisplay } from "./score-display"
 import { ReputationBadge } from "./reputation-badge"
@@ -13,6 +14,23 @@ interface HomePageProps {
 }
 
 export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
+    const [ownerPfp, setOwnerPfp] = useState<string>("https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/6a3c98c9-69be-431d-cd58-93e10b3b9600/rectcrop")
+
+    useEffect(() => {
+        const fetchOwnerPfp = async () => {
+            try {
+                const res = await fetch("/api/owner")
+                const data = await res.json()
+                if (data.pfpUrl) {
+                    setOwnerPfp(data.pfpUrl)
+                }
+            } catch (error) {
+                console.error("Failed to fetch owner PFP:", error)
+            }
+        }
+        fetchOwnerPfp()
+    }, [])
+
     return (
         <div className="space-y-8 pb-24">
             {/* Score Display */}
@@ -77,9 +95,9 @@ export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
                     <div className="relative">
                         <div className="absolute inset-0 bg-primary/20 rounded-full blur-sm animate-pulse" />
                         <img
-                            src="https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/6a3c98c9-69be-431d-cd58-93e10b3b9600/rectcrop"
+                            src={ownerPfp}
                             alt="@aleekhoso"
-                            className="relative h-9 w-9 rounded-full border-2 border-primary/50 ring-2 ring-primary/20"
+                            className="relative h-9 w-9 rounded-full border-2 border-primary/50 ring-2 ring-primary/20 object-cover"
                         />
                     </div>
                     <div className="relative flex flex-col items-start leading-none">
