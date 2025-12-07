@@ -26,6 +26,7 @@ export const metadata: Metadata = {
     "fc:frame:button:1": "View My Score",
     "fc:frame:button:1:action": "post",
     "fc:frame:post_url": `${appUrl}/api/frame`,
+    "farcaster:manifest": `${appUrl}/.well-known/farcaster.json`,
   },
   icons: {
     icon: [
@@ -47,6 +48,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/.well-known/farcaster.json" />
+      </head>
       <body className={`font-sans antialiased ${_inter.variable}`}>
         <Providers>{children}</Providers>
         <Analytics />

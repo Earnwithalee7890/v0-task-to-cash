@@ -1,36 +1,33 @@
 import { NextResponse } from "next/server"
 
 export async function GET() {
-  const appUrl = "https://v0-task-to-cash-seven.vercel.app"
-
   const manifest = {
-    accountAssociation: {
-      header:
-        "eyJmaWQiOjMzODA2MCwidHlwZSI6ImF1dGgiLCJrZXkiOiIweEJDNzRlQTExNWY0ZjMwQ2U3MzdGMzk0YTkzNzAxQWJkMTY0MmQ3RDEifQ",
-      payload: "eyJkb21haW4iOiJ2MC10YXNrLXRvLWNhc2gtc2V2ZW4udmVyY2VsLmFwcCJ9",
-      signature: "XtjTSm1mIbMtK34XLcJ/G4AnGzPrfgnH4aS/lVZHxAsxJwzF10BG8XnCTppCqz96NN289eEAwx+sXmiFxPgndhw=",
-    },
-    frame: {
-      version: "1",
-      name: "TrueScore",
-      subtitle: "Your Real Neynar Reputation",
-      description:
-        "View your real Neynar score, engagement analytics, and account reputation on Farcaster. Includes daily check-in and tip features.",
-      iconUrl: `${appUrl}/icon.jpg`,
-      splashImageUrl: `${appUrl}/splash.jpg`,
-      splashBackgroundColor: "#1a1a2e",
-      homeUrl: appUrl,
-      webhookUrl: `${appUrl}/api/webhook`,
-      primaryCategory: "social",
-      tags: ["reputation", "analytics", "neynar", "score"],
-    },
+    version: "1",
+    name: "TrueScore",
+    iconUrl: "https://v0-task-to-cash-seven.vercel.app/icon.png",
+    homeUrl: "https://v0-task-to-cash-seven.vercel.app",
+    splashImageUrl: "https://v0-task-to-cash-seven.vercel.app/splash.png",
+    splashBackgroundColor: "#1a1a2e",
+    webhookUrl: "https://v0-task-to-cash-seven.vercel.app/api/webhook",
+    subtitle: "Your Real Neynar Reputation",
+    description: "View your real Neynar score, engagement analytics, and account reputation on Farcaster. Includes daily check-in and tip features.",
+    primaryCategory: "social",
+    tags: ["reputation", "analytics", "neynar", "score"],
+    imageUrl: "https://v0-task-to-cash-seven.vercel.app/og-image.png",
+    buttonTitle: "View My Score",
+    ogTitle: "TrueScore - Your Real Neynar Reputation",
+    ogDescription: "View your real Neynar score, engagement analytics, and account reputation on Farcaster",
+    ogImageUrl: "https://v0-task-to-cash-seven.vercel.app/og-image.png",
+    castShareUrl: "https://v0-task-to-cash-seven.vercel.app",
+    heroImageUrl: "https://v0-task-to-cash-seven.vercel.app/og-image.png",
+    tagline: "Track your Farcaster reputation",
+    screenshotUrls: ["https://v0-task-to-cash-seven.vercel.app/og-image.png"]
   }
 
-  return new NextResponse(JSON.stringify(manifest), {
+  return NextResponse.json(manifest, {
     headers: {
       "Content-Type": "application/json",
-      "Cache-Control": "no-cache, no-store, must-revalidate",
-      "Access-Control-Allow-Origin": "*",
+      "Cache-Control": "public, max-age=3600",
     },
   })
 }
