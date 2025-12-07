@@ -147,12 +147,47 @@ export function DailyCheckin() {
             <p className="text-xs text-muted-foreground">Earn on-chain proof</p>
           </div>
         </div>
-        {lastCheckin && (
-          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-primary/10 text-primary text-xs">
-            <Zap className="h-3 w-3" />
-            {lastCheckin}
+
+        {/* Goal Circle for streak */}
+        <div className="relative h-14 w-14">
+          <svg className="transform -rotate-90" viewBox="0 0 56 56">
+            {/* Background circle */}
+            <circle
+              cx="28"
+              cy="28"
+              r="24"
+              stroke="currentColor"
+              strokeWidth="4"
+              fill="none"
+              className="text-secondary/30"
+            />
+            {/* Progress circle */}
+            <circle
+              cx="28"
+              cy="28"
+              r="24"
+              stroke="url(#checkinGradient)"
+              strokeWidth="4"
+              fill="none"
+              strokeDasharray={`${2.4 * Math.PI * 24} ${2.4 * Math.PI * 24}`}
+              strokeDashoffset={2.4 * Math.PI * 24 * (1 - 0.5)}
+              className="transition-all duration-500"
+              strokeLinecap="round"
+            />
+            <defs>
+              <linearGradient id="checkinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#8b5cf6" />
+                <stop offset="100%" stopColor="#ec4899" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <span className="text-xs font-bold text-foreground block">5</span>
+              <Zap className="h-2.5 w-2.5 text-primary mx-auto" />
+            </div>
           </div>
-        )}
+        </div>
       </div>
 
       <div className="flex gap-3">
@@ -172,11 +207,10 @@ export function DailyCheckin() {
         <Button
           onClick={handleCheckin}
           disabled={status === "loading" || status === "switching" || status === "success"}
-          className={`h-12 px-6 font-semibold transition-all duration-300 ${
-            status === "success"
+          className={`h-12 px-6 font-semibold transition-all duration-300 ${status === "success"
               ? "bg-primary text-primary-foreground"
               : "bg-gradient-to-r from-primary to-chart-2 text-primary-foreground hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
-          }`}
+            }`}
         >
           {(status === "loading" || status === "switching") && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {status === "success" && <Check className="mr-2 h-4 w-4" />}

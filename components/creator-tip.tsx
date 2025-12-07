@@ -57,13 +57,53 @@ export function CreatorTip() {
 
     return (
         <Card className="glass-card p-5 space-y-4">
-            <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-chart-3/30 to-chart-3/10 flex items-center justify-center">
-                    <Coins className="h-5 w-5 text-chart-3" />
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-chart-3/30 to-chart-3/10 flex items-center justify-center">
+                        <Coins className="h-5 w-5 text-chart-3" />
+                    </div>
+                    <div>
+                        <h3 className="font-semibold text-foreground">Tip the Creator</h3>
+                        <p className="text-xs text-muted-foreground">Support with USDC</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 className="font-semibold text-foreground">Tip the Creator</h3>
-                    <p className="text-xs text-muted-foreground">Support with USDC</p>
+
+                {/* Goal Circle */}
+                <div className="relative h-14 w-14">
+                    <svg className="transform -rotate-90" viewBox="0 0 56 56">
+                        {/* Background circle */}
+                        <circle
+                            cx="28"
+                            cy="28"
+                            r="24"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                            fill="none"
+                            className="text-secondary/30"
+                        />
+                        {/* Progress circle */}
+                        <circle
+                            cx="28"
+                            cy="28"
+                            r="24"
+                            stroke="url(#tipGradient)"
+                            strokeWidth="4"
+                            fill="none"
+                            strokeDasharray={`${2.4 * Math.PI * 24} ${2.4 * Math.PI * 24}`}
+                            strokeDashoffset={2.4 * Math.PI * 24 * (1 - 0.35)}
+                            className="transition-all duration-500"
+                            strokeLinecap="round"
+                        />
+                        <defs>
+                            <linearGradient id="tipGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#10b981" />
+                                <stop offset="100%" stopColor="#3b82f6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-xs font-bold text-foreground">$35</span>
+                    </div>
                 </div>
             </div>
 
@@ -92,20 +132,20 @@ export function CreatorTip() {
             </div>
 
             {/* Manual Tip Input */}
-            <div className="flex gap-2">
+            <div className="grid grid-cols-3 gap-2">
                 <input
                     type="number"
-                    placeholder="Custom amount"
+                    placeholder="Amount"
                     value={customAmount}
                     onChange={(e) => setCustomAmount(e.target.value)}
-                    className="flex-1 h-12 px-4 rounded-xl bg-secondary/50 border border-border/50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="col-span-2 h-12 px-4 rounded-xl bg-secondary/50 border border-border/50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     min="0"
                     step="0.01"
                 />
                 <button
                     onClick={handleCustomTip}
                     disabled={!customAmount || parseFloat(customAmount) <= 0}
-                    className="h-12 px-6 rounded-xl bg-gradient-to-br from-primary to-primary/90 text-primary-foreground font-semibold hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="h-12 rounded-xl bg-gradient-to-br from-primary to-primary/90 text-primary-foreground font-semibold hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Send
                 </button>

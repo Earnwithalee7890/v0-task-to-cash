@@ -125,19 +125,11 @@ export function TrueScoreApp() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-background px-4 py-8">
+      <main className="min-h-screen bg-background flex items-center justify-center px-4">
         <div className="fixed inset-0 bg-gradient-to-br from-primary/5 via-background to-chart-5/5 pointer-events-none" />
-        <div className="relative mx-auto max-w-md space-y-6">
-          <div className="text-center animate-pulse">
-            <h1 className="text-3xl font-bold text-foreground">TrustScore</h1>
-            <p className="text-sm text-muted-foreground">Loading your score...</p>
-          </div>
-          <Skeleton className="mx-auto h-52 w-52 rounded-full" />
-          <div className="grid grid-cols-2 gap-3">
-            {[...Array(2)].map((_, i) => (
-              <Skeleton key={i} className="h-24 rounded-xl" />
-            ))}
-          </div>
+        <div className="relative text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
+          <p className="mt-4 text-sm text-muted-foreground">Loading...</p>
         </div>
       </main>
     )

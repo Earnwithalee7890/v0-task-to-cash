@@ -50,10 +50,10 @@ export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
                 <div className="grid grid-cols-2 gap-3">
                     <button
                         onClick={onAddToMiniApp}
-                        className="group flex items-center justify-center gap-2 h-12 rounded-xl bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground font-semibold shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border border-border/50"
+                        className="group flex items-center justify-center gap-2 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/90 text-primary-foreground font-semibold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                     >
-                        <div className="p-1 rounded-full bg-background/50 group-hover:bg-background/80 transition-colors">
-                            <Plus className="h-4 w-4" />
+                        <div className="p-1 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors">
+                            <Plus className="h-4 w-4 text-white" />
                         </div>
                         Add App
                     </button>
@@ -74,8 +74,13 @@ export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
                 >
                     <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors" />
                     <div className="absolute -right-4 -top-4 h-12 w-12 bg-primary/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500" />
-                    <div className="relative p-1.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors animate-pulse-ring">
-                        <User className="h-5 w-5" />
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-primary/20 rounded-full blur-sm animate-pulse" />
+                        <img
+                            src="https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https%3A%2F%2Fi.imgur.com%2FHWnMEfl.jpg"
+                            alt="@aleekhoso"
+                            className="relative h-9 w-9 rounded-full border-2 border-primary/50 ring-2 ring-primary/20"
+                        />
                     </div>
                     <div className="relative flex flex-col items-start leading-none">
                         <span className="text-sm">Follow Owner</span>
