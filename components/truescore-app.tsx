@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react"
 import { ScoreDisplay } from "./score-display"
 import { UserStats } from "./user-stats"
 import { ReputationBadge } from "./reputation-badge"
-import { TipButton } from "./tip-button"
 import { DailyCheckin } from "./daily-checkin"
 import { ThemeToggle } from "./theme-toggle"
 import { AppFooter } from "./app-footer"
@@ -211,7 +210,7 @@ export function TrueScoreApp() {
               <h3 className="font-semibold text-foreground">Quotient Score</h3>
               <p className="text-xs text-muted-foreground">
                 <a
-                  href="https://docs.quotient.social/reputation/quotient-score"
+                  href="https://docs.quotient.social/reputation/quotient-score#quotient-score"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:underline"
@@ -265,7 +264,6 @@ export function TrueScoreApp() {
 
         <div className="space-y-4 opacity-0 animate-slide-up stagger-5">
           <CreatorTip />
-          <TipButton />
           <DailyCheckin />
         </div>
 
