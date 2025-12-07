@@ -1,17 +1,21 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 
-// Webhook handler for Farcaster Frame events
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body = await request.json()
 
-    // Handle different webhook events
-    // Events include: frame_added, frame_removed, notifications_enabled, notifications_disabled
+    // Log webhook events
     console.log("Farcaster webhook received:", body)
 
-    return NextResponse.json({ success: true })
+    // Return success
+    return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
     console.error("Webhook error:", error)
-    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 })
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 })
   }
+}
+
+export async function GET() {
+  // Return success for health checks
+  return NextResponse.json({ status: "ok" }, { status: 200 })
 }

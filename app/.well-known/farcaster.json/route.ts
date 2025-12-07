@@ -2,32 +2,31 @@ import { NextResponse } from "next/server"
 
 export async function GET() {
   const manifest = {
-    version: "1",
-    name: "TrueScore",
-    iconUrl: "https://v0-task-to-cash-seven.vercel.app/icon.png",
-    homeUrl: "https://v0-task-to-cash-seven.vercel.app",
-    splashImageUrl: "https://v0-task-to-cash-seven.vercel.app/splash.png",
-    splashBackgroundColor: "#1a1a2e",
-    webhookUrl: "https://v0-task-to-cash-seven.vercel.app/api/webhook",
-    subtitle: "Your Real Neynar Reputation",
-    description: "View your real Neynar score, engagement analytics, and account reputation on Farcaster. Includes daily check-in and tip features.",
-    primaryCategory: "social",
-    tags: ["reputation", "analytics", "neynar", "score"],
-    imageUrl: "https://v0-task-to-cash-seven.vercel.app/og-image.png",
-    buttonTitle: "View My Score",
-    ogTitle: "TrueScore - Your Real Neynar Reputation",
-    ogDescription: "View your real Neynar score, engagement analytics, and account reputation on Farcaster",
-    ogImageUrl: "https://v0-task-to-cash-seven.vercel.app/og-image.png",
-    castShareUrl: "https://v0-task-to-cash-seven.vercel.app",
-    heroImageUrl: "https://v0-task-to-cash-seven.vercel.app/og-image.png",
-    tagline: "Track your Farcaster reputation",
-    screenshotUrls: ["https://v0-task-to-cash-seven.vercel.app/og-image.png"]
+    accountAssociation: {
+      header: "eyJmaWQiOjMzODA2MCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDI5NjYzN0YyMDMzRDQwQTVDNGE4ZjM1ODQ2YTkzNzEyYzViNzVFODkifQ",
+      payload: "eyJkb21haW4iOiJ2MC10YXNrLXRvLWNhc2gtc2V2ZW4udmVyY2VsLmFwcCJ9",
+      signature: "MHhlZGU2NjJjNTNmNGJmNGE2MTAzNGU3ZGE4NjI5NDQwZjJjMzc4ZmY3NTc1ZWI2MGQ4MzE3NGE1ZTMyMTBiNjY3NTk5ZjMyOWJhMjcyOTBkZTA5MTg3MzY0ZjgwYjlkODhlMmQ5YWM4NzI1M2QyODg4NDA2ZmRlNmU0MDY0MWJhMzFi"
+    },
+    frame: {
+      version: "next",
+      imageUrl: "https://v0-task-to-cash-seven.vercel.app/og-image.png",
+      button: {
+        title: "View My Score",
+        action: {
+          type: "launch_frame",
+          name: "TrueScore",
+          url: "https://v0-task-to-cash-seven.vercel.app",
+          splashImageUrl: "https://v0-task-to-cash-seven.vercel.app/splash.png",
+          splashBackgroundColor: "#1a1a2e"
+        }
+      }
+    }
   }
 
   return NextResponse.json(manifest, {
     headers: {
       "Content-Type": "application/json",
-      "Cache-Control": "public, max-age=3600",
+      "Cache-Control": "max-age=0",
     },
   })
 }
