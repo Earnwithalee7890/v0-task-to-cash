@@ -1,5 +1,4 @@
 import { Metadata } from "next"
-import { redirect } from "next/navigation"
 
 interface SharePageProps {
     searchParams: Promise<{
@@ -61,6 +60,33 @@ export async function generateMetadata({ searchParams }: SharePageProps): Promis
 }
 
 export default async function SharePage({ searchParams }: SharePageProps) {
-    // Redirect to the main app - the meta tags will be picked up by crawlers
-    redirect("/")
+    const params = await searchParams
+    const score = params.score || "0"
+    const displayName = params.displayName || params.username || "User"
+
+    // Render a page with meta tags - crawlers will see this
+    // Users will be redirected via meta refresh
+    return (
+        <html>
+            <head>
+                <meta httpEquiv="refresh" content="0;url=/" />
+            </head>
+            <body style={{
+                background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)",
+                minHeight: "100vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                fontFamily: "system-ui, sans-serif"
+            }}>
+                <div style={{ textAlign: "center" }}>
+                    <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>
+                        {displayName}&apos;s TrueScore: {score}
+                    </h1>
+                    <p style={{ opacity: 0.7 }}>Loading TrueScore app...</p>
+                </div>
+            </body>
+        </html>
+    )
 }
