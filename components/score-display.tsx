@@ -56,61 +56,95 @@ export function ScoreDisplay({ score }: ScoreDisplayProps) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="relative h-52 w-52 animate-float">
-        <div
-          className="absolute inset-4 rounded-full blur-2xl transition-all duration-1000"
-          style={{ backgroundColor: getGlowColor(score), opacity: mounted ? 0.5 : 0 }}
-        />
+  \u003cdiv className = "flex flex-col items-center justify-center"\u003e
+  {/* Premium Glass Container */ }
+  \u003cdiv className = "relative"\u003e
+  {/* Multi-layered glow backdrop */ }
+  \u003cdiv className = "absolute -inset-8 opacity-0 animate-fade-in"\u003e
+  \u003cdiv
+  className = "absolute inset-0 rounded-full blur-3xl transition-all duration-1000"
+  style = {{ backgroundColor: getGlowColor(score), opacity: mounted ? 0.6 : 0 }
+}
+          /\u003e
+\u003cdiv
+className = "absolute inset-4 rounded-full blur-2xl transition-all duration-1000"
+style = {{ backgroundColor: getGlowColor(score), opacity: mounted ? 0.4 : 0 }}
+          /\u003e
+\u003c / div\u003e
 
-        <svg className="h-full w-full -rotate-90 relative" viewBox="0 0 180 180">
-          {/* Background circle with gradient */}
-          <defs>
-            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor={getStrokeColor(score)} stopOpacity="1" />
-              <stop offset="100%" stopColor={getStrokeColor(score)} stopOpacity="0.6" />
-            </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-              <feMerge>
-                <feMergeNode in="coloredBlur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          <circle cx="90" cy="90" r="80" fill="none" strokeWidth="10" className="stroke-secondary/50" />
-          {/* Progress circle with glow */}
-          <circle
-            cx="90"
-            cy="90"
-            r="80"
-            fill="none"
-            strokeWidth="10"
-            strokeLinecap="round"
-            stroke="url(#progressGradient)"
-            filter="url(#glow)"
-            style={{
-              strokeDasharray: circumference,
-              strokeDashoffset,
-              transition: "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)",
+{/* Glassmorphic background card - NO BORDERS */ }
+\u003cdiv className = "relative backdrop-blur-xl bg-gradient-to-br from-background/60 via-background/40 to-background/60 rounded-3xl p-8 shadow-2xl"\u003e
+{/* Inner glow ring */ }
+\u003cdiv
+className = "absolute inset-0 rounded-3xl opacity-50"
+style = {{
+  background: `radial-gradient(circle at center, transparent 40%, ${getGlowColor(score)} 100%)`,
             }}
-          />
-        </svg>
+          /\u003e
 
-        {/* Score text */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span
-            className={`text-6xl font-bold tabular-nums ${getScoreColor(score)} transition-all duration-300`}
-            style={{
-              textShadow: `0 0 30px ${getGlowColor(score)}`,
-            }}
-          >
-            {animatedScore}
-          </span>
-          <span className="text-sm text-muted-foreground mt-1">Neynar Score</span>
-        </div>
-      </div>
-    </div>
+\u003cdiv className = "relative h-52 w-52 animate-float"\u003e
+\u003csvg className = "h-full w-full -rotate-90 relative" viewBox = "0 0 180 180"\u003e
+\u003cdefs\u003e
+{/* Enhanced gradient with multiple stops */ }
+\u003clinearGradient id = "progressGradient" x1 = "0%" y1 = "0%" x2 = "100%" y2 = "100%"\u003e
+\u003cstop offset = "0%" stopColor = { getStrokeColor(score) } stopOpacity = "1" /\u003e
+\u003cstop offset = "50%" stopColor = { getStrokeColor(score) } stopOpacity = "0.9" /\u003e
+\u003cstop offset = "100%" stopColor = { getStrokeColor(score) } stopOpacity = "0.7" /\u003e
+\u003c / linearGradient\u003e
+{/* Stronger glow filter */ }
+\u003cfilter id = "glow"\u003e
+\u003cfeGaussianBlur stdDeviation = "4" result = "coloredBlur" /\u003e
+\u003cfeMerge\u003e
+\u003cfeMergeNode in="coloredBlur" /\u003e
+\u003cfeMergeNode in="coloredBlur" /\u003e
+\u003cfeMergeNode in="SourceGraphic" /\u003e
+\u003c / feMerge\u003e
+\u003c / filter\u003e
+\u003c / defs\u003e
+
+{/* Background track - very subtle, no visible border */ }
+\u003ccircle
+cx = "90"
+cy = "90"
+r = "80"
+fill = "none"
+strokeWidth = "8"
+className = "stroke-secondary/20"
+  /\u003e
+
+{/* Progress circle with enhanced glow - NO BORDER */ }
+\u003ccircle
+cx = "90"
+cy = "90"
+r = "80"
+fill = "none"
+strokeWidth = "12"
+strokeLinecap = "round"
+stroke = "url(#progressGradient)"
+filter = "url(#glow)"
+style = {{
+  strokeDasharray: circumference,
+    strokeDashoffset,
+    transition: "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
+              /\u003e
+\u003c / svg\u003e
+
+{/* Score text with enhanced styling */ }
+\u003cdiv className = "absolute inset-0 flex flex-col items-center justify-center"\u003e
+\u003cspan
+className = {`text-7xl font-black tabular-nums ${getScoreColor(score)} transition-all duration-300`}
+style = {{
+  textShadow: `0 0 40px ${getGlowColor(score)}, 0 0 20px ${getGlowColor(score)}`,
+                }}
+\u003e
+{ animatedScore }
+\u003c / span\u003e
+\u003cspan className = "text-xs font-semibold text-muted-foreground/80 mt-2 tracking-wider uppercase"\u003eNeynar Score\u003c / span\u003e
+\u003c / div\u003e
+\u003c / div\u003e
+\u003c / div\u003e
+\u003c / div\u003e
+\u003c / div\u003e
   )
 }
