@@ -56,95 +56,94 @@ export function ScoreDisplay({ score }: ScoreDisplayProps) {
   }
 
   return (
-  \u003cdiv className = "flex flex-col items-center justify-center"\u003e
-  {/* Premium Glass Container */ }
-  \u003cdiv className = "relative"\u003e
-  {/* Multi-layered glow backdrop */ }
-  \u003cdiv className = "absolute -inset-8 opacity-0 animate-fade-in"\u003e
-  \u003cdiv
-  className = "absolute inset-0 rounded-full blur-3xl transition-all duration-1000"
-  style = {{ backgroundColor: getGlowColor(score), opacity: mounted ? 0.6 : 0 }
-}
-          /\u003e
-\u003cdiv
-className = "absolute inset-4 rounded-full blur-2xl transition-all duration-1000"
-style = {{ backgroundColor: getGlowColor(score), opacity: mounted ? 0.4 : 0 }}
-          /\u003e
-\u003c / div\u003e
+    <div className="flex flex-col items-center justify-center">
+      {/* Premium Glass Container */}
+      <div className="relative">
+        {/* Multi-layered glow backdrop */}
+        <div className="absolute -inset-8 opacity-0 animate-fade-in">
+          <div
+            className="absolute inset-0 rounded-full blur-3xl transition-all duration-1000"
+            style={{ backgroundColor: getGlowColor(score), opacity: mounted ? 0.6 : 0 }}
+          />
+          <div
+            className="absolute inset-4 rounded-full blur-2xl transition-all duration-1000"
+            style={{ backgroundColor: getGlowColor(score), opacity: mounted ? 0.4 : 0 }}
+          />
+        </div>
 
-{/* Glassmorphic background card - NO BORDERS */ }
-\u003cdiv className = "relative backdrop-blur-xl bg-gradient-to-br from-background/60 via-background/40 to-background/60 rounded-3xl p-8 shadow-2xl"\u003e
-{/* Inner glow ring */ }
-\u003cdiv
-className = "absolute inset-0 rounded-3xl opacity-50"
-style = {{
-  background: `radial-gradient(circle at center, transparent 40%, ${getGlowColor(score)} 100%)`,
+        {/* Glassmorphic background card - NO BORDERS */}
+        <div className="relative backdrop-blur-xl bg-gradient-to-br from-background/60 via-background/40 to-background/60 rounded-3xl p-8 shadow-2xl">
+          {/* Inner glow ring */}
+          <div
+            className="absolute inset-0 rounded-3xl opacity-50"
+            style={{
+              background: `radial-gradient(circle at center, transparent 40%, ${getGlowColor(score)} 100%)`,
             }}
-          /\u003e
+          />
 
-\u003cdiv className = "relative h-52 w-52 animate-float"\u003e
-\u003csvg className = "h-full w-full -rotate-90 relative" viewBox = "0 0 180 180"\u003e
-\u003cdefs\u003e
-{/* Enhanced gradient with multiple stops */ }
-\u003clinearGradient id = "progressGradient" x1 = "0%" y1 = "0%" x2 = "100%" y2 = "100%"\u003e
-\u003cstop offset = "0%" stopColor = { getStrokeColor(score) } stopOpacity = "1" /\u003e
-\u003cstop offset = "50%" stopColor = { getStrokeColor(score) } stopOpacity = "0.9" /\u003e
-\u003cstop offset = "100%" stopColor = { getStrokeColor(score) } stopOpacity = "0.7" /\u003e
-\u003c / linearGradient\u003e
-{/* Stronger glow filter */ }
-\u003cfilter id = "glow"\u003e
-\u003cfeGaussianBlur stdDeviation = "4" result = "coloredBlur" /\u003e
-\u003cfeMerge\u003e
-\u003cfeMergeNode in="coloredBlur" /\u003e
-\u003cfeMergeNode in="coloredBlur" /\u003e
-\u003cfeMergeNode in="SourceGraphic" /\u003e
-\u003c / feMerge\u003e
-\u003c / filter\u003e
-\u003c / defs\u003e
+          <div className="relative h-52 w-52 animate-float">
+            <svg className="h-full w-full -rotate-90 relative" viewBox="0 0 180 180">
+              <defs>
+                {/* Enhanced gradient with multiple stops */}
+                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor={getStrokeColor(score)} stopOpacity="1" />
+                  <stop offset="50%" stopColor={getStrokeColor(score)} stopOpacity="0.9" />
+                  <stop offset="100%" stopColor={getStrokeColor(score)} stopOpacity="0.7" />
+                </linearGradient>
+                {/* Stronger glow filter */}
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
 
-{/* Background track - very subtle, no visible border */ }
-\u003ccircle
-cx = "90"
-cy = "90"
-r = "80"
-fill = "none"
-strokeWidth = "8"
-className = "stroke-secondary/20"
-  /\u003e
+              {/* Background track - very subtle, no visible border */}
+              <circle
+                cx="90"
+                cy="90"
+                r="80"
+                fill="none"
+                strokeWidth="8"
+                className="stroke-secondary/20"
+              />
 
-{/* Progress circle with enhanced glow - NO BORDER */ }
-\u003ccircle
-cx = "90"
-cy = "90"
-r = "80"
-fill = "none"
-strokeWidth = "12"
-strokeLinecap = "round"
-stroke = "url(#progressGradient)"
-filter = "url(#glow)"
-style = {{
-  strokeDasharray: circumference,
-    strokeDashoffset,
-    transition: "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)",
+              {/* Progress circle with enhanced glow - NO BORDER */}
+              <circle
+                cx="90"
+                cy="90"
+                r="80"
+                fill="none"
+                strokeWidth="12"
+                strokeLinecap="round"
+                stroke="url(#progressGradient)"
+                filter="url(#glow)"
+                style={{
+                  strokeDasharray: circumference,
+                  strokeDashoffset,
+                  transition: "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
-              /\u003e
-\u003c / svg\u003e
+              />
+            </svg>
 
-{/* Score text with enhanced styling */ }
-\u003cdiv className = "absolute inset-0 flex flex-col items-center justify-center"\u003e
-\u003cspan
-className = {`text-7xl font-black tabular-nums ${getScoreColor(score)} transition-all duration-300`}
-style = {{
-  textShadow: `0 0 40px ${getGlowColor(score)}, 0 0 20px ${getGlowColor(score)}`,
+            {/* Score text with enhanced styling */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span
+                className={`text-7xl font-black tabular-nums ${getScoreColor(score)} transition-all duration-300`}
+                style={{
+                  textShadow: `0 0 40px ${getGlowColor(score)}, 0 0 20px ${getGlowColor(score)}`,
                 }}
-\u003e
-{ animatedScore }
-\u003c / span\u003e
-\u003cspan className = "text-xs font-semibold text-muted-foreground/80 mt-2 tracking-wider uppercase"\u003eNeynar Score\u003c / span\u003e
-\u003c / div\u003e
-\u003c / div\u003e
-\u003c / div\u003e
-\u003c / div\u003e
-\u003c / div\u003e
+              >
+                {animatedScore}
+              </span>
+              <span className="text-xs font-semibold text-muted-foreground/80 mt-2 tracking-wider uppercase">Neynar Score</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
