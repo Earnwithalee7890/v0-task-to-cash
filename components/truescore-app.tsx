@@ -66,8 +66,9 @@ export function TrueScoreApp() {
   const shareApp = useCallback(() => {
     if (!userData) return
     const text = `Check out my TrueScore! 🎯\n\nNeynar Score: ${userData.score}\nReputation: ${userData.reputation.toUpperCase()}\n\nGet your score 👇`
-    const appUrl = "https://v0-task-to-cash-seven.vercel.app"
-    sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(appUrl)}`)
+    const baseUrl = "https://v0-task-to-cash-seven.vercel.app"
+    const shareUrl = `${baseUrl}/share?fid=${userData.fid}&score=${encodeURIComponent(userData.score)}&username=${encodeURIComponent(userData.username)}&displayName=${encodeURIComponent(userData.displayName)}&reputation=${encodeURIComponent(userData.reputation)}`
+    sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(shareUrl)}`)
   }, [userData])
 
   useEffect(() => {
