@@ -3,13 +3,87 @@ import { NextRequest } from "next/server"
 
 export const runtime = "edge"
 
+// Fetch user data directly - can't import from lib in edge runtime
+async function fetchUserScore(fid: number) {
+    const apiKey = process.env.NEYNAR_API_KEY
+
+    if (!apiKey) {
+        return {
+            username: "demo_user",
+            displayName: "Demo User",
+            score: 75,
+            reputation: "neutral",
+        }
+    }
+
+    try {
+        const response = await fetch(
+            `https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`,
+            {
+                headers: {
+                    accept: "application/json",
+                    "x-api-key": apiKey,
+                },
+            }
+        )
+
+        if (!response.ok) throw new Error("API error")
+
+        const data = await response.json()
+        const user = data.users?.[0]
+
+        if (!user) throw new Error("User not found")
+
+        const rawScore = user.experimental?.neynar_user_score ?? 0
+        const score = Math.round(rawScore * 100)
+
+        let reputation = "neutral"
+        if (score >= 80) reputation = "safe"
+        else if (score >= 50) reputation = "neutral"
+        else if (score >= 25) reputation = "risky"
+        else reputation = "spammy"
+
+        return {
+            username: user.username || "user",
+            displayName: user.display_name || user.username || "User",
+            score,
+            reputation,
+        }
+    } catch {
+        return {
+            username: "user",
+            displayName: "User",
+            score: 50,
+            reputation: "neutral",
+        }
+    }
+}
+
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
 
-    const score = searchParams.get("score") || "0"
-    const username = searchParams.get("username") || "User"
-    const displayName = searchParams.get("displayName") || username
-    const reputation = searchParams.get("reputation") || "neutral"
+    // Primary: Use FID to fetch live data
+    const fidParam = searchParams.get("fid")
+
+    let score: string
+    let username: string
+    let displayName: string
+    let reputation: string
+
+    if (fidParam) {
+        // Fetch live data from Neynar using FID
+        const userData = await fetchUserScore(Number(fidParam))
+        score = String(userData.score)
+        username = userData.username
+        displayName = userData.displayName
+        reputation = userData.reputation
+    } else {
+        // Fallback: Use query params if provided (backwards compatibility)
+        score = searchParams.get("score") || "0"
+        username = searchParams.get("username") || "User"
+        displayName = searchParams.get("displayName") || username
+        reputation = searchParams.get("reputation") || "neutral"
+    }
 
     // Determine colors based on score
     const scoreNum = parseInt(score)
@@ -77,6 +151,7 @@ export async function GET(request: NextRequest) {
                 >
                     <div
                         style={{
+                            display: "flex",
                             fontSize: "32px",
                             fontWeight: "bold",
                             color: "#ffffff",
@@ -143,6 +218,7 @@ export async function GET(request: NextRequest) {
                 >
                     <div
                         style={{
+                            display: "flex",
                             fontSize: "24px",
                             fontWeight: "600",
                             color: "#ffffff",
@@ -152,6 +228,7 @@ export async function GET(request: NextRequest) {
                     </div>
                     <div
                         style={{
+                            display: "flex",
                             fontSize: "16px",
                             color: "rgba(255,255,255,0.5)",
                         }}

@@ -67,7 +67,8 @@ export function TrueScoreApp() {
     if (!userData) return
     const text = `Check out my TrueScore! 🎯\n\nNeynar Score: ${userData.score}\nReputation: ${userData.reputation.toUpperCase()}\n\nGet your score 👇`
     const baseUrl = "https://v0-task-to-cash-seven.vercel.app"
-    const shareUrl = `${baseUrl}/share?fid=${userData.fid}&score=${encodeURIComponent(userData.score)}&username=${encodeURIComponent(userData.username)}&displayName=${encodeURIComponent(userData.displayName)}&reputation=${encodeURIComponent(userData.reputation)}`
+    // Only pass FID - the share page and OG image will fetch live data
+    const shareUrl = `${baseUrl}/share?fid=${userData.fid}`
     sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(shareUrl)}`)
   }, [userData])
 

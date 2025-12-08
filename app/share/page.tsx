@@ -1,12 +1,9 @@
 import { Metadata } from "next"
+import { getUserScore } from "@/lib/neynar"
 
 interface SharePageProps {
     searchParams: Promise<{
         fid?: string
-        score?: string
-        username?: string
-        displayName?: string
-        reputation?: string
     }>
 }
 
@@ -14,13 +11,13 @@ const appUrl = "https://v0-task-to-cash-seven.vercel.app"
 
 export async function generateMetadata({ searchParams }: SharePageProps): Promise<Metadata> {
     const params = await searchParams
-    const score = params.score || "0"
-    const username = params.username || "User"
-    const displayName = params.displayName || username
-    const reputation = params.reputation || "neutral"
+    const fid = params.fid ? Number(params.fid) : 338060
 
-    // Build dynamic OG image URL
-    const ogImageUrl = `${appUrl}/api/og?score=${encodeURIComponent(score)}&username=${encodeURIComponent(username)}&displayName=${encodeURIComponent(displayName)}&reputation=${encodeURIComponent(reputation)}`
+    // Fetch live user data from Neynar
+    const userData = await getUserScore(fid)
+
+    // Build dynamic OG image URL - only needs FID now
+    const ogImageUrl = `${appUrl}/api/og?fid=${fid}`
 
     // Build embed JSON for Farcaster
     const embedJson = JSON.stringify({
@@ -39,17 +36,17 @@ export async function generateMetadata({ searchParams }: SharePageProps): Promis
     })
 
     return {
-        title: `${displayName}'s TrueScore - ${score} Points`,
-        description: `${displayName} (@${username}) has a Neynar score of ${score}. Check your own TrueScore!`,
+        title: `${userData.displayName}'s TrueScore - ${userData.score} Points`,
+        description: `${userData.displayName} (@${userData.username}) has a Neynar score of ${userData.score}. Check your own TrueScore!`,
         openGraph: {
-            title: `${displayName}'s TrueScore`,
-            description: `Neynar Score: ${score} | Reputation: ${reputation}`,
+            title: `${userData.displayName}'s TrueScore`,
+            description: `Neynar Score: ${userData.score} | Reputation: ${userData.reputation}`,
             images: [ogImageUrl],
         },
         twitter: {
             card: "summary_large_image",
-            title: `${displayName}'s TrueScore`,
-            description: `Neynar Score: ${score} | Reputation: ${reputation}`,
+            title: `${userData.displayName}'s TrueScore`,
+            description: `Neynar Score: ${userData.score} | Reputation: ${userData.reputation}`,
             images: [ogImageUrl],
         },
         other: {
@@ -61,8 +58,10 @@ export async function generateMetadata({ searchParams }: SharePageProps): Promis
 
 export default async function SharePage({ searchParams }: SharePageProps) {
     const params = await searchParams
-    const score = params.score || "0"
-    const displayName = params.displayName || params.username || "User"
+    const fid = params.fid ? Number(params.fid) : 338060
+
+    // Fetch live data for display
+    const userData = await getUserScore(fid)
 
     // Return a simple page that redirects - crawlers will read meta tags first
     return (
@@ -80,7 +79,7 @@ export default async function SharePage({ searchParams }: SharePageProps) {
             >
                 <div className="text-center text-white">
                     <h1 className="text-2xl font-bold mb-2">
-                        {displayName}&apos;s TrueScore: {score}
+                        {userData.displayName}&apos;s TrueScore: {userData.score}
                     </h1>
                     <p className="opacity-70">Loading TrueScore app...</p>
                 </div>
