@@ -20,7 +20,6 @@ export interface UserData {
   followers: number
   following: number
   verifiedAddresses: string[]
-  quotient: number
 }
 
 export function TrueScoreApp() {
@@ -31,37 +30,10 @@ export function TrueScoreApp() {
   const [context, setContext] = useState<FrameContext | null>(null)
   const [theme, setTheme] = useState<"light" | "dark">("light")
   const [showAddPrompt, setShowAddPrompt] = useState(false)
-  const [showScoreUpdate, setShowScoreUpdate] = useState(false)
   const [activeTab, setActiveTab] = useState<"home" | "profile">("home")
 
   const updateUserData = async (data: any, fid: number) => {
-    // Fetch real Quotient Score from API
-    let quotientScore = 0
-    try {
-      const quotientRes = await fetch("/api/quotient", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fid }),
-      })
-      if (quotientRes.ok) {
-        const quotientData = await quotientRes.json()
-        quotientScore = quotientData.quotientScore || 0
-      }
-    } catch (err) {
-      console.error("Failed to fetch Quotient score:", err)
-    }
-
-    const lastQuotient = Number(localStorage.getItem("lastQuotient") ?? "-1")
-    if (lastQuotient !== -1 && lastQuotient !== quotientScore) {
-      const lastNotified = Number(localStorage.getItem("lastNotified") ?? "0")
-      const now = Date.now()
-      if (now - lastNotified > 7 * 24 * 60 * 60 * 1000) {
-        setShowScoreUpdate(true)
-        localStorage.setItem("lastNotified", now.toString())
-      }
-    }
-    localStorage.setItem("lastQuotient", quotientScore.toString())
-    setUserData({ ...data, quotient: quotientScore })
+    setUserData({ ...data })
   }
 
   const fetchUserData = useCallback(async (fid: number) => {
@@ -92,7 +64,7 @@ export function TrueScoreApp() {
   }, [])
 
   const shareApp = useCallback(() => {
-    const text = `Check out my TrueScore! Neynar Score: ${userData?.score} | Quotient Score: ${userData?.quotient.toFixed(2)}`
+    const text = `Check out my TrueScore! Neynar Score: ${userData?.score}`
     const url = "https://v0-task-to-cash-seven.vercel.app"
     sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(url)}`)
   }, [userData])
@@ -169,11 +141,7 @@ export function TrueScoreApp() {
         </div>
       )}
 
-      {showScoreUpdate && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-primary/10 border border-primary/30 text-foreground px-4 py-2 rounded-md shadow-md animate-fade-in z-40">
-          <p>Your Quotient score has been updated this week! Check the new score.</p>
-        </div>
-      )}
+
 
       <div className="relative mx-auto max-w-md space-y-8">
         <header className="opacity-0 animate-fade-in">

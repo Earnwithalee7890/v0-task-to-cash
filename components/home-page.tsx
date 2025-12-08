@@ -14,22 +14,7 @@ interface HomePageProps {
 }
 
 export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
-    const [ownerPfp, setOwnerPfp] = useState<string>("https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/6a3c98c9-69be-431d-cd58-93e10b3b9600/rectcrop")
 
-    useEffect(() => {
-        const fetchOwnerPfp = async () => {
-            try {
-                const res = await fetch("/api/owner")
-                const data = await res.json()
-                if (data.pfpUrl) {
-                    setOwnerPfp(data.pfpUrl)
-                }
-            } catch (error) {
-                console.error("Failed to fetch owner PFP:", error)
-            }
-        }
-        fetchOwnerPfp()
-    }, [])
 
     return (
         <div className="space-y-8 pb-24">
@@ -43,25 +28,7 @@ export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
                 <ReputationBadge reputation={userData.reputation} />
             </div>
 
-            {/* Quotient Score Card */}
-            <div className="opacity-0 animate-slide-up stagger-4 space-y-4">
-                <div className="glass-card p-4 flex items-center justify-between rounded-xl border border-border/50 bg-secondary/30">
-                    <div>
-                        <h3 className="font-semibold text-foreground">Quotient Score</h3>
-                        <p className="text-xs text-muted-foreground">
-                            <a
-                                href="https://docs.quotient.social/reputation/quotient-score#quotient-score"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:underline"
-                            >
-                                Based on engagement quality
-                            </a>
-                        </p>
-                    </div>
-                    <div className="text-2xl font-bold text-primary">{userData.quotient.toFixed(2)}</div>
-                </div>
-            </div>
+
 
             {/* Action Buttons */}
             <div className="grid grid-cols-1 gap-3 opacity-0 animate-slide-up stagger-4">
@@ -94,11 +61,8 @@ export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
                     <div className="absolute -right-4 -top-4 h-12 w-12 bg-primary/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500" />
                     <div className="relative">
                         <div className="absolute inset-0 bg-primary/20 rounded-full blur-sm animate-pulse" />
-                        <img
-                            src={ownerPfp}
-                            alt="@aleekhoso"
-                            className="relative h-9 w-9 rounded-full border-2 border-primary/50 ring-2 ring-primary/20 object-cover"
-                        />
+                        <div className="absolute inset-0 bg-primary/20 rounded-full blur-sm" />
+                        <User className="relative h-9 w-9 rounded-full p-1 border-2 border-primary/50 text-primary" />
                     </div>
                     <div className="relative flex flex-col items-start leading-none">
                         <span className="text-sm">Follow Owner</span>
