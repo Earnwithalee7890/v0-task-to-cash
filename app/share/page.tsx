@@ -38,9 +38,8 @@ export async function generateMetadata({ searchParams }: SharePageProps): Promis
             "fc:frame": "vNext",
             "fc:frame:image": ogImageUrl,
             "fc:frame:image:aspect_ratio": "1.91:1",
-            "fc:frame:button:1": "Open TrueScore",
-            "fc:frame:button:1:action": "link",
-            "fc:frame:button:1:target": appUrl,
+            "fc:frame:button:1": "Open Mini App",
+            "fc:frame:button:1:action": "launch",
         },
     }
 }
