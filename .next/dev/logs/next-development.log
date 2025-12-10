@@ -34795,3 +34795,4 @@ https://react.dev/link/hydration-mismatch
 [01:14:52.423] Browser LOG     Add to Mini App clicked
 [01:14:52.423] Browser ERROR   Error adding to mini app: {}
 [01:53:54.707] Server  LOG      ✓ Compiled in 291ms
+[05:47:32.305] Server  LOG      ✓ Compiled in 1804ms

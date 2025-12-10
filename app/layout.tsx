@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "TrueScore",
     description: "Your Real Neynar Reputation Score",
-    images: [`${appUrl}/og-image.png`],
+    images: [`${appUrl}/api/og?fid=338060`],
   },
   other: {
     "farcaster:manifest": `${appUrl}/.well-known/farcaster.json`,
