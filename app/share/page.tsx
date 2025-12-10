@@ -19,22 +19,6 @@ export async function generateMetadata({ searchParams }: SharePageProps): Promis
     // Build dynamic OG image URL - only needs FID now
     const ogImageUrl = `${appUrl}/api/og?fid=${fid}`
 
-    // Build embed JSON for Farcaster
-    const embedJson = JSON.stringify({
-        version: "1",
-        imageUrl: ogImageUrl,
-        button: {
-            title: "Check My Score",
-            action: {
-                type: "launch_miniapp",
-                name: "TrueScore",
-                url: appUrl,
-                splashImageUrl: `${appUrl}/splash.png`,
-                splashBackgroundColor: "#1a1a2e"
-            }
-        }
-    })
-
     return {
         title: `${userData.displayName}'s TrueScore - ${userData.score} Points`,
         description: `${userData.displayName} (@${userData.username}) has a Neynar score of ${userData.score}. Check your own TrueScore!`,
@@ -50,8 +34,12 @@ export async function generateMetadata({ searchParams }: SharePageProps): Promis
             images: [ogImageUrl],
         },
         other: {
-            "fc:frame": embedJson,
-            "fc:miniapp": embedJson,
+            "fc:frame": "vNext",
+            "fc:frame:image": ogImageUrl,
+            "fc:frame:image:aspect_ratio": "1.91:1",
+            "fc:frame:button:1": "Open TrueScore",
+            "fc:frame:button:1:action": "link",
+            "fc:frame:button:1:target": appUrl,
         },
     }
 }

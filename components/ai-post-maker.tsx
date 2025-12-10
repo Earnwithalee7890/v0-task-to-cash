@@ -13,25 +13,26 @@ export function AIPostMaker() {
         if (!prompt.trim()) return
 
         setLoading(true)
+        setGeneratedPost("")
+
         try {
-            // Simple AI-like post generation using templates
-            const templates = [
-                `🚀 ${prompt}\n\nExcited to share this with the Farcaster community! 🎯`,
-                `💡 Thinking about: ${prompt}\n\nWhat do you all think? Drop your thoughts below! 👇`,
-                `🔥 ${prompt}\n\nLFG! Who else is bullish on this? 🚀`,
-                `✨ ${prompt}\n\nThis is going to be huge! Can't wait to see what happens next 🌟`,
-                `🎯 ${prompt}\n\nSharing this gem with my frens! 💎`,
-            ]
+            const response = await fetch('/api/generate-post', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: prompt.trim() }),
+            })
 
-            // Randomly select a template
-            const randomTemplate = templates[Math.floor(Math.random() * templates.length)]
+            if (!response.ok) {
+                throw new Error('Failed to generate post')
+            }
 
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 1000))
-
-            setGeneratedPost(randomTemplate)
+            const data = await response.json()
+            setGeneratedPost(data.post)
         } catch (error) {
             console.error("Error generating post:", error)
+            setGeneratedPost("Sorry, couldn't generate a post right now. Please try again! 🔄")
         } finally {
             setLoading(false)
         }
