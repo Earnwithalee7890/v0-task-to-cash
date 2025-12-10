@@ -1,7 +1,7 @@
 {
-    "frame": {
-        "name": "TrueScore",
+    "miniapp": {
         "version": "1",
+        "name": "TrueScore",
         "iconUrl": "https://v0-task-to-cash-seven.vercel.app/icon.png",
         "homeUrl": "https://v0-task-to-cash-seven.vercel.app",
         "imageUrl": "https://v0-task-to-cash-seven.vercel.app/api/og?fid=338060",

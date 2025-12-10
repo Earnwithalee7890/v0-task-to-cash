@@ -45,13 +45,10 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/.well-known/farcaster.json" />
 
-        {/* Farcaster Frame Meta Tags */}
-        <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content="https://v0-task-to-cash-seven.vercel.app/api/og?fid=338060" />
-        <meta name="fc:frame:image" content="https://v0-task-to-cash-seven.vercel.app/api/og?fid=338060" />
-        <meta name="fc:frame:button:1" content="Open Mini App" />
-        <meta name="fc:frame:button:1:action" content="launch" />
-        <meta name="fc:frame:post_url" content="https://v0-task-to-cash-seven.vercel.app" />
+        {/* Farcaster Mini App Embed */}
+        <meta name="fc:miniapp" content='{"version":"1","imageUrl":"https://v0-task-to-cash-seven.vercel.app/api/og?fid=338060","button":{"title":"Check Neynar Score","action":{"type":"launch_miniapp","name":"TrueScore","url":"https://v0-task-to-cash-seven.vercel.app","splashImageUrl":"https://v0-task-to-cash-seven.vercel.app/splash.png","splashBackgroundColor":"#1a1a2e"}}}' />
+        {/* For backward compatibility */}
+        <meta name="fc:frame" content='{"version":"1","imageUrl":"https://v0-task-to-cash-seven.vercel.app/api/og?fid=338060","button":{"title":"Check Neynar Score","action":{"type":"launch_frame","name":"TrueScore","url":"https://v0-task-to-cash-seven.vercel.app","splashImageUrl":"https://v0-task-to-cash-seven.vercel.app/splash.png","splashBackgroundColor":"#1a1a2e"}}}' />
 
         {/* Open Graph Meta Tags */}
         <meta property="og:title" content="TrueScore - Your Real Neynar Reputation" />

@@ -35,11 +35,35 @@ export async function generateMetadata({ searchParams }: SharePageProps): Promis
             images: [ogImageUrl],
         },
         other: {
-            "fc:frame": "vNext",
-            "fc:frame:image": ogImageUrl,
-            "fc:frame:image:aspect_ratio": "1.91:1",
-            "fc:frame:button:1": "Open Mini App",
-            "fc:frame:button:1:action": "launch",
+            "fc:miniapp": JSON.stringify({
+                version: "1",
+                imageUrl: ogImageUrl,
+                button: {
+                    title: "Check Neynar Score",
+                    action: {
+                        type: "launch_miniapp",
+                        name: "TrueScore",
+                        url: appUrl,
+                        splashImageUrl: `${appUrl}/splash.png`,
+                        splashBackgroundColor: "#1a1a2e"
+                    }
+                }
+            }),
+            // For backward compatibility
+            "fc:frame": JSON.stringify({
+                version: "1",
+                imageUrl: ogImageUrl,
+                button: {
+                    title: "Check Neynar Score",
+                    action: {
+                        type: "launch_frame",
+                        name: "TrueScore",
+                        url: appUrl,
+                        splashImageUrl: `${appUrl}/splash.png`,
+                        splashBackgroundColor: "#1a1a2e"
+                    }
+                }
+            }),
         },
     }
 }
