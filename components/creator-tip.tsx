@@ -8,7 +8,7 @@ import { parseUnits } from "viem"
 
 const OWNER_WALLET = "0xcf74BbBDDBB7ed5129a715F20d1cC34Fe1124fe4" as const
 const USDC_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" as const
-const tipAmounts = [3, 5, 10, 20, 50]
+const tipAmounts = [3, 5]
 
 export function CreatorTip() {
     const [copied, setCopied] = useState(false)
@@ -55,33 +55,36 @@ export function CreatorTip() {
     const shortenAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`
 
     return (
-        <Card className="glass-card p-5 space-y-4">
+        <Card className="glass-card-strong p-5 space-y-4 bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-yellow-500/20 border-2 border-amber-400/40 neon-glow-cyan">
             <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-chart-3/30 to-chart-3/10 flex items-center justify-center">
-                    <Coins className="h-5 w-5 text-chart-3" />
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg box-glow-cyan">
+                    <Coins className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                    <h3 className="font-semibold text-foreground">Tip the Creator</h3>
-                    <p className="text-xs text-muted-foreground">Support with USDC</p>
+                    <h3 className="font-bold text-foreground text-lg">Tip the Creator</h3>
+                    <p className="text-xs text-amber-200">Support with USDC 💰</p>
                 </div>
             </div>
 
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-secondary/50 border border-border/50">
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-secondary/50 border-2 border-amber-400/30">
                 <code className="flex-1 text-xs text-muted-foreground font-mono">{shortenAddress(OWNER_WALLET)}</code>
                 <button
                     onClick={copyAddress}
-                    className="h-8 w-8 p-0 flex items-center justify-center hover:bg-secondary rounded transition-colors"
+                    className="h-8 w-8 p-0 flex items-center justify-center hover:bg-amber-400/20 rounded transition-colors"
                 >
-                    {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
+                    {copied ? <Check className="h-4 w-4 text-amber-400" /> : <Copy className="h-4 w-4 text-amber-300" />}
                 </button>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
-                {tipAmounts.map((amt) => (
+            <div className="grid grid-cols-2 gap-3">
+                {tipAmounts.map((amt, idx) => (
                     <button
                         key={amt}
                         onClick={() => handleTip(amt)}
-                        className="h-12 rounded-xl bg-gradient-to-br from-chart-3/20 to-primary/20 border border-chart-3/30 text-foreground font-semibold hover:from-chart-3/30 hover:to-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+                        className={`h-14 rounded-2xl font-bold text-white text-lg shadow-lg hover:scale-110 active:scale-95 transition-all duration-300 ${idx === 0
+                                ? "bg-gradient-to-br from-green-400 to-emerald-500 box-glow-cyan"
+                                : "bg-gradient-to-br from-blue-400 to-cyan-500 box-glow-aqua"
+                            }`}
                     >
                         ${amt}
                     </button>

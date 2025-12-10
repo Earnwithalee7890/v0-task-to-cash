@@ -136,15 +136,15 @@ export function DailyCheckin() {
   }
 
   return (
-    <Card className="glass-card p-5 space-y-4">
+    <Card className="glass-card-strong p-5 space-y-4 bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-fuchsia-500/20 border-2 border-purple-400/40 box-glow-aqua">
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center">
-            <CalendarCheck className="h-5 w-5 text-primary" />
+          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center shadow-lg neon-glow-purple">
+            <CalendarCheck className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h3 className="font-semibold text-foreground">Daily Check-In</h3>
-            <p className="text-xs text-muted-foreground">Earn on-chain proof</p>
+            <h3 className="font-bold text-foreground text-lg">Daily Check-In</h3>
+            <p className="text-xs text-purple-200">Earn on-chain proof 🎯</p>
           </div>
         </div>
 

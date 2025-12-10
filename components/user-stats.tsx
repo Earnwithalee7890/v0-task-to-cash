@@ -16,8 +16,8 @@ export function UserStats({ followers, following }: UserStatsProps) {
   }
 
   const stats = [
-    { label: "Followers", value: followers, icon: Users, color: "from-primary/20 to-primary/5" },
-    { label: "Following", value: following, icon: UserPlus, color: "from-chart-2/20 to-chart-2/5" },
+    { label: "Followers", value: followers, icon: Users, color: "from-cyan-400 to-blue-500", glow: "box-glow-aqua" },
+    { label: "Following", value: following, icon: UserPlus, color: "from-pink-400 to-rose-500", glow: "box-glow-cyan" },
   ]
 
   return (
@@ -25,16 +25,16 @@ export function UserStats({ followers, following }: UserStatsProps) {
       {stats.map((stat, index) => (
         <Card
           key={stat.label}
-          className="glass-card group p-3 flex flex-col items-center justify-center gap-1.5 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 cursor-default"
+          className={`glass-card-strong group p-4 flex flex-col items-center justify-center gap-2 transition-all duration-300 hover:scale-110 cursor-default border-2 ${stat.glow}`}
           style={{ animationDelay: `${index * 0.1}s` }}
         >
           <div
-            className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${stat.color} transition-transform group-hover:scale-110`}
+            className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${stat.color} transition-transform group-hover:scale-110 shadow-lg`}
           >
-            <stat.icon className="h-5 w-5 text-foreground/80" />
+            <stat.icon className="h-6 w-6 text-white" />
           </div>
-          <p className="text-xl font-bold text-foreground tabular-nums">{formatNumber(stat.value)}</p>
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">{stat.label}</p>
+          <p className="text-2xl font-bold text-foreground tabular-nums">{formatNumber(stat.value)}</p>
+          <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-bold">{stat.label}</p>
         </Card>
       ))}
     </div>

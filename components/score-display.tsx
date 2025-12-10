@@ -11,7 +11,7 @@ export function ScoreDisplay({ score }: ScoreDisplayProps) {
   const [mounted, setMounted] = useState(false)
 
   const percentage = Math.min(score, 100)
-  const circumference = 2 * Math.PI * 80
+  const circumference = 2 * Math.PI * 70
   const strokeDashoffset = circumference - (animatedScore / 100) * circumference
 
   useEffect(() => {
@@ -34,62 +34,57 @@ export function ScoreDisplay({ score }: ScoreDisplayProps) {
     return () => clearInterval(timer)
   }, [score])
 
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-primary"
-    if (score >= 60) return "text-chart-3"
-    if (score >= 40) return "text-chart-2"
-    return "text-destructive"
-  }
-
-  const getStrokeColor = (score: number) => {
-    if (score >= 80) return "#4ade80"
-    if (score >= 60) return "#facc15"
-    if (score >= 40) return "#38bdf8"
-    return "#f87171"
-  }
-
-  const getGlowColor = (score: number) => {
-    if (score >= 80) return "rgba(74, 222, 128, 0.4)"
-    if (score >= 60) return "rgba(250, 204, 21, 0.4)"
-    if (score >= 40) return "rgba(56, 189, 248, 0.4)"
-    return "rgba(248, 113, 113, 0.4)"
-  }
-
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="relative h-52 w-52 animate-float">
+      <div className="relative h-64 w-64">
+        {/* Outer neon glow rings */}
         <div
-          className="absolute inset-4 rounded-full blur-2xl transition-all duration-1000"
-          style={{ backgroundColor: getGlowColor(score), opacity: mounted ? 0.5 : 0 }}
+          className="absolute inset-0 rounded-full box-glow-aqua animate-pulse-neon"
+          style={{ opacity: mounted ? 0.4 : 0 }}
+        />
+        <div
+          className="absolute inset-4 rounded-full box-glow-cyan"
+          style={{ opacity: mounted ? 0.3 : 0 }}
         />
 
-        <svg className="h-full w-full -rotate-90 relative" viewBox="0 0 180 180">
-          {/* Background circle with gradient */}
+        {/* SVG Circle */}
+        <svg className="h-full w-full -rotate-90 relative" viewBox="0 0 160 160">
           <defs>
-            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor={getStrokeColor(score)} stopOpacity="1" />
-              <stop offset="100%" stopColor={getStrokeColor(score)} stopOpacity="0.6" />
+            <linearGradient id="neonScoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#00d9ff" />
+              <stop offset="50%" stopColor="#00ffcc" />
+              <stop offset="100%" stopColor="#0088ff" />
             </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+            <filter id="neonGlow">
+              <feGaussianBlur stdDeviation="4" result="coloredBlur" />
               <feMerge>
+                <feMergeNode in="coloredBlur" />
                 <feMergeNode in="coloredBlur" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
           </defs>
 
-          <circle cx="90" cy="90" r="80" fill="none" strokeWidth="10" className="stroke-secondary/50" />
-          {/* Progress circle with glow */}
+          {/* Background circle */}
           <circle
-            cx="90"
-            cy="90"
-            r="80"
+            cx="80"
+            cy="80"
+            r="70"
             fill="none"
-            strokeWidth="10"
+            strokeWidth="6"
+            stroke="rgba(0, 217, 255, 0.15)"
+          />
+
+          {/* Progress circle with neon glow */}
+          <circle
+            cx="80"
+            cy="80"
+            r="70"
+            fill="none"
+            strokeWidth="6"
             strokeLinecap="round"
-            stroke="url(#progressGradient)"
-            filter="url(#glow)"
+            stroke="url(#neonScoreGradient)"
+            filter="url(#neonGlow)"
             style={{
               strokeDasharray: circumference,
               strokeDashoffset,
@@ -98,17 +93,15 @@ export function ScoreDisplay({ score }: ScoreDisplayProps) {
           />
         </svg>
 
-        {/* Score text */}
+        {/* Score number with aqua neon glow */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
-            className={`text-6xl font-bold tabular-nums ${getScoreColor(score)} transition-all duration-300`}
-            style={{
-              textShadow: `0 0 30px ${getGlowColor(score)}`,
-            }}
+            className="text-7xl font-bold tabular-nums neon-glow-aqua animate-pulse"
+            style={{ animationDuration: "3s" }}
           >
             {animatedScore}
           </span>
-          <span className="text-sm text-muted-foreground mt-1">Neynar Score</span>
+          <span className="text-sm text-cyan-300/80 mt-2 letter-space-wide">NEYNAR SCORE</span>
         </div>
       </div>
     </div>
