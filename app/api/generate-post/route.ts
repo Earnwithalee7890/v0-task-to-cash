@@ -30,15 +30,15 @@ export async function POST(request: Request) {
                 messages: [
                     {
                         role: "system",
-                        content: "You are a social media expert creating engaging Farcaster posts. Create posts that are: 1) Concise but impactful (150-280 characters), 2) Use relevant emojis naturally, 3) Include a call-to-action or question when appropriate, 4) Sound authentic and conversational. DO NOT use hashtags."
+                        content: "You are a social media expert creating engaging Farcaster posts. Create posts that are: 1) 200-320 characters long, 2) Use relevant emojis naturally, 3) Include a call-to-action or question, 4) Sound authentic and conversational, 5) Create excitement and engagement. DO NOT use hashtags."
                     },
                     {
                         role: "user",
                         content: `Create an engaging Farcaster post about: ${prompt}`
                     }
                 ],
-                temperature: 0.8,
-                max_tokens: 150,
+                temperature: 0.9,
+                max_tokens: 200,
             }),
         })
 
@@ -65,29 +65,55 @@ export async function POST(request: Request) {
 }
 
 function fallbackPostGeneration(prompt: string) {
-    // Enhanced fallback templates
+    // 20 diverse, engaging templates
     const templates = [
-        `💭 Just thinking about ${prompt}... \n\nThis could be a game-changer for the Farcaster community! What are your thoughts? 🤔`,
+        // Enthusiastic & Bullish
+        `🚀 Just discovered something amazing about ${prompt}!\n\nThe potential here is absolutely massive. Been researching this for weeks and everything points to this being the next big thing. Early adopters are already winning.\n\nWho else is paying attention? 👀`,
 
-        `🚀 Excited to dive deeper into ${prompt}!\n\nThe possibilities here are endless. Who else is exploring this? Let me know in the comments! 👇`,
+        `⚡ ${prompt} is exactly what the space needs right now.\n\nWatched it evolve over the past few months and the growth trajectory is wild. Team is shipping consistently, community is strong, and the tech actually works.\n\nBullish AF! 📈`,
 
-        `✨ ${prompt} is exactly what we need right now.\n\nI've been researching this and the potential is huge. Anyone want to collaborate on this? 🤝`,
+        `🔥 Hot take: ${prompt} will be 10x bigger in 6 months.\n\nEveryone's sleeping on this while the smart money is quietly accumulating. The fundamentals are there, the timing is perfect, and the narrative is building.\n\nYou've been warned! 🎯`,
 
-        `🔥 Hot take: ${prompt} is going to revolutionize how we think about Web3.\n\nStill early, but the signs are all there. LFG! 🚀`,
+        `💎 ${prompt} might be the most underrated opportunity in Web3 right now.\n\nSeriously, look at the team, read the docs, join the community. This isn't just hype - real builders are working on real problems. Still early but not for long.\n\nDYOR! 🧠`,
 
-        `🎯 Been exploring ${prompt} and I'm genuinely impressed.\n\nThe tech is solid, the community is growing, and the timing feels right. Bullish! 📈`,
+        // Analytical & Thoughtful
+        `💭 Been thinking deeply about ${prompt} lately...\n\nWhat started as curiosity turned into genuine conviction. The more you dig, the more sense it makes. Not financial advice, but definitely worth your research time.\n\nWhat's your take? Drop thoughts below! 👇`,
 
-        `💡 Interesting perspective on ${prompt} I came across today...\n\nIt's making me rethink some assumptions. What's your take on this? Drop your thoughts below! 💬`,
+        `📊 Quick analysis on ${prompt}:\n\nThe market is undervaluing this by at least 50%. Compared to competitors with similar tech but 10x the market cap, this is objectively underpriced. Numbers don't lie.\n\nStill early to accumulate! 💰`,
 
-        `🌟 ${prompt} is one of those things that seems obvious in retrospect.\n\nBut someone had to be first to really push it forward. Respect to the builders! 🛠️`,
+        `🎯 ${prompt} represents a fundamental shift in how we think about innovation.\n\nNot many people understand the implications yet, but those who do are positioning themselves now. This is one of those "obvious in retrospect" moments.\n\nMark my words! ⏰`,
 
-        `⚡ Quick thought on ${prompt}:\n\nWe're still so early in understanding the full implications. The next 6-12 months will be wild. Stay curious! 🧠`,
+        `🧩 Connecting the dots on ${prompt}:\n\n1. Strong fundamentals ✅\n2. Growing community ✅  \n3. Real use cases ✅\n4. Solid execution ✅\n\nAll the pieces are there. Just needs time to play out. Patience will be rewarded.\n\nWho's holding long-term? 🙌`,
 
-        `🎨 ${prompt} represents a perfect example of innovation meeting community needs.\n\nLove seeing genuine builders working on real problems. This is what it's all about! 💪`,
+        // Community & Social
+        `💬 Can we talk about ${prompt} for a sec?\n\nThe community around this is honestly one of the best I've seen. Smart discussions, helpful people, no toxic vibes. That's usually a great signal.\n\nAnyone else notice this? Let me know! 🤝`,
 
-        `🌊 The wave around ${prompt} is building momentum.\n\nEarly adopters are already seeing the value. If you're not paying attention yet, now's the time! 👀`
+        `🌟 ${prompt} is proof that good things happen when community comes first.\n\nNo empty promises, just consistent building. No fake hype, just real progress. The vibe is immaculate and the results speak for themselves.\n\nProud to be early! 🙏`,
+
+        `🎨 The culture around ${prompt} is something special.\n\nIt's not just about making gains - people genuinely care about the mission. That kind of alignment is rare and powerful. When you find it, you hold it.\n\nWho's with me? 💪`,
+
+        `👥 ${prompt} has the kind of community that actually ships.\n\nEvery week there's new updates, new features, new wins. This is what sustainable growth looks like. Not a pump and dump, but real long-term value creation.\n\nRespect to the builders! 🛠️`,
+
+        // Educational & Informative
+        `📚 Quick thread on why ${prompt} matters:\n\nMost people are missing the bigger picture here. This isn't just another project - it's solving real problems that affect millions. The TAM is huge and we're just scratching the surface.\n\nLet me explain... 🧵`,
+
+        `💡 Something interesting about ${prompt} that most don't know:\n\nThe tech behind this is actually groundbreaking. Solved problems that teams with 100x the funding couldn't crack. That's the kind of innovation that creates generational wealth.\n\nPay attention! 👁️`,
+
+        `🔍 Deep dive into ${prompt}:\n\nSpent the weekend going through everything - whitepaper, GitHub, community channels. Came away incredibly impressed. The attention to detail and long-term thinking is rare.\n\nHappy to answer questions! 💬`,
+
+        `📖 ${prompt} explained simply:\n\nImagine something game-changing but for Web3. That's basically what we're building here. The use case is clear, the execution is solid, and the timing is perfect.\n\nMakes sense now? 🤔`,
+
+        // FOMO & Urgency
+        `⏰ Friendly reminder: ${prompt} won't stay this undervalued forever.\n\nLiterally every metric is pointing up and right. Volume increasing, holders growing, development accelerating. When the market realizes, it'll be too late.\n\nNFA but maybe look into it! 🚨`,
+
+        `🎪 Everyone asking "wen moon?" for ${prompt}...\n\nMeanwhile things are literally taking off right now lol. Sometimes the best opportunities are hiding in plain sight. By the time it's trending, you're already late.\n\nDon't say I didn't warn you! ⚠️`,
+
+        `🌊 The ${prompt} wave is building and most people aren't even watching yet.\n\nThis is exactly how every major move starts - quiet accumulation, then sudden explosion. History repeats itself for those who study it.\n\nSet your alerts! 🔔`,
+
+        `💫 ${prompt} is at that perfect inflection point.\n\nNot too early (tech works), not too late (still undervalued). This is the sweet spot where life-changing opportunities are made.\n\nPosition accordingly! ⚡`
     ]
 
+    // Randomly select a template
     const randomTemplate = templates[Math.floor(Math.random() * templates.length)]
 
     return NextResponse.json({ post: randomTemplate })
