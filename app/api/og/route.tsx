@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
 
     const badgeColor = badgeColors[reputation] || badgeColors.neutral
 
-    return new ImageResponse(
+    const imageResponse = new ImageResponse(
         (
             <div
                 style={{
@@ -279,4 +279,11 @@ export async function GET(request: NextRequest) {
             height: 630,
         }
     )
+
+    // Add cache-control headers to prevent caching
+    imageResponse.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate')
+    imageResponse.headers.set('CDN-Cache-Control', 'no-store')
+    imageResponse.headers.set('Vercel-CDN-Cache-Control', 'no-store')
+
+    return imageResponse
 }

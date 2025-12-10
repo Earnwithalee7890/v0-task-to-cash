@@ -21,15 +21,15 @@
         "neynar",
         "score"
     ],
-    "imageUrl": "https://v0-task-to-cash-seven.vercel.app/og-image.png",
+    "imageUrl": "https://v0-task-to-cash-seven.vercel.app/api/og?fid=338060",
     "buttonTitle": "View My Score",
     "ogTitle": "TrueScore - Your Real Neynar Reputation",
     "ogDescription": "View your real Neynar score, engagement analytics, and account reputation on Farcaster",
-    "ogImageUrl": "https://v0-task-to-cash-seven.vercel.app/og-image.png",
-    "castShareUrl": "https://v0-task-to-cash-seven.vercel.app",
-    "heroImageUrl": "https://v0-task-to-cash-seven.vercel.app/og-image.png",
+    "ogImageUrl": "https://v0-task-to-cash-seven.vercel.app/api/og?fid=338060",
+    "castShareUrl": "https://v0-task-to-cash-seven.vercel.app/share",
+    "heroImageUrl": "https://v0-task-to-cash-seven.vercel.app/api/og?fid=338060",
     "tagline": "Track your Farcaster reputation",
     "screenshotUrls": [
-        "https://v0-task-to-cash-seven.vercel.app/og-image.png"
+        "https://v0-task-to-cash-seven.vercel.app/api/og?fid=338060"
     ]
 }
