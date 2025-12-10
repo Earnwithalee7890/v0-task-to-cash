@@ -34794,3 +34794,4 @@ https://react.dev/link/hydration-mismatch
 [01:14:29.964] Browser ERROR   uncaughtError: TypeError: Cannot redefine property: ethereum
 [01:14:52.423] Browser LOG     Add to Mini App clicked
 [01:14:52.423] Browser ERROR   Error adding to mini app: {}
+[01:53:54.707] Server  LOG      ✓ Compiled in 291ms

@@ -10,6 +10,7 @@ import { AIAnalysisSection } from "./ai-analysis-section"
 import { BadgesList } from "./badges-list"
 import { ShareCard } from "./share-card"
 import { AIInsightsModal } from "./ai-insights-modal"
+import { AIPostMaker } from "./ai-post-maker"
 import { Plus, Share2, User } from "lucide-react"
 import sdk from "@farcaster/frame-sdk"
 import type { UserData } from "./truescore-app"
@@ -50,10 +51,11 @@ export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
 
 
 
-                {/* Quotient Score Card */}
+                {/* AI Post Maker */}
                 <div className="opacity-0 animate-slide-up stagger-3">
-                    <QuotientScoreCard fid={userData.fid} />
+                    <AIPostMaker />
                 </div>
+
 
 
 

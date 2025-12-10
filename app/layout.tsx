@@ -44,6 +44,16 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <head>
         <link rel="manifest" href="/.well-known/farcaster.json" />
+
+        {/* Farcaster Frame Meta Tags */}
+        <meta property="fc:frame" content="vNext" />
+        <meta property="fc:frame:image" content={`${appUrl}/og-image.png`} />
+        <meta property="fc:frame:button:1" content="Open App" />
+        <meta property="fc:frame:button:1:action" content="link" />
+        <meta property="fc:frame:button:1:target" content={appUrl} />
+        <meta property="og:image" content={`${appUrl}/og-image.png`} />
+        <meta property="og:title" content="TrueScore - Your Real Neynar Reputation" />
+        <meta property="og:description" content="View your real Neynar score and Farcaster reputation" />
       </head>
       <body className={`font-sans antialiased ${_inter.variable}`}>
         <Providers>{children}</Providers>

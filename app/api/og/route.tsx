@@ -87,29 +87,30 @@ export async function GET(request: NextRequest) {
 
     // Determine colors based on score
     const scoreNum = parseInt(score)
-    let scoreColor = "#f87171" // red for low
-    let glowColor = "rgba(248, 113, 113, 0.4)"
+    let gradientStart = "#ef4444"
+    let gradientEnd = "#dc2626"
+    let scoreColor = "#ffffff"
 
     if (scoreNum >= 80) {
-        scoreColor = "#4ade80" // green
-        glowColor = "rgba(74, 222, 128, 0.4)"
+        gradientStart = "#10b981"
+        gradientEnd = "#059669"
     } else if (scoreNum >= 60) {
-        scoreColor = "#facc15" // yellow
-        glowColor = "rgba(250, 204, 21, 0.4)"
+        gradientStart = "#f59e0b"
+        gradientEnd = "#d97706"
     } else if (scoreNum >= 40) {
-        scoreColor = "#38bdf8" // blue
-        glowColor = "rgba(56, 189, 248, 0.4)"
+        gradientStart = "#3b82f6"
+        gradientEnd = "#2563eb"
     }
 
     // Badge color based on reputation
-    const badgeColors: Record<string, { bg: string; text: string }> = {
-        safe: { bg: "#22c55e", text: "#ffffff" },
-        neutral: { bg: "#a855f7", text: "#ffffff" },
-        risky: { bg: "#f97316", text: "#ffffff" },
-        spammy: { bg: "#ef4444", text: "#ffffff" },
+    const badgeColors: Record<string, string> = {
+        safe: "#10b981",
+        neutral: "#a855f7",
+        risky: "#f59e0b",
+        spammy: "#ef4444",
     }
 
-    const badge = badgeColors[reputation] || badgeColors.neutral
+    const badgeColor = badgeColors[reputation] || badgeColors.neutral
 
     return new ImageResponse(
         (
@@ -121,155 +122,155 @@ export async function GET(request: NextRequest) {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)",
+                    background: "linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%)",
                     fontFamily: "Inter, sans-serif",
-                    overflow: "hidden",
                     position: "relative",
                 }}
             >
-                {/* Glow effect */}
+                {/* Animated Background Elements */}
                 <div
                     style={{
                         position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        width: "350px",
-                        height: "350px",
-                        borderRadius: "50%",
-                        background: glowColor,
-                        filter: "blur(80px)",
+                        top: "0",
+                        left: "0",
+                        right: "0",
+                        bottom: "0",
+                        background: `radial-gradient(circle at 30% 50%, ${gradientStart}15 0%, transparent 50%)`,
+                    }}
+                />
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "0",
+                        left: "0",
+                        right: "0",
+                        bottom: "0",
+                        background: `radial-gradient(circle at 70% 50%, ${gradientEnd}15 0%, transparent 50%)`,
                     }}
                 />
 
-                {/* TrueScore Logo/Title */}
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "12px",
-                        marginBottom: "24px",
-                    }}
-                >
-                    <div
-                        style={{
-                            display: "flex",
-                            fontSize: "32px",
-                            fontWeight: "bold",
-                            color: "#ffffff",
-                            letterSpacing: "-0.02em",
-                        }}
-                    >
-                        TrueScore
-                    </div>
-                </div>
-
-                {/* Score Circle */}
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "220px",
-                        height: "220px",
-                        borderRadius: "50%",
-                        background: "rgba(255, 255, 255, 0.05)",
-                        boxShadow: `0 0 60px ${glowColor}`,
-                        marginBottom: "24px",
-                    }}
-                >
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        }}
-                    >
-                        <span
-                            style={{
-                                fontSize: "72px",
-                                fontWeight: "bold",
-                                color: scoreColor,
-                                lineHeight: 1,
-                                textShadow: `0 0 30px ${glowColor}`,
-                            }}
-                        >
-                            {score}
-                        </span>
-                        <span
-                            style={{
-                                fontSize: "14px",
-                                color: "rgba(255,255,255,0.6)",
-                                marginTop: "8px",
-                            }}
-                        >
-                            Neynar Score
-                        </span>
-                    </div>
-                </div>
-
-                {/* User info */}
+                {/* Main Content */}
                 <div
                     style={{
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        gap: "8px",
+                        justifyContent: "center",
+                        gap: "32px",
+                        zIndex: 10,
                     }}
                 >
+                    {/* Logo */}
                     <div
                         style={{
                             display: "flex",
-                            fontSize: "24px",
+                            fontSize: "36px",
+                            fontWeight: "bold",
+                            background: "linear-gradient(90deg, #00d9ff 0%, #00ffcc 100%)",
+                            backgroundClip: "text",
+                            color: "transparent",
+                            letterSpacing: "0.1em",
+                        }}
+                    >
+                        TRUESCORE
+                    </div>
+
+                    {/* Score Display - Large and Prominent */}
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: "16px",
+                        }}
+                    >
+                        <div
+                            style={{
+                                display: "flex",
+                                fontSize: "180px",
+                                fontWeight: "bold",
+                                background: `linear-gradient(135deg, ${gradientStart} 0%, ${gradientEnd} 100%)`,
+                                backgroundClip: "text",
+                                color: "transparent",
+                                lineHeight: 1,
+                            }}
+                        >
+                            {score}
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                fontSize: "24px",
+                                color: "rgba(255,255,255,0.6)",
+                                letterSpacing: "0.15em",
+                                textTransform: "uppercase",
+                            }}
+                        >
+                            Neynar Score
+                        </div>
+                    </div>
+
+                    {/* User Info */}
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: "8px",
+                        }}
+                    >
+                        <div
+                            style={{
+                                display: "flex",
+                                fontSize: "32px",
+                                fontWeight: "600",
+                                color: "#ffffff",
+                            }}
+                        >
+                            {displayName}
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                fontSize: "20px",
+                                color: "rgba(255,255,255,0.5)",
+                            }}
+                        >
+                            @{username}
+                        </div>
+                    </div>
+
+                    {/* Reputation Badge - Subtle */}
+                    <div
+                        style={{
+                            display: "flex",
+                            padding: "10px 28px",
+                            borderRadius: "999px",
+                            background: `${badgeColor}20`,
+                            border: `2px solid ${badgeColor}`,
+                            color: badgeColor,
+                            fontSize: "18px",
                             fontWeight: "600",
-                            color: "#ffffff",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.1em",
                         }}
                     >
-                        {displayName}
-                    </div>
-                    <div
-                        style={{
-                            display: "flex",
-                            fontSize: "16px",
-                            color: "rgba(255,255,255,0.5)",
-                        }}
-                    >
-                        @{username}
+                        {reputation}
                     </div>
                 </div>
 
-                {/* Reputation Badge */}
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginTop: "20px",
-                        padding: "8px 20px",
-                        borderRadius: "999px",
-                        background: badge.bg,
-                        color: badge.text,
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                    }}
-                >
-                    {reputation}
-                </div>
-
-                {/* Footer */}
+                {/* Footer - Minimal */}
                 <div
                     style={{
                         position: "absolute",
-                        bottom: "24px",
+                        bottom: "32px",
                         display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        color: "rgba(255,255,255,0.4)",
-                        fontSize: "14px",
+                        color: "rgba(255,255,255,0.3)",
+                        fontSize: "16px",
+                        letterSpacing: "0.05em",
                     }}
                 >
-                    Check your score at v0-task-to-cash-seven.vercel.app
+                    Get your score at TrueScore
                 </div>
             </div>
         ),
