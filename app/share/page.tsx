@@ -1,52 +1,63 @@
-"use client"
+import { Metadata, ResolvingMetadata } from 'next'
+import ShareClient from './share-client'
 
-import { useEffect, useState } from 'react'
-import sdk from "@farcaster/frame-sdk"
+type Props = {
+    searchParams: { [key: string]: string | string[] | undefined }
+}
 
-export default function SharePage() {
-    const [fid, setFid] = useState<number | null>(null)
-    const [loading, setLoading] = useState(true)
+export async function generateMetadata(
+    { searchParams }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const fid = searchParams.fid || '338060' // Fallback to owner if missing
 
-    useEffect(() => {
-        const init = async () => {
-            try {
-                const context = await sdk.context
-                const userFid = context?.user?.fid
+    const appUrl = "https://v0-task-to-cash-seven.vercel.app"
+    const imageUrl = `${appUrl}/api/og?fid=${fid}`
 
-                if (userFid) {
-                    setFid(userFid)
-                } else {
-                    // Default to owner if no user context
-                    setFid(338060)
+    const fcMetadata: Record<string, string> = {
+        "fc:frame": JSON.stringify({
+            version: "next",
+            imageUrl: imageUrl,
+            button: {
+                title: "Check Neynar Score",
+                action: {
+                    type: "launch_frame",
+                    name: "TrueScore",
+                    url: appUrl,
+                    splashImageUrl: `${appUrl}/splash.png`,
+                    splashBackgroundColor: "#1a1a2e"
                 }
-            } catch (error) {
-                console.error('Error getting user context:', error)
-                setFid(338060)
-            } finally {
-                setLoading(false)
             }
-        }
-
-        init()
-    }, [])
-
-    useEffect(() => {
-        if (fid && !loading) {
-            // Redirect to home - the home page will load the correct user's score
-            window.location.href = `/`
-        }
-    }, [fid, loading])
-
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 to-blue-900">
-                <div className="text-white text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-                    <p>Loading your score...</p>
-                </div>
-            </div>
-        )
+        }),
+        "fc:miniapp": JSON.stringify({
+            version: "next",
+            imageUrl: imageUrl,
+            button: {
+                title: "Check Neynar Score",
+                action: {
+                    type: "launch_miniapp",
+                    name: "TrueScore",
+                    url: appUrl,
+                    splashImageUrl: `${appUrl}/splash.png`,
+                    splashBackgroundColor: "#1a1a2e"
+                }
+            }
+        })
     }
 
-    return null
+    return {
+        title: `TrueScore - Check User ${fid}'s Score`,
+        openGraph: {
+            title: "TrueScore",
+            description: "Check your real Neynar score instantly",
+            images: [imageUrl],
+        },
+        other: {
+            ...fcMetadata
+        }
+    }
+}
+
+export default function SharePage() {
+    return <ShareClient />
 }
