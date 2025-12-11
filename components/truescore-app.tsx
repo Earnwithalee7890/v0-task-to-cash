@@ -64,6 +64,14 @@ export function TrueScoreApp() {
     })
   }, [])
 
+  // Helper function to get FID from URL parameters
+  const getFidFromUrl = (): number | null => {
+    if (typeof window === 'undefined') return null
+    const params = new URLSearchParams(window.location.search)
+    const fidParam = params.get('fid')
+    return fidParam ? Number(fidParam) : null
+  }
+
   const addToMiniApp = useCallback(async () => {
     try {
       console.log("Add to Mini App clicked")
@@ -104,11 +112,26 @@ export function TrueScoreApp() {
           setTheme(fcTheme)
           document.documentElement.classList.toggle("dark", fcTheme === "dark")
         }
-        if (!frameContext?.user?.fid) {
-          console.log('[INIT] No FID found in frameContext, showing add prompt')
-          setShowAddPrompt(true)
+
+        // Try multiple sources for FID, in priority order:
+        // 1. SDK context (user has added mini app)
+        // 2. URL parameter (shared link)
+        // 3. Default to owner FID
+        let fid = frameContext?.user?.fid
+
+        if (!fid) {
+          console.log('[INIT] No FID from SDK context, checking URL...')
+          const urlFid = getFidFromUrl()
+          if (urlFid) {
+            console.log('[INIT] Found FID in URL:', urlFid)
+            fid = urlFid
+          } else {
+            console.log('[INIT] No FID in URL either, using default owner FID')
+            fid = 338060
+            setShowAddPrompt(true)
+          }
         }
-        const fid = frameContext?.user?.fid ?? 338060
+
         console.log('[INIT] Final FID to use:', fid)
         await fetchUserData(fid)
         await sdk.actions.ready()
@@ -116,7 +139,9 @@ export function TrueScoreApp() {
       } catch (e) {
         console.error("SDK init error", e)
         setIsSDKLoaded(true)
-        await fetchUserData(338060)
+        // Try URL parameter even on error
+        const urlFid = getFidFromUrl()
+        await fetchUserData(urlFid || 338060)
       }
     }
     init()
