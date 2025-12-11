@@ -17,7 +17,17 @@ const appUrl = "https://v0-task-to-cash-seven.vercel.app"
 export async function generateMetadata({ searchParams }: SharePageProps): Promise<Metadata> {
     const params = await searchParams
     console.log('[SHARE PAGE] searchParams:', params)
-    const fid = params.fid ? Number(params.fid) : 338060
+
+    // Try to get FID from URL parameter first
+    let fid = params.fid ? Number(params.fid) : null
+
+    // If no FID in URL, try to get it from request context
+    // In Farcaster, the FID might be in the context when someone shares
+    if (!fid) {
+        console.log('[SHARE PAGE] No FID in params, defaulting to owner for now')
+        fid = 338060
+    }
+
     console.log('[SHARE PAGE] Using FID:', fid)
 
     // Fetch live user data from Neynar
