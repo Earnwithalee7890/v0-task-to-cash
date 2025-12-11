@@ -1,12 +1,7 @@
-```
 "use client"
-
-import { Metadata } from "next"
 
 import { useEffect, useState } from 'react'
 import sdk from "@farcaster/frame-sdk"
-import { redirect } from 'next/navigation'
-
 
 export default function SharePage() {
     const [fid, setFid] = useState<number | null>(null)
@@ -17,7 +12,7 @@ export default function SharePage() {
             try {
                 const context = await sdk.context
                 const userFid = context?.user?.fid
-                
+
                 if (userFid) {
                     setFid(userFid)
                 } else {
@@ -31,14 +26,14 @@ export default function SharePage() {
                 setLoading(false)
             }
         }
-        
+
         init()
     }, [])
 
     useEffect(() => {
         if (fid && !loading) {
-            // Redirect to home with the detected FID
-            window.location.href = `/? fid = ${ fid } `
+            // Redirect to home - the home page will load the correct user's score
+            window.location.href = `/`
         }
     }, [fid, loading])
 
@@ -55,4 +50,3 @@ export default function SharePage() {
 
     return null
 }
-```
