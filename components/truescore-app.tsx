@@ -79,7 +79,9 @@ export function TrueScoreApp() {
     const text = `Check out my TrueScore! 🎯\n\nNeynar Score: ${userData.score}\nReputation: ${userData.reputation.toUpperCase()}\n\nGet your score 👇`
     const baseUrl = "https://v0-task-to-cash-seven.vercel.app"
     // Only pass FID - the share page and OG image will fetch live data
-    const shareUrl = `${baseUrl}/share?fid=${userData.fid}`
+    // Add timestamp to force fresh fetch and bypass Farcaster cache
+    const timestamp = Date.now()
+    const shareUrl = `${baseUrl}/share?fid=${userData.fid}&t=${timestamp}`
     sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(shareUrl)}`)
   }, [userData])
 

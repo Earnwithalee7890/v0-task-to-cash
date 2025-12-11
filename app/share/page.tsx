@@ -4,8 +4,13 @@ import { getUserScore } from "@/lib/neynar"
 interface SharePageProps {
     searchParams: Promise<{
         fid?: string
+        t?: string // timestamp parameter for cache busting
     }>
 }
+
+// Force dynamic rendering - never cache this page
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 const appUrl = "https://v0-task-to-cash-seven.vercel.app"
 
