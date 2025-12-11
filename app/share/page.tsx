@@ -1,5 +1,8 @@
 import { Metadata, ResolvingMetadata } from 'next'
 import ShareClient from './share-client'
+import { Suspense } from 'react'
+
+export const dynamic = 'force-dynamic'
 
 type Props = {
     searchParams: { [key: string]: string | string[] | undefined }
@@ -57,10 +60,6 @@ export async function generateMetadata(
         }
     }
 }
-
-import { Suspense } from 'react'
-
-// ... existing code ...
 
 export default function SharePage() {
     return (
