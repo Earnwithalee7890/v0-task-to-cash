@@ -58,6 +58,14 @@ export async function generateMetadata(
     }
 }
 
+import { Suspense } from 'react'
+
+// ... existing code ...
+
 export default function SharePage() {
-    return <ShareClient />
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ShareClient />
+        </Suspense>
+    )
 }
