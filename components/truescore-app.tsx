@@ -115,8 +115,8 @@ export function TrueScoreApp() {
 
         // Try multiple sources for FID, in priority order:
         // 1. SDK context (user has added mini app)
-        // 2. URL parameter (shared link)
-        // 3. Default to owner FID
+        // 2. URL parameter (shared link or direct access)
+        // 3. Show add prompt (don't default to owner FID)
         let fid = frameContext?.user?.fid
 
         if (!fid) {
@@ -126,9 +126,13 @@ export function TrueScoreApp() {
             console.log('[INIT] Found FID in URL:', urlFid)
             fid = urlFid
           } else {
-            console.log('[INIT] No FID in URL either, using default owner FID')
-            fid = 338060
+            console.log('[INIT] No FID in URL either')
+            // IMPORTANT: Don't default to owner FID, show add prompt instead
+            // This forces users to add the mini app to use it properly
             setShowAddPrompt(true)
+            setLoading(false)
+            setIsSDKLoaded(true)
+            return // Exit early, don't load any data
           }
         }
 
@@ -141,7 +145,13 @@ export function TrueScoreApp() {
         setIsSDKLoaded(true)
         // Try URL parameter even on error
         const urlFid = getFidFromUrl()
-        await fetchUserData(urlFid || 338060)
+        if (urlFid) {
+          await fetchUserData(urlFid)
+        } else {
+          // Show add prompt instead of defaulting to owner
+          setShowAddPrompt(true)
+          setLoading(false)
+        }
       }
     }
     init()
@@ -179,15 +189,20 @@ export function TrueScoreApp() {
     <AnimatedBackground theme={theme}>
       <main className="min-h-screen px-4 py-8 overflow-hidden">
         {showAddPrompt && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
+          <div className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50">
             <div className="glass-card-strong p-6 shadow-2xl max-w-sm w-full mx-4">
-              <h2 className="text-xl font-semibold mb-4 text-foreground text-shadow-sm">Add TrueScore Mini App</h2>
-              <p className="text-muted-foreground mb-4">Add this mini app to your Farcaster feed for quick access.</p>
+              <h2 className="text-xl font-semibold mb-4 text-foreground text-shadow-sm">Add Mini App Required</h2>
+              <p className="text-muted-foreground mb-4">
+                To see your own TrueScore, you need to add this mini app to your Farcaster account.
+              </p>
+              <p className="text-sm text-muted-foreground/80 mb-4">
+                This allows the app to securely identify you and show your personal Neynar score.
+              </p>
               <button
                 onClick={addToMiniApp}
                 className="w-full py-3 btn-gradient-purple text-white rounded-xl font-semibold hover:scale-105 active:scale-95 transition-all"
               >
-                Add Mini App
+                Add Mini App Now
               </button>
             </div>
           </div>
