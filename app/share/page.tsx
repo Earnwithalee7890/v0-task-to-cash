@@ -18,7 +18,7 @@ export async function generateMetadata(
     const appUrl = "https://v0-task-to-cash-seven.vercel.app"
     const imageUrl = fid
         ? `${appUrl}/api/og?fid=${fid}`
-        : `${appUrl}/default-og.png`
+        : `${appUrl}/api/og?fid=338060`
 
     return {
         title: "TrueScore",
