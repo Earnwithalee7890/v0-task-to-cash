@@ -6,7 +6,7 @@ const appUrl = "https://v0-task-to-cash-seven.vercel.app"
 export const metadata: Metadata = {
   other: {
     "fc:miniapp": JSON.stringify({
-      version: "next",
+      version: "1",
       imageUrl: `${appUrl}/api/og?fid=338060`,
       button: {
         title: "Check Neynar Score",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       }
     }),
     "fc:frame": JSON.stringify({
-      version: "next",
+      version: "1",
       imageUrl: `${appUrl}/api/og?fid=338060`,
       button: {
         title: "Check Neynar Score",
