@@ -92,7 +92,12 @@ export function TrueScoreApp() {
   useEffect(() => {
     const init = async () => {
       try {
+        console.log('[INIT] Starting SDK initialization...')
         const frameContext = await sdk.context
+        console.log('[INIT] Full frameContext:', frameContext)
+        console.log('[INIT] frameContext.user:', frameContext?.user)
+        console.log('[INIT] frameContext.user.fid:', frameContext?.user?.fid)
+
         setContext(frameContext)
         if ((frameContext?.client as any)?.theme) {
           const fcTheme = (frameContext.client as any).theme === "dark" ? "dark" : "light"
@@ -100,9 +105,11 @@ export function TrueScoreApp() {
           document.documentElement.classList.toggle("dark", fcTheme === "dark")
         }
         if (!frameContext?.user?.fid) {
+          console.log('[INIT] No FID found in frameContext, showing add prompt')
           setShowAddPrompt(true)
         }
         const fid = frameContext?.user?.fid ?? 338060
+        console.log('[INIT] Final FID to use:', fid)
         await fetchUserData(fid)
         await sdk.actions.ready()
         setIsSDKLoaded(true)
