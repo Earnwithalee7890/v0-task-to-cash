@@ -5,12 +5,13 @@ import { Suspense } from "react"
 export const dynamic = "force-dynamic"
 
 type Props = {
-    searchParams: { [key: string]: string | string[] | undefined }
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateMetadata(
-    { searchParams }: Props
+    props: Props
 ): Promise<Metadata> {
+    const searchParams = await props.searchParams
     const fid = searchParams.fid ? String(searchParams.fid) : undefined
 
     // If no FID, show generic OG image instead of your own FID
