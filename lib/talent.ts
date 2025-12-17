@@ -90,18 +90,22 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [])
         let revenue = 0
 
         rawScores.forEach((s: any) => {
-            const type = String(s.score_type || "").toLowerCase()
+            // Documented slugs are 'builder' and 'creator'
+            const slug = String(s.scorer_slug || s.score_type || "").toLowerCase()
             const scoreVal = Number(s.score ?? s.value ?? s.points ?? 0)
 
-            if (type === "builder" || s.builder_score !== undefined) {
-                builderScore = Math.max(builderScore, scoreVal || s.builder_score || 0)
-            }
-            if (type === "creator" || s.creator_score !== undefined) {
-                creatorScore = Math.max(creatorScore, scoreVal || s.creator_score || 0)
+            console.log(`[DEBUG] Found score - Slug: ${slug}, Value: ${scoreVal}`)
+
+            if (slug.includes("builder")) {
+                builderScore = Math.max(builderScore, scoreVal)
+            } else if (slug.includes("creator")) {
+                creatorScore = Math.max(creatorScore, scoreVal)
             }
 
+            // Extract profile metadata if available at top level of score object
             if (s.handle) profileHandle = s.handle
             if (s.human_checkmark !== undefined) profileHuman = !!s.human_checkmark
+            if (s.verified_checkmark !== undefined) profileVerified = !!s.verified_checkmark
             if (s.verified !== undefined) profileVerified = !!s.verified
 
             const revVal = Number(s.farcaster_revenue ?? s.revenue ?? s.total_rewards ?? 0)
