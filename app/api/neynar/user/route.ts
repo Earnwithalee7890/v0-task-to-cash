@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
       casts: totalCasts,
       replies: totalReplies,
       verifiedAddresses: user.verified_addresses?.eth_addresses ?? [],
-      talentScore: talentData?.builder_score,
+      builderScore: talentData?.builder_score,
       creatorScore: talentData?.creator_score,
       farcasterRevenue: talentData?.farcaster_revenue,
       isHuman: talentData?.human_checkmark,

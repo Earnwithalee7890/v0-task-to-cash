@@ -51,10 +51,10 @@ export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
                 </div>
 
                 {/* Talent Protocol Score Card */}
-                {(userData.talentScore !== undefined || userData.creatorScore !== undefined) && (
+                {(userData.builderScore !== undefined || userData.creatorScore !== undefined) && (
                     <div className="opacity-0 animate-slide-up stagger-2">
                         <TalentScoreCard
-                            builderScore={userData.talentScore}
+                            builderScore={userData.builderScore}
                             creatorScore={userData.creatorScore}
                             farcasterRevenue={userData.farcasterRevenue}
                             isHuman={userData.isHuman}

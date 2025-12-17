@@ -59,8 +59,9 @@ export async function getTalentProtocolData(fid: number): Promise<TalentProfileD
 
         // Iterate through all scores to find specialized types
         scores.forEach((s: any) => {
-            if (s.score_type === "builder") builderScore = s.score || 0
-            if (s.score_type === "creator") creatorScore = s.score || 0
+            const type = String(s.score_type || "").toLowerCase()
+            if (type === "builder") builderScore = s.score || 0
+            if (type === "creator") creatorScore = s.score || 0
 
             // Extract common metadata from any of the score objects
             if (s.handle) handle = s.handle
@@ -69,6 +70,7 @@ export async function getTalentProtocolData(fid: number): Promise<TalentProfileD
 
             // Search for revenue data in data points or top level
             if (s.farcaster_revenue) revenue = s.farcaster_revenue
+            if (s.revenue) revenue = s.revenue // Fallback name
         })
 
         return {
