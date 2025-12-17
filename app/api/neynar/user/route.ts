@@ -89,10 +89,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch Talent Protocol data
+    const eth_addresses = user.verified_addresses?.eth_addresses ?? []
     let talentData = null
     try {
       const { getTalentProtocolData } = await import("@/lib/talent")
-      talentData = await getTalentProtocolData(Number.parseInt(fid))
+      talentData = await getTalentProtocolData(Number.parseInt(fid), eth_addresses)
+      console.log(`[DEBUG] Talent Data for FID ${fid}:`, talentData)
     } catch (err) {
       console.error("Error fetching Talent Protocol data:", err)
     }
@@ -109,9 +111,9 @@ export async function GET(request: NextRequest) {
       casts: totalCasts,
       replies: totalReplies,
       verifiedAddresses: user.verified_addresses?.eth_addresses ?? [],
-      builderScore: talentData?.builder_score,
-      creatorScore: talentData?.creator_score,
-      farcasterRevenue: talentData?.farcaster_revenue,
+      builderScore: talentData?.builder_score ?? 0,
+      creatorScore: talentData?.creator_score ?? 0,
+      farcasterRevenue: talentData?.farcaster_revenue ?? 0,
       isHuman: talentData?.human_checkmark,
       isVerified: talentData?.verified,
       talentHandle: talentData?.handle

@@ -37,18 +37,26 @@ export async function GET(request: NextRequest) {
 
             if (!userResponse.ok) continue
 
-            const userData = await userResponse.json()
-            const currentNeynarScore = Math.round((userData.users?.[0]?.experimental?.neynar_user_score ?? 0) * 100)
+            const neynarData = await userResponse.json()
+            const userProfile = neynarData.users?.[0]
+            const currentNeynarScore = Math.round((userProfile?.experimental?.neynar_user_score ?? 0) * 100)
+            const eth_addresses = userProfile?.verified_addresses?.eth_addresses ?? []
 
             // 4. Check for change
             if (currentNeynarScore !== user.lastNeynarScore) {
                 console.log(`Score changed for FID ${user.fid}: ${user.lastNeynarScore} -> ${currentNeynarScore}`)
 
-                // 5. Send Notification
-                await notifyScoreChange(user.fid, user.lastNeynarScore, currentNeynarScore)
+                // Fetch latest Talent scores for richer notification
+                const talentData = await getTalentProtocolData(user.fid, eth_addresses)
 
-                // 6. Update DB
-                // await db.users.update({ where: { fid: user.fid }, data: { lastNeynarScore: currentNeynarScore } })
+                // 5. Send Notification
+                await notifyScoreChange(
+                    user.fid,
+                    user.lastNeynarScore,
+                    currentNeynarScore,
+                    talentData?.builder_score,
+                    talentData?.creator_score
+                )
 
                 results.push({ fid: user.fid, status: "notified", old: user.lastNeynarScore, new: currentNeynarScore })
             } else {

@@ -55,15 +55,21 @@ export async function sendNeynarNotification(payload: NotificationPayload) {
 /**
  * Convenience function to notify about a score change
  */
-export async function notifyScoreChange(fid: number, oldScore: number, newScore: number) {
+export async function notifyScoreChange(fid: number, oldScore: number, newScore: number, builderScore?: number, creatorScore?: number) {
     const direction = newScore > oldScore ? "increased" : "decreased"
     const diff = Math.abs(newScore - oldScore)
+
+    let body = `Your Neynar score ${direction} by ${diff} points.`
+    if (builderScore !== undefined || creatorScore !== undefined) {
+        body += `\nBuilder: ${builderScore || 0} | Creator: ${creatorScore || 0}`
+    }
+    body += `\nTap to see your full reputation report.`
 
     return sendNeynarNotification({
         target_fids: [fid],
         notification: {
             title: "Your TrueScore Updated!",
-            body: `Your Neynar score ${direction} by ${diff} points. Tap to see your full reputation report.`,
+            body: body,
             target_url: "https://v0-task-to-cash-seven.vercel.app/"
         }
     })

@@ -23,6 +23,11 @@ interface HomePageProps {
 }
 
 export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
+    console.log('[DEBUG] HomePage UserData:', {
+        builderScore: userData.builderScore,
+        creatorScore: userData.creatorScore,
+        handle: userData.talentHandle
+    })
     const [showAIInsights, setShowAIInsights] = useState(false)
 
     const handleAIInsights = () => {
