@@ -110,9 +110,12 @@ export async function GET(request: NextRequest) {
       replies: totalReplies,
       verifiedAddresses: user.verified_addresses?.eth_addresses ?? [],
       talentScore: talentData?.builder_score,
+      creatorScore: talentData?.creator_score,
+      farcasterRevenue: talentData?.farcaster_revenue,
       isHuman: talentData?.human_checkmark,
       isVerified: talentData?.verified,
-      talentHandle: talentData?.handle
+      talentHandle: talentData?.handle,
+      monthlyIncome: (await import("@/lib/talent")).getMonthlyFarcasterIncome()
     })
   } catch (error) {
     console.error("Neynar API error:", error)

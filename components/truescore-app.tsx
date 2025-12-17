@@ -25,9 +25,12 @@ export interface UserData {
   replies?: number
   verifiedAddresses: string[]
   talentScore?: number
+  creatorScore?: number
+  farcasterRevenue?: number
   isHuman?: boolean
   isVerified?: boolean
   talentHandle?: string
+  monthlyIncome?: { month: string; income: number }[]
 }
 
 export function TrueScoreApp() {

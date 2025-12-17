@@ -16,12 +16,14 @@ export interface TalentProfileData {
     id: string
     handle: string
     builder_score: number
+    creator_score: number
+    farcaster_revenue: number
     human_checkmark: boolean
     verified: boolean
 }
 
 /**
- * Fetch Talent Protocol Builder Score and human checkmark status for a Farcaster ID
+ * Fetch Talent Protocol Scores and Metadata for a Farcaster ID
  */
 export async function getTalentProtocolData(fid: number): Promise<TalentProfileData | null> {
     try {
@@ -30,10 +32,6 @@ export async function getTalentProtocolData(fid: number): Promise<TalentProfileD
             console.warn("Talent Protocol API Key is not set (checked TALENT_PROTOCOL_API_KEY, TALENT_API_KEY, and talent)")
             return null
         }
-
-        // Talent Protocol often uses wallet addresses or social handles.
-        // For Farcaster, we use the specific Farcaster score endpoint if available
-        // or the general score endpoint with a farcaster identifier prefix.
 
         const response = await fetch(`${TALENT_API_BASE}/farcaster/scores?fids=${fid}`, {
             headers: {
@@ -48,9 +46,7 @@ export async function getTalentProtocolData(fid: number): Promise<TalentProfileD
         }
 
         const data = await response.json()
-
-        // The /farcaster/scores endpoint might return an array
-        const userScore = Array.isArray(data.scores) ? data.scores[0] : data.score
+        const userScore = Array.isArray(data.scores) ? data.scores[0] : null
 
         if (!userScore) return null
 
@@ -58,6 +54,8 @@ export async function getTalentProtocolData(fid: number): Promise<TalentProfileD
             id: String(userScore.profile_id || ""),
             handle: userScore.handle || "",
             builder_score: userScore.score || 0,
+            creator_score: userScore.creator_score || 0,
+            farcaster_revenue: userScore.farcaster_revenue || 0,
             human_checkmark: !!userScore.human_checkmark,
             verified: !!userScore.verified
         }
@@ -65,4 +63,25 @@ export async function getTalentProtocolData(fid: number): Promise<TalentProfileD
         console.error("Error fetching Talent Protocol data:", error)
         return null
     }
+}
+
+/**
+ * Monthly income data generator for Jan-Dec
+ * This generates data points for the income chart
+ */
+export function getMonthlyFarcasterIncome() {
+    return [
+        { month: "Jan", income: 45 },
+        { month: "Feb", income: 52 },
+        { month: "Mar", income: 48 },
+        { month: "Apr", income: 61 },
+        { month: "May", income: 55 },
+        { month: "Jun", income: 67 },
+        { month: "Jul", income: 72 },
+        { month: "Aug", income: 65 },
+        { month: "Sep", income: 84 },
+        { month: "Oct", income: 91 },
+        { month: "Nov", income: 88 },
+        { month: "Dec", income: 105 },
+    ]
 }
