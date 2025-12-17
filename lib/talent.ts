@@ -46,42 +46,42 @@ export async function getTalentProtocolData(fid: number): Promise<TalentProfileD
         }
 
         const data = await response.json()
-        const userScore = Array.isArray(data.scores) ? data.scores[0] : null
+        const scores = Array.isArray(data.scores) ? data.scores : []
 
-        if (!userScore) return null
+        if (scores.length === 0) return null
+
+        let builderScore = 0
+        let creatorScore = 0
+        let revenue = 0
+        let handle = ""
+        let isHuman = false
+        let isVerified = false
+
+        // Iterate through all scores to find specialized types
+        scores.forEach((s: any) => {
+            if (s.score_type === "builder") builderScore = s.score || 0
+            if (s.score_type === "creator") creatorScore = s.score || 0
+
+            // Extract common metadata from any of the score objects
+            if (s.handle) handle = s.handle
+            if (s.human_checkmark !== undefined) isHuman = !!s.human_checkmark
+            if (s.verified !== undefined) isVerified = !!s.verified
+
+            // Search for revenue data in data points or top level
+            if (s.farcaster_revenue) revenue = s.farcaster_revenue
+        })
 
         return {
-            id: String(userScore.profile_id || ""),
-            handle: userScore.handle || "",
-            builder_score: userScore.score || 0,
-            creator_score: userScore.creator_score || 0,
-            farcaster_revenue: userScore.farcaster_revenue || 0,
-            human_checkmark: !!userScore.human_checkmark,
-            verified: !!userScore.verified
+            id: String(fid),
+            handle,
+            builder_score: builderScore,
+            creator_score: creatorScore,
+            farcaster_revenue: revenue,
+            human_checkmark: isHuman,
+            verified: isVerified
         }
     } catch (error) {
         console.error("Error fetching Talent Protocol data:", error)
         return null
     }
-}
-
-/**
- * Monthly income data generator for Jan-Dec
- * This generates data points for the income chart
- */
-export function getMonthlyFarcasterIncome() {
-    return [
-        { month: "Jan", income: 45 },
-        { month: "Feb", income: 52 },
-        { month: "Mar", income: 48 },
-        { month: "Apr", income: 61 },
-        { month: "May", income: 55 },
-        { month: "Jun", income: 67 },
-        { month: "Jul", income: 72 },
-        { month: "Aug", income: 65 },
-        { month: "Sep", income: 84 },
-        { month: "Oct", income: 91 },
-        { month: "Nov", income: 88 },
-        { month: "Dec", income: 105 },
-    ]
 }

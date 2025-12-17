@@ -114,8 +114,7 @@ export async function GET(request: NextRequest) {
       farcasterRevenue: talentData?.farcaster_revenue,
       isHuman: talentData?.human_checkmark,
       isVerified: talentData?.verified,
-      talentHandle: talentData?.handle,
-      monthlyIncome: (await import("@/lib/talent")).getMonthlyFarcasterIncome()
+      talentHandle: talentData?.handle
     })
   } catch (error) {
     console.error("Neynar API error:", error)

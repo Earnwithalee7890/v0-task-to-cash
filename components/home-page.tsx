@@ -12,7 +12,6 @@ import { ShareCard } from "./share-card"
 import { AIInsightsModal } from "./ai-insights-modal"
 import { AIPostMaker } from "./ai-post-maker"
 import { TalentScoreCard } from "./talent-score-card"
-import { EarningsChart } from "./earnings-chart"
 import { Plus, Share2, User } from "lucide-react"
 import sdk from "@farcaster/frame-sdk"
 import type { UserData } from "./truescore-app"
@@ -62,14 +61,6 @@ export function HomePage({ userData, onAddToMiniApp, onShare }: HomePageProps) {
                             isVerified={userData.isVerified}
                             handle={userData.talentHandle}
                         />
-                    </div>
-                )}
-
-
-                {/* Earnings Chart */}
-                {userData.monthlyIncome && (
-                    <div className="opacity-0 animate-slide-up stagger-2">
-                        <EarningsChart data={userData.monthlyIncome} />
                     </div>
                 )}
 
