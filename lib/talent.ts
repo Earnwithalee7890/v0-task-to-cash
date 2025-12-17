@@ -12,6 +12,21 @@ export interface TalentScoreData {
     skills_score: number
 }
 
+export interface TalentScoreLevel {
+    level: number
+    name: string
+    color: string
+}
+
+export function getScoreLevel(score: number): TalentScoreLevel {
+    if (score >= 250) return { level: 6, name: "Master", color: "text-amber-400" }
+    if (score >= 170) return { level: 5, name: "Expert", color: "text-purple-400" }
+    if (score >= 120) return { level: 4, name: "Advanced", color: "text-blue-400" }
+    if (score >= 80) return { level: 3, name: "Practitioner", color: "text-green-400" }
+    if (score >= 40) return { level: 2, name: "Apprentice", color: "text-orange-400" }
+    return { level: 1, name: "Novice", color: "text-gray-400" }
+}
+
 export interface TalentProfileData {
     id: string
     handle: string
@@ -49,8 +64,8 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [])
         })
 
         if (fidResponse.ok) {
-            const data = await fidResponse.json()
-            if (Array.isArray(data.scores)) rawScores.push(...data.scores)
+            const data = await fidResponse.ok ? await fidResponse.json() : null
+            if (data && Array.isArray(data.scores)) rawScores.push(...data.scores)
         }
 
         // 2. Fallback to Wallets if FID returned nothing or to enrich data
@@ -90,9 +105,9 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [])
         let revenue = 0
 
         rawScores.forEach((s: any) => {
-            // Documented slugs are 'builder' and 'creator'
+            // Documented slugs are 'builder_score' and 'creator_score' preferred in API v3
             const slug = String(s.scorer_slug || s.score_type || "").toLowerCase()
-            const scoreVal = Number(s.score ?? s.value ?? s.points ?? 0)
+            const scoreVal = Number(s.points ?? s.score ?? s.value ?? 0)
 
             console.log(`[DEBUG] Found score - Slug: ${slug}, Value: ${scoreVal}`)
 

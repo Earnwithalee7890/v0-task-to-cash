@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Users, CheckCircle2, UserCheck, ShieldCheck, Zap } from "lucide-react"
+import { getScoreLevel } from "@/lib/talent"
 
 interface TalentScoreCardProps {
     builderScore?: number
@@ -12,7 +13,10 @@ interface TalentScoreCardProps {
     handle?: string
 }
 
-export function TalentScoreCard({ builderScore, creatorScore, farcasterRevenue, isHuman, isVerified, handle }: TalentScoreCardProps) {
+export function TalentScoreCard({ builderScore = 0, creatorScore = 0, farcasterRevenue, isHuman, isVerified, handle }: TalentScoreCardProps) {
+    const builderLevel = getScoreLevel(builderScore)
+    const creatorLevel = getScoreLevel(creatorScore)
+
     if (builderScore === undefined && creatorScore === undefined) return null
 
     return (
@@ -46,36 +50,36 @@ export function TalentScoreCard({ builderScore, creatorScore, farcasterRevenue, 
 
                 <div className="grid grid-cols-2 gap-3 mb-5">
                     {/* Builder Score */}
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/20">
-                        <div className="flex items-center gap-1.5 mb-2">
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/20 flex flex-col items-center text-center">
+                        <div className="flex items-center gap-1.5 mb-1">
                             <Zap className="h-3 w-3 text-purple-300" />
-                            <span className="text-[9px] font-bold uppercase tracking-wider text-purple-200">Builder</span>
+                            <span className="text-[10px] font-black uppercase tracking-wider text-purple-200">Builder</span>
                         </div>
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-black text-foreground dark:text-white">{builderScore ?? 0}</span>
-                            <span className="text-[10px] font-bold text-purple-300/40">/100</span>
+                        <span className="text-4xl font-black text-foreground dark:text-white mb-1">{builderScore}</span>
+                        <div className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white/5 ${builderLevel.color}`}>
+                            Lvl {builderLevel.level}: {builderLevel.name}
                         </div>
                     </div>
 
                     {/* Creator Score */}
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-500/10 to-transparent border border-pink-500/20">
-                        <div className="flex items-center gap-1.5 mb-2">
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-500/10 to-transparent border border-pink-500/20 flex flex-col items-center text-center">
+                        <div className="flex items-center gap-1.5 mb-1">
                             <Users className="h-3 w-3 text-pink-300" />
-                            <span className="text-[9px] font-bold uppercase tracking-wider text-pink-200">Creator</span>
+                            <span className="text-[10px] font-black uppercase tracking-wider text-pink-200">Creator</span>
                         </div>
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-black text-foreground dark:text-white">{creatorScore ?? 0}</span>
-                            <span className="text-[10px] font-bold text-pink-300/40">/100</span>
+                        <span className="text-4xl font-black text-foreground dark:text-white mb-1">{creatorScore}</span>
+                        <div className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white/5 ${creatorLevel.color}`}>
+                            Lvl {creatorLevel.level}: {creatorLevel.name}
                         </div>
                     </div>
                 </div>
 
                 {/* Earnings Section */}
-                {farcasterRevenue !== undefined && (
+                {farcasterRevenue !== undefined && farcasterRevenue > 0 && (
                     <div className="mb-5 p-4 rounded-2xl bg-green-500/5 border border-green-500/20 flex flex-col items-center">
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-green-400/60 mb-1">Lifetime Rewards</span>
                         <div className="flex items-baseline gap-1.5">
-                            <span className="text-2xl font-black text-green-500 font-mono italic">${farcasterRevenue.toLocaleString()}</span>
+                            <span className="text-2xl font-black text-green-400 font-mono italic">${farcasterRevenue.toLocaleString()}</span>
                             <span className="text-[10px] font-black text-green-400/40 uppercase">usdc</span>
                         </div>
                     </div>
