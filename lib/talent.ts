@@ -47,13 +47,13 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
     try {
         const apiKey = process.env.TALENT_PROTOCOL_API_KEY || process.env.TALENT_API_KEY || process.env.talent
         if (!apiKey) {
-            console.warn("Talent Protocol API Key is not set")
+            console.error("[TALENT] CRITICAL: No API Key found in environment variables (TALENT_PROTOCOL_API_KEY, TALENT_API_KEY, or talent)")
             return null
         }
 
+        // Use standard X-API-KEY header as per v3 docs. Avoid Authorization header to prevent potential JWT conflicts.
         const headers = {
             "X-API-KEY": apiKey,
-            "Authorization": `Bearer ${apiKey}`,
             "Content-Type": "application/json"
         }
 
@@ -104,7 +104,8 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
                             if (Array.isArray(p.scores)) rawScores.push(...p.scores)
                         }
                     } else {
-                        console.log(`[TALENT] Passport Strategy (${ident}) failed with status: ${res.status}`)
+                        const errText = await res.text().catch(() => "unknown error")
+                        console.log(`[TALENT] Passport Strategy (${ident}) failed with status: ${res.status}. Error: ${errText.substring(0, 100)}`)
                     }
                 } catch (e) {
                     console.log(`[TALENT] Passport Strategy (${ident}) failed`)
@@ -125,6 +126,9 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
                         if (!profileHandle) profileHandle = p.handle
                         if (Array.isArray(p.scores)) rawScores.push(...p.scores)
                     }
+                } else {
+                    const errText = await res.text().catch(() => "unknown error")
+                    console.log(`[TALENT] Farcaster Scores Strategy failed with status: ${res.status}. Error: ${errText.substring(0, 100)}`)
                 }
             } catch (e) {
                 console.log("[TALENT] Farcaster Scores Strategy failed")
@@ -148,7 +152,8 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
                             if (Array.isArray(p.scores)) rawScores.push(...p.scores)
                         }
                     } else {
-                        console.log(`[TALENT] Profile Identity Strategy (${ident}) failed with status: ${res.status}`)
+                        const errText = await res.text().catch(() => "unknown error")
+                        console.log(`[TALENT] Profile Identity Strategy (${ident}) failed with status: ${res.status}. Error: ${errText.substring(0, 100)}`)
                     }
                 } catch (e) {
                     console.log(`[TALENT] Profile Identity Strategy (${ident}) failed`)
@@ -169,6 +174,9 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
                             if (!profileHandle) profileHandle = p.handle
                             if (Array.isArray(p.scores)) rawScores.push(...p.scores)
                         }
+                    } else {
+                        const errText = await res.text().catch(() => "unknown error")
+                        console.log(`[TALENT] Wallet Passport Strategy (${wallet}) failed with status: ${res.status}. Error: ${errText.substring(0, 100)}`)
                     }
                 } catch (e) {
                     console.log(`[TALENT] Wallet Passport Strategy (${wallet}) failed`)
@@ -180,6 +188,7 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
         if (fc_handle) {
             promises.push((async () => {
                 try {
+                    console.log(`[TALENT] Attempting Search Strategy for ${fc_handle} with API Key starting: ${apiKey.substring(0, 4)}...`)
                     const res = await fetch(`${TALENT_API_BASE}/search?q=${fc_handle}`, { headers, signal: controller.signal })
                     if (res.ok) {
                         const data = await res.json()
@@ -189,6 +198,9 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
                             if (!firstPassportData) firstPassportData = p
                             if (Array.isArray(p.scores)) rawScores.push(...p.scores)
                         }
+                    } else {
+                        const errText = await res.text().catch(() => "unknown error")
+                        console.log(`[TALENT] Search Strategy (${fc_handle}) failed with status: ${res.status}. Error: ${errText.substring(0, 100)}`)
                     }
                 } catch (e) {
                     console.log(`[TALENT] Search Strategy (${fc_handle}) failed`)
