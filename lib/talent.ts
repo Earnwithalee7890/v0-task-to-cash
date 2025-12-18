@@ -45,7 +45,12 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
     const timeoutId = setTimeout(() => controller.abort(), 8000)
 
     try {
-        const apiKey = process.env.TALENT_PROTOCOL_API_KEY || process.env.TALENT_API_KEY || process.env.talent
+        const apiKey =
+            process.env.TALENT_PROTOCOL_API_KEY ||
+            process.env.TALENT_API_KEY ||
+            process.env.X_API_KEY ||
+            process.env.talent_api ||
+            process.env.talent
         if (!apiKey) {
             console.error("[TALENT] CRITICAL: No API Key found in environment variables (TALENT_PROTOCOL_API_KEY, TALENT_API_KEY, or talent)")
             return null
