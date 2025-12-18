@@ -41,6 +41,9 @@ export interface TalentProfileData {
  * Fetch Talent Protocol Scores and Metadata for a Farcaster ID or Wallets
  */
 export async function getTalentProtocolData(fid: number, wallets: string[] = []): Promise<TalentProfileData | null> {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 8000) // 8s total timeout
+
     try {
         const apiKey = process.env.TALENT_PROTOCOL_API_KEY || process.env.TALENT_API_KEY || process.env.talent
         if (!apiKey) {
@@ -48,68 +51,97 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [])
             return null
         }
 
-        let rawScores: any[] = []
+        const headers = {
+            "X-API-KEY": apiKey,
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json"
+        }
+
+        const rawScores: any[] = []
         let profileHandle = ""
         let profileHuman = false
         let profileVerified = false
+        let profileId = ""
 
-        // 1. Try fetching by FID first
-        console.log(`[DEBUG] Attempting Talent API fetch for FID: ${fid}`)
-        const fidResponse = await fetch(`${TALENT_API_BASE}/farcaster/scores?fids=${fid}`, {
-            headers: {
-                "X-API-KEY": apiKey,
-                "Authorization": `Bearer ${apiKey}`,
-                "Content-Type": "application/json"
+        // Prepare parallel requests
+        const promises: Promise<void>[] = []
+
+        // STRATEGY 1: FID Score
+        promises.push((async () => {
+            try {
+                const res = await fetch(`${TALENT_API_BASE}/farcaster/scores?fids=${fid}`, { headers, signal: controller.signal })
+                if (res.ok) {
+                    const data = await res.json()
+                    if (data.scores) rawScores.push(...data.scores)
+                    else if (data.profiles?.[0]?.scores) {
+                        const p = data.profiles[0]
+                        rawScores.push(...p.scores)
+                        if (!profileId) profileId = p.id
+                        if (!profileHandle) profileHandle = p.handle || p.username
+                    }
+                }
+            } catch (e) {
+                console.log("[TALENT] Strategy 1 failed or timed out")
             }
+        })())
+
+        // STRATEGY 2: Identity Search
+        promises.push((async () => {
+            try {
+                const searchUrl = `${TALENT_API_BASE}/search/advanced/profiles?query=${encodeURIComponent(JSON.stringify({ identity: `farcaster:${fid}`, exactMatch: true }))}`
+                const res = await fetch(searchUrl, { headers, signal: controller.signal })
+                if (res.ok) {
+                    const data = await res.json()
+                    const p = data.profiles?.[0]
+                    if (p) {
+                        if (!profileId) profileId = p.id
+                        if (!profileHandle) profileHandle = p.handle || p.username
+                        profileHuman = profileHuman || !!p.human_checkmark
+                        profileVerified = profileVerified || !!p.verified
+                        if (p.scores) rawScores.push(...p.scores)
+                    }
+                }
+            } catch (e) {
+                console.log("[TALENT] Strategy 2 failed or timed out")
+            }
+        })())
+
+        // STRATEGY 3: Wallet Search (First 3 wallets only for speed)
+        const topWallets = wallets.slice(0, 3)
+        topWallets.forEach(wallet => {
+            promises.push((async () => {
+                try {
+                    const res = await fetch(`${TALENT_API_BASE}/scores?id=${wallet}`, { headers, signal: controller.signal })
+                    if (res.ok) {
+                        const data = await res.json()
+                        if (data.profile) {
+                            if (!profileId) profileId = data.profile.id
+                            if (!profileHandle) profileHandle = data.profile.handle
+                            profileHuman = profileHuman || !!data.profile.human_checkmark
+                        }
+                        if (data.scores) rawScores.push(...data.scores)
+                    }
+                } catch (e) {
+                    console.log(`[TALENT] Strategy 3 (${wallet}) failed or timed out`)
+                }
+            })())
         })
 
-        if (fidResponse.ok) {
-            const data = await fidResponse.ok ? await fidResponse.json() : null
-            if (data && Array.isArray(data.scores)) rawScores.push(...data.scores)
-        }
-
-        // 2. Fallback to Wallets if FID returned nothing or to enrich data
-        if (rawScores.length === 0 && wallets.length > 0) {
-            console.log(`[DEBUG] No scores for FID, trying wallets: ${wallets.join(', ')}`)
-            for (const wallet of wallets) {
-                const walletResponse = await fetch(`${TALENT_API_BASE}/scores?id=${wallet}`, {
-                    headers: {
-                        "X-API-KEY": apiKey,
-                        "Authorization": `Bearer ${apiKey}`,
-                        "Content-Type": "application/json"
-                    }
-                })
-                if (walletResponse.ok) {
-                    const data = await walletResponse.json()
-                    // The wallet endpoint usually returns a single profile with a scores array
-                    if (data.profile) {
-                        if (data.profile.handle) profileHandle = data.profile.handle
-                        if (data.profile.human_checkmark) profileHuman = true
-                        if (data.profile.verified) profileVerified = true
-                    }
-                    if (Array.isArray(data.scores)) rawScores.push(...data.scores)
-                    if (rawScores.length > 0) break // Found data
-                }
-            }
-        }
+        await Promise.all(promises)
+        clearTimeout(timeoutId)
 
         if (rawScores.length === 0) {
-            console.warn(`[DEBUG] No Talent Protocol data found for FID ${fid} or Wallets`)
+            console.warn(`[TALENT] No data found for FID ${fid} after parallel fetch`)
             return null
         }
-
-        console.log(`[DEBUG] Raw Talent Scores count: ${rawScores.length}`)
 
         let builderScore = 0
         let creatorScore = 0
         let revenue = 0
 
         rawScores.forEach((s: any) => {
-            // Documented slugs are 'builder_score' and 'creator_score' preferred in API v3
             const slug = String(s.scorer_slug || s.score_type || "").toLowerCase()
             const scoreVal = Number(s.points ?? s.score ?? s.value ?? 0)
-
-            console.log(`[DEBUG] Found score - Slug: ${slug}, Value: ${scoreVal}`)
 
             if (slug.includes("builder")) {
                 builderScore = Math.max(builderScore, scoreVal)
@@ -117,18 +149,16 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [])
                 creatorScore = Math.max(creatorScore, scoreVal)
             }
 
-            // Extract profile metadata if available at top level of score object
-            if (s.handle) profileHandle = s.handle
-            if (s.human_checkmark !== undefined) profileHuman = !!s.human_checkmark
-            if (s.verified_checkmark !== undefined) profileVerified = !!s.verified_checkmark
-            if (s.verified !== undefined) profileVerified = !!s.verified
+            if (s.handle && !profileHandle) profileHandle = s.handle
+            if (s.human_checkmark !== undefined) profileHuman = profileHuman || !!s.human_checkmark
+            if (s.verified !== undefined) profileVerified = profileVerified || !!s.verified
 
             const revVal = Number(s.farcaster_revenue ?? s.revenue ?? s.total_rewards ?? 0)
             revenue = Math.max(revenue, revVal)
         })
 
         return {
-            id: String(fid),
+            id: profileId || String(fid),
             handle: profileHandle,
             builder_score: builderScore,
             creator_score: creatorScore,
@@ -137,7 +167,9 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [])
             verified: profileVerified
         }
     } catch (error) {
-        console.error("Error fetching Talent Protocol data:", error)
+        console.error("[TALENT] Fatal error in parallel fetch:", error)
         return null
+    } finally {
+        clearTimeout(timeoutId)
     }
 }

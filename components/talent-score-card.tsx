@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Users, CheckCircle2, UserCheck, ShieldCheck, Zap } from "lucide-react"
+import { Users, CheckCircle2, UserCheck, ShieldCheck, Zap, User } from "lucide-react"
 import { getScoreLevel } from "@/lib/talent"
 
 interface TalentScoreCardProps {
@@ -48,31 +48,46 @@ export function TalentScoreCard({ builderScore = 0, creatorScore = 0, farcasterR
                     )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 mb-5">
-                    {/* Builder Score */}
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/20 flex flex-col items-center text-center">
-                        <div className="flex items-center gap-1.5 mb-1">
-                            <Zap className="h-3 w-3 text-purple-300" />
-                            <span className="text-[10px] font-black uppercase tracking-wider text-purple-200">Builder</span>
+                {/* Show Scores Grid ONLY if they aren't both 0, OR if we have a handle */}
+                {(builderScore > 0 || creatorScore > 0 || handle) ? (
+                    <div className="grid grid-cols-2 gap-3 mb-5">
+                        {/* Builder Score */}
+                        <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/20 flex flex-col items-center text-center">
+                            <div className="flex items-center gap-1.5 mb-1">
+                                <Zap className="h-3 w-3 text-purple-300" />
+                                <span className="text-[10px] font-black uppercase tracking-wider text-purple-200">Builder</span>
+                            </div>
+                            <span className="text-4xl font-black text-foreground dark:text-white mb-1">{builderScore}</span>
+                            <div className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white/5 ${builderLevel.color}`}>
+                                Lvl {builderLevel.level}: {builderLevel.name}
+                            </div>
                         </div>
-                        <span className="text-4xl font-black text-foreground dark:text-white mb-1">{builderScore}</span>
-                        <div className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white/5 ${builderLevel.color}`}>
-                            Lvl {builderLevel.level}: {builderLevel.name}
-                        </div>
-                    </div>
 
-                    {/* Creator Score */}
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-500/10 to-transparent border border-pink-500/20 flex flex-col items-center text-center">
-                        <div className="flex items-center gap-1.5 mb-1">
-                            <Users className="h-3 w-3 text-pink-300" />
-                            <span className="text-[10px] font-black uppercase tracking-wider text-pink-200">Creator</span>
-                        </div>
-                        <span className="text-4xl font-black text-foreground dark:text-white mb-1">{creatorScore}</span>
-                        <div className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white/5 ${creatorLevel.color}`}>
-                            Lvl {creatorLevel.level}: {creatorLevel.name}
+                        {/* Creator Score */}
+                        <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-500/10 to-transparent border border-pink-500/20 flex flex-col items-center text-center">
+                            <div className="flex items-center gap-1.5 mb-1">
+                                <Users className="h-3 w-3 text-pink-300" />
+                                <span className="text-[10px] font-black uppercase tracking-wider text-pink-200">Creator</span>
+                            </div>
+                            <span className="text-4xl font-black text-foreground dark:text-white mb-1">{creatorScore}</span>
+                            <div className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white/5 ${creatorLevel.color}`}>
+                                Lvl {creatorLevel.level}: {creatorLevel.name}
+                            </div>
                         </div>
                     </div>
-                </div>
+                ) : (
+                    <div className="mb-5 p-5 rounded-2xl bg-white/5 border border-white/10 text-center flex flex-col items-center gap-2">
+                        <User className="h-8 w-8 text-white/20 mb-1" />
+                        <p className="text-[11px] font-bold text-white/60">No Talent Protocol Profile Found</p>
+                        <p className="text-[9px] text-white/30 max-w-[180px]">Connect your Farcaster to Talent Protocol to see your verified builder rank.</p>
+                        <button
+                            onClick={() => sdk.actions.openUrl("https://app.talentprotocol.com")}
+                            className="mt-2 text-[10px] font-black uppercase tracking-widest text-purple-400 hover:text-purple-300 transition-colors border-b border-purple-500/30 pb-0.5"
+                        >
+                            Claim Passport ↗
+                        </button>
+                    </div>
+                )}
 
                 {/* Earnings Section */}
                 {farcasterRevenue !== undefined && farcasterRevenue > 0 && (

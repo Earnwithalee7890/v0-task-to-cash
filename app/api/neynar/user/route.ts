@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
 
     try {
       const castsResponse = await fetch(
-        `https://api.neynar.com/v2/farcaster/feed/user/${fid}?limit=150`,
+        `https://api.neynar.com/v2/farcaster/feed/user/${fid}?limit=50`,
         {
           headers: {
             accept: "application/json",
@@ -99,6 +99,7 @@ export async function GET(request: NextRequest) {
       console.error("Error fetching Talent Protocol data:", err)
     }
 
+    console.log('[DEBUG] Returned Talent Data:', JSON.stringify(talentData))
     return NextResponse.json({
       fid: user.fid,
       username: user.username,
