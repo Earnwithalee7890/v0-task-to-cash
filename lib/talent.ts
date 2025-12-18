@@ -40,7 +40,7 @@ export interface TalentProfileData {
 /**
  * Fetch Talent Protocol Scores and Metadata for a Farcaster ID or Wallets
  */
-export async function getTalentProtocolData(fid: number, wallets: string[] = []): Promise<TalentProfileData | null> {
+export async function getTalentProtocolData(fid: number, wallets: string[] = [], fc_handle?: string): Promise<TalentProfileData | null> {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 8000)
 
@@ -67,6 +67,11 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [])
 
         // STRATEGY 0: Passports Endpoint (v3 Most Reliable)
         const idents = [`farcaster:${fid}`, String(fid)]
+        if (fc_handle) {
+            idents.push(`farcaster:${fc_handle}`)
+            idents.push(fc_handle)
+        }
+
         idents.forEach(ident => {
             promises.push((async () => {
                 try {
@@ -108,22 +113,27 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [])
         })())
 
         // STRATEGY 2: Profiles Identity lookup
-        promises.push((async () => {
-            try {
-                const res = await fetch(`${TALENT_API_BASE}/profiles?identity=farcaster:${fid}`, { headers, signal: controller.signal })
-                if (res.ok) {
-                    const data = await res.json()
-                    const p = data.profile || data.profiles?.[0]
-                    if (p) {
-                        if (!profileId) profileId = p.id
-                        if (!profileHandle) profileHandle = p.handle
-                        if (Array.isArray(p.scores)) rawScores.push(...p.scores)
+        const profileIdents = [`farcaster:${fid}`]
+        if (fc_handle) profileIdents.push(`farcaster:${fc_handle}`)
+
+        profileIdents.forEach(ident => {
+            promises.push((async () => {
+                try {
+                    const res = await fetch(`${TALENT_API_BASE}/profiles?identity=${ident}`, { headers, signal: controller.signal })
+                    if (res.ok) {
+                        const data = await res.json()
+                        const p = data.profile || data.profiles?.[0]
+                        if (p) {
+                            if (!profileId) profileId = p.id
+                            if (!profileHandle) profileHandle = p.handle
+                            if (Array.isArray(p.scores)) rawScores.push(...p.scores)
+                        }
                     }
+                } catch (e) {
+                    console.log(`[TALENT] Profile Identity Strategy (${ident}) failed`)
                 }
-            } catch (e) {
-                console.log("[TALENT] Profile Identity Strategy failed")
-            }
-        })())
+            })())
+        })
 
         // STRATEGY 3: Wallet Passports
         wallets.slice(0, 3).forEach(wallet => {

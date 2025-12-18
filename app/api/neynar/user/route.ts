@@ -93,8 +93,8 @@ export async function GET(request: NextRequest) {
     let talentData = null
     try {
       const { getTalentProtocolData } = await import("@/lib/talent")
-      talentData = await getTalentProtocolData(Number.parseInt(fid), eth_addresses)
-      console.log(`[DEBUG] Talent Data for FID ${fid}:`, talentData)
+      talentData = await getTalentProtocolData(Number.parseInt(fid), eth_addresses, user.username)
+      console.log(`[DEBUG] Talent Data for FID ${fid} (@${user.username}):`, talentData)
     } catch (err) {
       console.error("Error fetching Talent Protocol data:", err)
     }
