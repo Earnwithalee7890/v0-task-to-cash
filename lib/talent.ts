@@ -66,49 +66,72 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [])
         // Prepare parallel requests
         const promises: Promise<void>[] = []
 
-        // STRATEGY 1: FID Score
+        // STRATEGY 0: Direct Profile Lookup by FID (v3)
         promises.push((async () => {
             try {
-                const res = await fetch(`${TALENT_API_BASE}/farcaster/scores?fids=${fid}`, { headers, signal: controller.signal })
-                if (res.ok) {
-                    const data = await res.json()
-                    if (data.scores) rawScores.push(...data.scores)
-                    else if (data.profiles?.[0]?.scores) {
-                        const p = data.profiles[0]
-                        rawScores.push(...p.scores)
-                        if (!profileId) profileId = p.id
-                        if (!profileHandle) profileHandle = p.handle || p.username
+                // Try multiple identity formats
+                const idents = [`farcaster:${fid}`, String(fid)]
+                for (const ident of idents) {
+                    const res = await fetch(`${TALENT_API_BASE}/profiles?identity=${ident}`, { headers, signal: controller.signal })
+                    if (res.ok) {
+                        const data = await res.json()
+                        const p = data.profile || data.profiles?.[0]
+                        if (p) {
+                            if (!profileId) profileId = p.id
+                            if (!profileHandle) profileHandle = p.handle || p.username
+                            profileHuman = profileHuman || !!p.human_checkmark
+                            profileVerified = profileVerified || !!p.verified
+                            if (p.scores) rawScores.push(...p.scores)
+                            break
+                        }
                     }
                 }
             } catch (e) {
-                console.log("[TALENT] Strategy 1 failed or timed out")
+                console.log("[TALENT] Strategy 0 failed")
             }
         })())
 
-        // STRATEGY 2: Identity Search
+        // STRATEGY 1: FID Score (v3 array format)
         promises.push((async () => {
             try {
-                const searchUrl = `${TALENT_API_BASE}/search/advanced/profiles?query=${encodeURIComponent(JSON.stringify({ identity: `farcaster:${fid}`, exactMatch: true }))}`
-                const res = await fetch(searchUrl, { headers, signal: controller.signal })
+                const res = await fetch(`${TALENT_API_BASE}/farcaster/scores?fids[]=${fid}`, { headers, signal: controller.signal })
                 if (res.ok) {
                     const data = await res.json()
+                    if (Array.isArray(data.scores)) rawScores.push(...data.scores)
+
+                    // If metadata is inside a profile object
                     const p = data.profiles?.[0]
                     if (p) {
                         if (!profileId) profileId = p.id
                         if (!profileHandle) profileHandle = p.handle || p.username
                         profileHuman = profileHuman || !!p.human_checkmark
-                        profileVerified = profileVerified || !!p.verified
+                    }
+                }
+            } catch (e) {
+                console.log("[TALENT] Strategy 1 failed")
+            }
+        })())
+
+        // STRATEGY 2: Identity Search (v3 query format)
+        promises.push((async () => {
+            try {
+                const searchRes = await fetch(`${TALENT_API_BASE}/search?query=farcaster:${fid}`, { headers, signal: controller.signal })
+                if (searchRes.ok) {
+                    const data = await searchRes.json()
+                    const p = data.profiles?.[0]
+                    if (p) {
+                        if (!profileId) profileId = p.id
+                        if (!profileHandle) profileHandle = p.handle || p.username
                         if (p.scores) rawScores.push(...p.scores)
                     }
                 }
             } catch (e) {
-                console.log("[TALENT] Strategy 2 failed or timed out")
+                console.log("[TALENT] Strategy 2 failed")
             }
         })())
 
-        // STRATEGY 3: Wallet Search (First 3 wallets only for speed)
-        const topWallets = wallets.slice(0, 3)
-        topWallets.forEach(wallet => {
+        // STRATEGY 3: Wallet Search (All wallets, parallelized)
+        wallets.slice(0, 5).forEach(wallet => {
             promises.push((async () => {
                 try {
                     const res = await fetch(`${TALENT_API_BASE}/scores?id=${wallet}`, { headers, signal: controller.signal })

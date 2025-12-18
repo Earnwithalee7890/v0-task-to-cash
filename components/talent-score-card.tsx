@@ -49,8 +49,8 @@ export function TalentScoreCard({ builderScore = 0, creatorScore = 0, farcasterR
                     )}
                 </div>
 
-                {/* Show Scores Grid ONLY if they aren't both 0, OR if we have a handle */}
-                {(builderScore > 0 || creatorScore > 0 || handle) ? (
+                {/* Show Scores Grid if ANY data is found (even if score is 0) */}
+                {(builderScore >= 0 && (handle || isHuman || isVerified || builderScore > 0 || creatorScore > 0)) ? (
                     <div className="grid grid-cols-2 gap-3 mb-5">
                         {/* Builder Score */}
                         <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/20 flex flex-col items-center text-center">
@@ -93,7 +93,7 @@ export function TalentScoreCard({ builderScore = 0, creatorScore = 0, farcasterR
                                     window.open("https://app.talentprotocol.com", "_blank")
                                 }
                             }}
-                            className="mt-2 text-[10px] font-black uppercase tracking-widest text-purple-400 hover:text-purple-300 transition-colors border-b border-purple-500/30 pb-0.5"
+                            className="mt-2 text-[10px] font-black uppercase tracking-widest text-purple-400 hover:text-purple-300 transition-colors border-b border-purple-500/30 pb-0.5 cursor-pointer"
                         >
                             Claim Passport ↗
                         </a>
