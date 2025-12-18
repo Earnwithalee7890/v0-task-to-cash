@@ -109,11 +109,11 @@ export function TrueScoreApp() {
     if (!userData) return
     console.log('Share button clicked. UserData:', userData)
     console.log('Sharing with FID:', userData.fid)
-    const text = `Check out my TrueScore! 🎯\n\nNeynar Score: ${userData.score}\nReputation: ${userData.reputation.toUpperCase()}\n\nGet your score 👇`
+    const text = `Check out my TrueScore! 🎯\n\nNeynar Score: ${userData.score}\nReputation: ${userData.reputation.toUpperCase()}\n\n🏗️ Builder: ${userData.builderScore || 0}\n🎨 Creator: ${userData.creatorScore || 0}\n\nGet yours here 👇`
     const baseUrl = "https://v0-task-to-cash-seven.vercel.app"
     // Add timestamp to force Farcaster to bypass cache and fetch fresh image
     const timestamp = Date.now()
-    const shareUrl = `${baseUrl}/share?fid=${userData.fid}&_=${timestamp}`
+    const shareUrl = `${baseUrl}/share?fid=${userData.fid}&username=${userData.username}&score=${userData.score}&rep=${userData.reputation}&builder=${userData.builderScore || 0}&creator=${userData.creatorScore || 0}&_=${timestamp}`
     console.log('Generated share URL:', shareUrl)
     sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(shareUrl)}`)
   }, [userData])
