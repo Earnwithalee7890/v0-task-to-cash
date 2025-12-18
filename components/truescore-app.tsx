@@ -42,14 +42,6 @@ export function TrueScoreApp() {
   const [showAddPrompt, setShowAddPrompt] = useState(false)
   const [activeTab, setActiveTab] = useState<"home" | "profile">("home")
   const [showOnboarding, setShowOnboarding] = useState(false)
-  const [minLoadingFinished, setMinLoadingFinished] = useState(false)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMinLoadingFinished(true)
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [])
 
   useEffect(() => {
     const hasSeenOnboarding = localStorage.getItem("truescore_onboarding_seen")
@@ -118,10 +110,10 @@ export function TrueScoreApp() {
     console.log('Share button clicked. UserData:', userData)
     console.log('Sharing with FID:', userData.fid)
     const text = `Check out my TrueScore! 🎯\n\nNeynar Score: ${userData.score}\nReputation: ${userData.reputation.toUpperCase()}\n\nGet your score 👇`
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : "https://v0-task-to-cash-seven.vercel.app"
+    const baseUrl = "https://v0-task-to-cash-seven.vercel.app"
     // Add timestamp to force Farcaster to bypass cache and fetch fresh image
     const timestamp = Date.now()
-    const shareUrl = `${baseUrl}/share?fid=${userData.fid}&s=${userData.score}&u=${encodeURIComponent(userData.username)}&r=${encodeURIComponent(userData.reputation)}&_=${timestamp}`
+    const shareUrl = `${baseUrl}/share?fid=${userData.fid}&_=${timestamp}`
     console.log('Generated share URL:', shareUrl)
     sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(shareUrl)}`)
   }, [userData])
@@ -177,46 +169,13 @@ export function TrueScoreApp() {
     init()
   }, [fetchUserData])
 
-  if (loading || !minLoadingFinished || !isSDKLoaded) {
+  if (loading) {
     return (
       <AnimatedBackground theme={theme}>
-        <main className="min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
-          <div className="relative flex flex-col items-center space-y-8 max-w-xs w-full">
-
-            {/* Pulsing Logo Container */}
-            <div className="relative h-24 w-24">
-              <div className="absolute inset-0 rounded-3xl bg-cyan-500/20 animate-ripple" />
-              <div className="absolute inset-0 rounded-3xl bg-cyan-500/10 animate-ripple stagger-2" />
-
-              <div className="relative h-full w-full bg-slate-900 rounded-3xl border-2 border-cyan-400/50 flex items-center justify-center overflow-hidden box-glow-aqua rotate-12 transition-transform">
-                <span className="text-4xl font-black text-white letter-space-wide -rotate-12">TS</span>
-
-                {/* Scan Line Effect */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/40 to-transparent h-1/2 w-full animate-scan" />
-              </div>
-            </div>
-
-            {/* Title & Status */}
-            <div className="text-center space-y-3">
-              <h1 className="text-3xl font-black tracking-tighter text-white animate-fade-in">
-                TRUESCORE
-              </h1>
-              <div className="flex flex-col items-center gap-1">
-                <p className="text-xs font-bold text-cyan-400 uppercase tracking-widest animate-pulse">
-                  Scanning Reputation
-                </p>
-                <div className="h-1 w-32 bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-cyan-400 animate-shimmer" style={{ width: '100%' }} />
-                </div>
-              </div>
-            </div>
-
-            {/* Staggered Info Points */}
-            <div className="w-full space-y-2 opacity-60">
-              <div className="h-2 w-full bg-slate-800 rounded animate-pulse" />
-              <div className="h-2 w-3/4 bg-slate-800 rounded animate-pulse" style={{ animationDelay: '0.2s' }} />
-              <div className="h-2 w-1/2 bg-slate-800 rounded animate-pulse" style={{ animationDelay: '0.4s' }} />
-            </div>
+        <main className="min-h-screen flex items-center justify-center px-4">
+          <div className="relative text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto" />
+            <p className="mt-4 text-sm text-white/80 text-shadow-md">Loading...</p>
           </div>
         </main>
       </AnimatedBackground>

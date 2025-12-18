@@ -6,6 +6,8 @@
         "homeUrl": "https://v0-task-to-cash-seven.vercel.app",
         "imageUrl": "https://v0-task-to-cash-seven.vercel.app/api/og?fid=338060",
         "buttonTitle": "Check Neynar Score",
+        "splashImageUrl": "https://v0-task-to-cash-seven.vercel.app/splash.png",
+        "splashBackgroundColor": "#1a1a2e",
         "webhookUrl": "https://api.neynar.com/f/app/77bacf7e-7358-40ce-963f-446751b5f386/event",
         "subtitle": "Your Real Neynar Reputation",
         "description": "View your real Neynar score, engagement analytics, and account reputation on Farcaster",

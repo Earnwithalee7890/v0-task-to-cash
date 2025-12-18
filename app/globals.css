@@ -709,39 +709,3 @@
     0 0 30px rgba(168, 85, 247, 0.3),
     0 0 45px rgba(168, 85, 247, 0.2);
 }
-
-@keyframes scan {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  100% {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-}
-
-.animate-scan {
-  animation: scan 2s linear infinite;
-}
-
-@keyframes ripple {
-  0% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-
-  100% {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-
-.animate-ripple {
-  animation: ripple 2s ease-out infinite;
-}
