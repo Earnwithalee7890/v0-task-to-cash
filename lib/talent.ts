@@ -45,16 +45,22 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
     const timeoutId = setTimeout(() => controller.abort(), 8000)
 
     try {
-        const apiKey =
-            process.env.TALENT_PROTOCOL_API_KEY ||
-            process.env.TALENT_API_KEY ||
-            process.env.X_API_KEY ||
-            process.env.talent_api ||
-            process.env.talent
+        let apiKey = ""
+        let keySource = ""
+
+        if (process.env.TALENT_PROTOCOL_API_KEY) { apiKey = process.env.TALENT_PROTOCOL_API_KEY; keySource = "TALENT_PROTOCOL_API_KEY"; }
+        else if (process.env.TALENT_API_KEY) { apiKey = process.env.TALENT_API_KEY; keySource = "TALENT_API_KEY"; }
+        else if (process.env.X_API_KEY) { apiKey = process.env.X_API_KEY; keySource = "X_API_KEY"; }
+        else if (process.env.talent_api) { apiKey = process.env.talent_api; keySource = "talent_api"; }
+        else if (process.env.talent) { apiKey = process.env.talent; keySource = "talent"; }
+
         if (!apiKey) {
-            console.error("[TALENT] CRITICAL: No API Key found in environment variables (TALENT_PROTOCOL_API_KEY, TALENT_API_KEY, or talent)")
+            console.error("[TALENT] CRITICAL: No API Key found in environment variables (TALENT_PROTOCOL_API_KEY, TALENT_API_KEY, X_API_KEY, etc.)")
             return null
         }
+
+        apiKey = apiKey.trim()
+        console.log(`[TALENT] API Key detected via ${keySource}. Leading chars: ${apiKey.substring(0, 4)}...`)
 
         // Use standard X-API-KEY header as per v3 docs. Avoid Authorization header to prevent potential JWT conflicts.
         const headers = {
