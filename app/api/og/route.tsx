@@ -41,12 +41,10 @@ export async function GET(req: NextRequest) {
     console.error('Error fetching user data:', error);
   }
 
-  // ONLY show score, username, and reputation as requested
-  // Using literal newlines ensures encodeURIComponent creates a single %0A
+  // Format text exactly as requested with labels
   const text = `Neynar Score: ${score}
-
-@${username}
-${reputation}`;
+Username: ${username}
+Reputation: ${reputation}`;
 
   // Use the robust Vercel legacy service for zero-failure rendering
   const ogImageUrl = `https://og-image.vercel.app/${encodeURIComponent(text)}.png?theme=dark&md=1&fontSize=100px`;
