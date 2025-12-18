@@ -98,6 +98,7 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
         const idents = [
             `farcaster:${fid}`,
             `${fid}`,
+            `farcaster_fid:${fid}`,
             `farcaster_id:${fid}`
         ]
         if (fc_handle) {
@@ -118,7 +119,7 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
                             console.log(`[TALENT] Strategy 0 found data for ${ident}`)
                             if (!firstPassportData) firstPassportData = p
                             if (!profileId) profileId = p.id || p.main_wallet
-                            if (!profileHandle) profileHandle = p.handle || p.username || p.username
+                            if (!profileHandle) profileHandle = p.handle || p.username || p.username || p.display_name
                             profileHuman = profileHuman || !!p.human_checkmark || !!p.is_human
                             profileVerified = profileVerified || !!p.verified || !!p.is_verified
                             if (Array.isArray(p.scores)) rawScores.push(...p.scores)
@@ -133,26 +134,38 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
             })())
         })
 
-        // STRATEGY 1: Farcaster Scores Bulk (v3)
+        // STRATEGY 1: Detailed Scores Endpoint (v3 Direct)
+        idents.forEach(ident => {
+            promises.push((async () => {
+                try {
+                    const res = await fetch(`${TALENT_API_BASE}/passports/${ident}/scores`, { headers, signal: controller.signal })
+                    if (res.ok) {
+                        const data = await res.json()
+                        if (Array.isArray(data.scores)) {
+                            console.log(`[TALENT] Strategy 1 found ${data.scores.length} scores for ${ident}`)
+                            rawScores.push(...data.scores)
+                        }
+                    }
+                } catch (e) { }
+            })())
+        })
+
+        // STRATEGY 6: Bulk Farcaster Scores (v3 specific)
         promises.push((async () => {
             try {
                 const res = await fetch(`${TALENT_API_BASE}/farcaster/scores?fids=${fid}`, { headers, signal: controller.signal })
                 if (res.ok) {
                     const data = await res.json()
-                    if (Array.isArray(data.scores)) rawScores.push(...data.scores)
-                    if (data.profiles?.[0]) {
-                        const p = data.profiles[0]
-                        if (!profileId) profileId = p.id
-                        if (!profileHandle) profileHandle = p.handle
-                        if (Array.isArray(p.scores)) rawScores.push(...p.scores)
+                    if (Array.isArray(data.scores)) {
+                        console.log(`[TALENT] Strategy 6 (bulk) found ${data.scores.length} scores`)
+                        rawScores.push(...data.scores)
                     }
-                } else {
-                    const errText = await res.text().catch(() => "unknown error")
-                    console.log(`[TALENT] Farcaster Scores Strategy failed with status: ${res.status}. Error: ${errText.substring(0, 100)}`)
+                    if (Array.isArray(data.passports)) {
+                        const p = data.passports[0]
+                        if (!firstPassportData) firstPassportData = p
+                    }
                 }
-            } catch (e) {
-                console.log("[TALENT] Farcaster Scores Strategy failed")
-            }
+            } catch (e) { }
         })())
 
         // STRATEGY 2: Profiles Identity lookup
@@ -277,19 +290,19 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
 
         console.log(`[TALENT] Final Aggregated Data for ${fid}:`, { builderScore, creatorScore, profileHandle, profileHuman })
 
-        if (builderScore === 0 && creatorScore === 0 && !profileHandle && !profileHuman && !profileVerified) {
+        if (builderScore === 0 && creatorScore === 0 && !profileHandle && !profileHuman && !profileVerified && !profileId && !firstPassportData) {
             console.warn(`[TALENT] No data found for FID ${fid} after all v3 strategies AND fallback`)
             return null
         }
 
         return {
-            id: profileId || String(fid),
-            handle: profileHandle,
+            id: profileId || (firstPassportData?.id) || String(fid),
+            handle: profileHandle || (firstPassportData?.handle) || (firstPassportData?.username),
             builder_score: builderScore,
             creator_score: creatorScore,
             farcaster_revenue: revenue,
-            human_checkmark: profileHuman,
-            verified: profileVerified
+            human_checkmark: profileHuman || !!firstPassportData?.human_checkmark,
+            verified: profileVerified || !!firstPassportData?.verified
         }
     } catch (error) {
         console.error("[TALENT] Fatal error in fetch:", error)
