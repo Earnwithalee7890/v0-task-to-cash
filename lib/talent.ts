@@ -157,12 +157,27 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
             })())
         })
 
-        await Promise.all(promises)
-
-        if (rawScores.length === 0) {
-            console.warn(`[TALENT] No data found for FID ${fid} after all v3 strategies`)
-            return null
+        // STRATEGY 4: Search (as final redundancy if handle exists)
+        if (fc_handle) {
+            promises.push((async () => {
+                try {
+                    const res = await fetch(`${TALENT_API_BASE}/search?q=${fc_handle}`, { headers, signal: controller.signal })
+                    if (res.ok) {
+                        const data = await res.json()
+                        const p = data.passports?.[0] || data.users?.[0]
+                        if (p) {
+                            console.log(`[TALENT] Search Strategy found candidate for ${fc_handle}`)
+                            if (!firstPassportData) firstPassportData = p
+                            if (Array.isArray(p.scores)) rawScores.push(...p.scores)
+                        }
+                    }
+                } catch (e) {
+                    console.log(`[TALENT] Search Strategy (${fc_handle}) failed`)
+                }
+            })())
         }
+
+        await Promise.all(promises)
 
         let builderScore = 0
         let creatorScore = 0
@@ -185,17 +200,21 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
 
         // FINAL FALLBACK: Check top-level fields if scores array was empty or failed
         if (builderScore === 0 || creatorScore === 0) {
-            // We'll check the first successful p we got
-            console.log(`[TALENT] Checking for top-level scores for FID ${fid}`)
             if (firstPassportData) {
-                builderScore = Math.max(builderScore, Number(firstPassportData.builder_score ?? 0))
-                creatorScore = Math.max(creatorScore, Number(firstPassportData.creator_score ?? 0))
-                revenue = Math.max(revenue, Number(firstPassportData.farcaster_revenue ?? 0))
-                profileHuman = profileHuman || !!firstPassportData.human_checkmark
-                profileVerified = profileVerified || !!firstPassportData.verified
+                console.log(`[TALENT] Falling back to top-level fields for FID ${fid}. Keys:`, Object.keys(firstPassportData))
+                builderScore = Math.max(builderScore, Number(firstPassportData.builder_score ?? firstPassportData.builderScore ?? 0))
+                creatorScore = Math.max(creatorScore, Number(firstPassportData.creator_score ?? firstPassportData.creatorScore ?? 0))
+                revenue = Math.max(revenue, Number(firstPassportData.farcaster_revenue ?? firstPassportData.farcasterRevenue ?? firstPassportData.revenue ?? 0))
+                profileHuman = profileHuman || !!(firstPassportData.human_checkmark ?? firstPassportData.isHuman)
+                profileVerified = profileVerified || !!(firstPassportData.verified ?? firstPassportData.isVerified)
                 if (!profileHandle) profileHandle = firstPassportData.handle || firstPassportData.username
                 if (!profileId) profileId = firstPassportData.id || firstPassportData.main_wallet
             }
+        }
+
+        if (builderScore === 0 && creatorScore === 0 && !profileHandle && !profileHuman && !profileVerified) {
+            console.warn(`[TALENT] No data found for FID ${fid} after all v3 strategies AND fallback`)
+            return null
         }
 
         return {
