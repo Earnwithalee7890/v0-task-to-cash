@@ -16,13 +16,11 @@ export async function generateMetadata(
     const score = searchParams.score ? String(searchParams.score) : "0"
     const rep = searchParams.rep ? String(searchParams.rep) : "unknown"
     const username = searchParams.username ? String(searchParams.username) : "user"
-    const builder = searchParams.builder ? String(searchParams.builder) : "0"
-    const creator = searchParams.creator ? String(searchParams.creator) : "0"
     const ts = searchParams._ ? String(searchParams._) : Date.now().toString()
 
     // Pass all params to OG image to ensure instant rendering with correct data
     const appUrl = "https://v0-task-to-cash-seven.vercel.app"
-    const imageUrl = `${appUrl}/api/og?fid=${fid}&score=${score}&rep=${rep}&username=${username}&builder=${builder}&creator=${creator}&_=${ts}`
+    const imageUrl = `${appUrl}/api/og?fid=${fid}&score=${score}&rep=${rep}&username=${username}&_=${ts}`
 
     return {
         title: "TrueScore",
