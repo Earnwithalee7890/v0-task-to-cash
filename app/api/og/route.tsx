@@ -6,38 +6,12 @@ export const runtime = 'edge';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const fid = searchParams.get('fid') || '338060';
 
-    // Fetch user data
-    let score = 0;
-    let username = 'user';
-    let reputation = 'Unknown';
-
-    try {
-      const response = await fetch(
-        `https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`,
-        {
-          headers: {
-            'accept': 'application/json',
-            'x-api-key': process.env.NEYNAR_API_KEY || '',
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        const user = data.users?.[0];
-        if (user) {
-          const rawScore = user.experimental?.neynar_user_score || 0;
-          score = Math.round(rawScore * 100);
-          username = user.username || 'user';
-          if (score >= 80) reputation = 'SAFE';
-          else if (score >= 50) reputation = 'NEUTRAL';
-          else if (score >= 25) reputation = 'RISKY';
-          else reputation = 'SPAMMY';
-        }
-      }
-    } catch (e) { }
+    // Get parameters directly from URL (Zero-Fetch Strategy)
+    const score = searchParams.get('score') || '0';
+    const username = searchParams.get('username') || 'user';
+    const reputation = (searchParams.get('rep') || 'unknown').toUpperCase();
+    const fid = searchParams.get('fid') || '0';
 
     // Reputation Colors
     let repColor = '#94a3b8';
@@ -57,25 +31,26 @@ export async function GET(req: NextRequest) {
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: '#0a0e27', // Deep space blue
-            backgroundImage: 'linear-gradient(to bottom, #0a0e27, #1a1b3a)',
             color: 'white',
-            padding: '60px',
+            padding: '40px',
             fontFamily: 'sans-serif',
           }}
         >
           {/* Header Title */}
           <div style={{
-            fontSize: '40px',
+            display: 'flex',
+            fontSize: '36px',
             fontWeight: 900,
-            letterSpacing: '15px',
+            letterSpacing: '12px',
             color: '#00d9ff',
-            marginBottom: '60px'
+            marginBottom: '50px',
+            textTransform: 'uppercase'
           }}>
             TRUESCORE
           </div>
 
           {/* 3 BOXES GRID */}
-          <div style={{ display: 'flex', gap: '30px', width: '100%', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', gap: '24px', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
 
             {/* Box 1: Neynar Score */}
             <div style={{
@@ -84,14 +59,13 @@ export async function GET(req: NextRequest) {
               alignItems: 'center',
               justifyContent: 'center',
               width: '320px',
-              height: '350px',
+              height: '320px',
               backgroundColor: '#161b33',
-              borderRadius: '40px',
-              border: '2px solid rgba(0, 217, 255, 0.3)',
-              boxShadow: '0 0 30px rgba(0, 217, 255, 0.1)',
+              borderRadius: '32px',
+              border: '4px solid #00d9ff33',
             }}>
               <div style={{ fontSize: '120px', fontWeight: 900, lineHeight: 1 }}>{score}</div>
-              <div style={{ fontSize: '20px', fontWeight: 700, opacity: 0.6, marginTop: '20px', letterSpacing: '2px' }}>
+              <div style={{ fontSize: '18px', fontWeight: 700, opacity: 0.5, marginTop: '20px', letterSpacing: '2px' }}>
                 NEYNER SCORE
               </div>
             </div>
@@ -103,15 +77,22 @@ export async function GET(req: NextRequest) {
               alignItems: 'center',
               justifyContent: 'center',
               width: '320px',
-              height: '350px',
+              height: '320px',
               backgroundColor: '#161b33',
-              borderRadius: '40px',
-              border: '2px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '32px',
+              border: '4px solid #ffffff1a',
             }}>
-              <div style={{ fontSize: '45px', fontWeight: 900, textAlign: 'center', padding: '0 20px', wordBreak: 'break-all' }}>
+              <div style={{
+                fontSize: '44px',
+                fontWeight: 800,
+                width: '100%',
+                textAlign: 'center',
+                padding: '0 20px',
+                overflow: 'hidden'
+              }}>
                 @{username}
               </div>
-              <div style={{ fontSize: '20px', fontWeight: 700, opacity: 0.6, marginTop: '20px', letterSpacing: '2px' }}>
+              <div style={{ fontSize: '18px', fontWeight: 700, opacity: 0.5, marginTop: '20px', letterSpacing: '2px' }}>
                 USERNAME
               </div>
             </div>
@@ -123,26 +104,26 @@ export async function GET(req: NextRequest) {
               alignItems: 'center',
               justifyContent: 'center',
               width: '320px',
-              height: '350px',
+              height: '320px',
               backgroundColor: '#161b33',
-              borderRadius: '40px',
-              border: `2px solid ${repColor}`,
-              boxShadow: `0 0 30px ${repColor}20`,
+              borderRadius: '32px',
+              border: `4px solid ${repColor}`,
             }}>
-              <div style={{ fontSize: '60px', fontWeight: 900, color: repColor }}>{reputation}</div>
-              <div style={{ fontSize: '20px', fontWeight: 700, opacity: 0.6, marginTop: '20px', letterSpacing: '2px' }}>
+              <div style={{ fontSize: '50px', fontWeight: 900, color: repColor }}>{reputation}</div>
+              <div style={{ fontSize: '18px', fontWeight: 700, opacity: 0.5, marginTop: '20px', letterSpacing: '2px' }}>
                 REPUTATION
               </div>
             </div>
 
           </div>
 
+          {/* Footer FID */}
           <div style={{
             position: 'absolute',
             bottom: '40px',
-            left: '60px',
+            right: '60px',
             fontSize: '18px',
-            color: 'rgba(255,255,255,0.2)',
+            color: 'rgba(255,255,255,0.1)',
             fontWeight: 700
           }}>
             FID: {fid}
@@ -155,6 +136,6 @@ export async function GET(req: NextRequest) {
       }
     );
   } catch (e: any) {
-    return new Response(`Error`, { status: 500 });
+    return new Response(`Error rendering image`, { status: 500 });
   }
 }

@@ -13,11 +13,14 @@ export async function generateMetadata(
 ): Promise<Metadata> {
     const searchParams = await props.searchParams
     const fid = searchParams.fid ? String(searchParams.fid) : "338060"
+    const score = searchParams.score ? String(searchParams.score) : "0"
+    const rep = searchParams.rep ? String(searchParams.rep) : "unknown"
+    const username = searchParams.username ? String(searchParams.username) : "user"
     const ts = searchParams._ ? String(searchParams._) : Date.now().toString()
 
-    // Pass FID and timestamp to OG image to ensure fresh rendering and bypass cache
+    // Pass all params to OG image to ensure instant rendering with correct data
     const appUrl = "https://v0-task-to-cash-seven.vercel.app"
-    const imageUrl = `${appUrl}/api/og?fid=${fid}&_=${ts}`
+    const imageUrl = `${appUrl}/api/og?fid=${fid}&score=${score}&username=${username}&rep=${rep}&_=${ts}`
 
     return {
         title: "TrueScore",
