@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
 
   // ONLY show score, username, and reputation as requested
   // Using literal newlines ensures encodeURIComponent creates a single %0A
-  const text = `${score}
+  const text = `Neynar Score: ${score}
 
 @${username}
 ${reputation}`;
