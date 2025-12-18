@@ -62,6 +62,7 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
         let profileHuman = false
         let profileVerified = false
         let profileId = ""
+        let firstPassportData: any = null
 
         const promises: Promise<void>[] = []
 
@@ -80,6 +81,7 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
                         const data = await res.json()
                         const p = data.passport
                         if (p) {
+                            if (!firstPassportData) firstPassportData = p
                             if (!profileId) profileId = p.id || p.main_wallet
                             if (!profileHandle) profileHandle = p.handle || p.username
                             profileHuman = profileHuman || !!p.human_checkmark
@@ -167,8 +169,8 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
         let revenue = 0
 
         rawScores.forEach((s: any) => {
-            const slug = String(s.scorer_slug || s.score_type || "").toLowerCase()
-            const scoreVal = Number(s.points ?? s.score ?? s.value ?? 0)
+            const slug = String(s.scorer_slug || s.score_type || s.name || s.slug || "").toLowerCase()
+            const scoreVal = Number(s.points ?? s.score ?? s.value ?? s.score_value ?? 0)
 
             if (slug.includes("builder")) builderScore = Math.max(builderScore, scoreVal)
             if (slug.includes("creator")) creatorScore = Math.max(creatorScore, scoreVal)
@@ -180,6 +182,21 @@ export async function getTalentProtocolData(fid: number, wallets: string[] = [],
             const revVal = Number(s.farcaster_revenue ?? s.revenue ?? s.total_rewards ?? 0)
             revenue = Math.max(revenue, revVal)
         })
+
+        // FINAL FALLBACK: Check top-level fields if scores array was empty or failed
+        if (builderScore === 0 || creatorScore === 0) {
+            // We'll check the first successful p we got
+            console.log(`[TALENT] Checking for top-level scores for FID ${fid}`)
+            if (firstPassportData) {
+                builderScore = Math.max(builderScore, Number(firstPassportData.builder_score ?? 0))
+                creatorScore = Math.max(creatorScore, Number(firstPassportData.creator_score ?? 0))
+                revenue = Math.max(revenue, Number(firstPassportData.farcaster_revenue ?? 0))
+                profileHuman = profileHuman || !!firstPassportData.human_checkmark
+                profileVerified = profileVerified || !!firstPassportData.verified
+                if (!profileHandle) profileHandle = firstPassportData.handle || firstPassportData.username
+                if (!profileId) profileId = firstPassportData.id || firstPassportData.main_wallet
+            }
+        }
 
         return {
             id: profileId || String(fid),
