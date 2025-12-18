@@ -20,7 +20,7 @@ export async function generateMetadata(
 
     // Pass all params to OG image to ensure instant rendering with correct data
     const appUrl = "https://v0-task-to-cash-seven.vercel.app"
-    const imageUrl = `${appUrl}/api/og?fid=${fid}&score=${score}&username=${username}&rep=${rep}&_=${ts}`
+    const imageUrl = `${appUrl}/api/og?fid=${fid}&score=${score}&username=${encodeURIComponent(username)}&rep=${encodeURIComponent(rep)}&_=${ts}`
 
     return {
         title: "TrueScore",

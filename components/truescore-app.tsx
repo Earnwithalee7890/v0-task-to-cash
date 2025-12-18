@@ -121,7 +121,7 @@ export function TrueScoreApp() {
     const baseUrl = "https://v0-task-to-cash-seven.vercel.app"
     // Add timestamp to force Farcaster to bypass cache and fetch fresh image
     const timestamp = Date.now()
-    const shareUrl = `${baseUrl}/share?fid=${userData.fid}&score=${userData.score}&username=${userData.username}&rep=${userData.reputation}&_=${timestamp}`
+    const shareUrl = `${baseUrl}/share?fid=${userData.fid}&score=${userData.score}&username=${encodeURIComponent(userData.username)}&rep=${encodeURIComponent(userData.reputation)}&_=${timestamp}`
     console.log('Generated share URL:', shareUrl)
     sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(shareUrl)}`)
   }, [userData])
