@@ -1,29 +1,26 @@
-import { ImageResponse } from 'next/og';
+import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 
-export const runtime = 'edge';
-
-// Reliable color mapping - simplified logic
-function getStatusColor(r: string) {
-  const s = r.toLowerCase();
-  if (s.includes('safe')) return '#4ade80';
-  if (s.includes('neutral')) return '#38bdf8';
-  if (s.includes('risky')) return '#fb923c';
-  if (s.includes('spammy')) return '#f87171';
-  return '#94a3b8';
-}
+// Remove Edge runtime to use stable Node.js runtime instead
+// export const runtime = 'edge'; 
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
 
     // Using shortened params for max reliability
-    const score = searchParams.get('s') || '0';
-    const username = searchParams.get('u') || 'user';
-    const reputation = searchParams.get('r') || 'Unknown';
-    const fid = searchParams.get('fid') || '0';
+    const s = searchParams.get('s') || '0';
+    const u = searchParams.get('u') || 'user';
+    const r = searchParams.get('r') || 'Unknown';
+    const f = searchParams.get('fid') || '0';
 
-    const color = getStatusColor(reputation);
+    // Color logic
+    let color = '#94a3b8'; // Default Gray
+    const status = r.toLowerCase();
+    if (status.includes('safe')) color = '#22c55e';    // Green
+    if (status.includes('neutral')) color = '#0ea5e9'; // Blue
+    if (status.includes('risky')) color = '#f97316';   // Orange
+    if (status.includes('spammy')) color = '#ef4444'; // Red
 
     return new ImageResponse(
       (
@@ -35,13 +32,24 @@ export async function GET(req: NextRequest) {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#0a0e27', // Use solid for zero-latency
+            backgroundColor: '#0a0e27',
             color: 'white',
-            padding: '50px',
+            padding: '40px',
             fontFamily: 'sans-serif',
           }}
         >
-          {/* Main Container - Row of 3 boxes */}
+          {/* Main Title */}
+          <div style={{
+            fontSize: '40px',
+            fontWeight: 'bold',
+            color: '#00d9ff',
+            marginBottom: '40px',
+            letterSpacing: '10px'
+          }}>
+            TRUESCORE
+          </div>
+
+          {/* Row of 3 boxes */}
           <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
 
             {/* Box 1: Score */}
@@ -53,14 +61,12 @@ export async function GET(req: NextRequest) {
               width: '320px',
               height: '350px',
               backgroundColor: '#111827',
-              borderRadius: '30px',
-              border: '2px solid #00d9ff66',
-              margin: '0 15px',
+              borderRadius: '20px',
+              border: '2px solid rgba(0, 217, 255, 0.4)',
+              margin: '0 10px',
             }}>
-              <div style={{ fontSize: '110px', fontWeight: 900 }}>{score}</div>
-              <div style={{ fontSize: '18px', fontWeight: 700, opacity: 0.5, marginTop: '20px' }}>
-                NEYNER SCORE
-              </div>
+              <div style={{ fontSize: '100px', fontWeight: 'bold' }}>{s}</div>
+              <div style={{ fontSize: '18px', opacity: 0.5, marginTop: '10px' }}>NEYNER SCORE</div>
             </div>
 
             {/* Box 2: User */}
@@ -72,19 +78,15 @@ export async function GET(req: NextRequest) {
               width: '320px',
               height: '350px',
               backgroundColor: '#111827',
-              borderRadius: '30px',
-              border: '2px solid #ffffff1a',
-              margin: '0 15px',
+              borderRadius: '20px',
+              border: '2px solid rgba(255, 255, 255, 0.1)',
+              margin: '0 10px',
             }}>
-              <div style={{ fontSize: '40px', fontWeight: 800, textAlign: 'center', padding: '0 10px', overflow: 'hidden' }}>
-                @{username}
-              </div>
-              <div style={{ fontSize: '18px', fontWeight: 700, opacity: 0.5, marginTop: '20px' }}>
-                USERNAME
-              </div>
+              <div style={{ fontSize: '36px', fontWeight: 'bold', textAlign: 'center', padding: '0 10px' }}>@{u}</div>
+              <div style={{ fontSize: '18px', opacity: 0.5, marginTop: '10px' }}>USERNAME</div>
             </div>
 
-            {/* Box 3: Status */}
+            {/* Box 3: Reputation */}
             <div style={{
               display: 'flex',
               flexDirection: 'column',
@@ -93,33 +95,19 @@ export async function GET(req: NextRequest) {
               width: '320px',
               height: '350px',
               backgroundColor: '#111827',
-              borderRadius: '30px',
+              borderRadius: '20px',
               border: `2px solid ${color}`,
-              margin: '0 15px',
+              margin: '0 10px',
             }}>
-              <div style={{ fontSize: '50px', fontWeight: 900, color: color }}>
-                {reputation.toUpperCase()}
-              </div>
-              <div style={{ fontSize: '18px', fontWeight: 700, opacity: 0.5, marginTop: '20px' }}>
-                REPUTATION
-              </div>
+              <div style={{ fontSize: '48px', fontWeight: 'bold', color: color }}>{r.toUpperCase()}</div>
+              <div style={{ fontSize: '18px', opacity: 0.5, marginTop: '10px' }}>REPUTATION</div>
             </div>
 
           </div>
 
-          {/* Branded Footer */}
-          <div style={{
-            marginTop: '50px',
-            fontSize: '30px',
-            fontWeight: 900,
-            letterSpacing: '10px',
-            color: '#00d9ff'
-          }}>
-            TRUESCORE
-          </div>
-
-          <div style={{ position: 'absolute', bottom: '30px', right: '40px', opacity: 0.2, fontSize: '16px' }}>
-            FID: {fid}
+          {/* Footer */}
+          <div style={{ position: 'absolute', bottom: '20px', opacity: 0.3, fontSize: '16px' }}>
+            FID: {f} • Powered by Neynar
           </div>
         </div>
       ),
@@ -128,8 +116,7 @@ export async function GET(req: NextRequest) {
         height: 630,
       }
     );
-  } catch (err) {
-    // If anything fails, return a 1x1 invisible pixel or simple string to avoid the grey box
-    return new Response('Image error', { status: 500 });
+  } catch (e) {
+    return new Response('Error rendering', { status: 200 });
   }
 }
