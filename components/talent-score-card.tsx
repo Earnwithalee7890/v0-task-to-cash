@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Users, CheckCircle2, UserCheck, ShieldCheck, Zap, User } from "lucide-react"
 import { getScoreLevel } from "@/lib/talent"
+import sdk from "@farcaster/frame-sdk"
 
 interface TalentScoreCardProps {
     builderScore?: number
@@ -80,12 +81,22 @@ export function TalentScoreCard({ builderScore = 0, creatorScore = 0, farcasterR
                         <User className="h-8 w-8 text-white/20 mb-1" />
                         <p className="text-[11px] font-bold text-white/60">No Talent Protocol Profile Found</p>
                         <p className="text-[9px] text-white/30 max-w-[180px]">Connect your Farcaster to Talent Protocol to see your verified builder rank.</p>
-                        <button
-                            onClick={() => sdk.actions.openUrl("https://app.talentprotocol.com")}
+                        <a
+                            href="https://app.talentprotocol.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                try {
+                                    sdk.actions.openUrl("https://app.talentprotocol.com")
+                                } catch (err) {
+                                    window.open("https://app.talentprotocol.com", "_blank")
+                                }
+                            }}
                             className="mt-2 text-[10px] font-black uppercase tracking-widest text-purple-400 hover:text-purple-300 transition-colors border-b border-purple-500/30 pb-0.5"
                         >
                             Claim Passport ↗
-                        </button>
+                        </a>
                     </div>
                 )}
 
