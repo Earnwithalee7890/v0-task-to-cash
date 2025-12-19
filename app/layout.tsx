@@ -14,6 +14,10 @@ export const metadata: Metadata = {
   title: "TrueScore - Your Real Neynar Reputation",
   description: "View your real Neynar score, engagement analytics, and account reputation on Farcaster",
   generator: "v0.app",
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "TrueScore",
     description: "Your Real Neynar Reputation Score",
