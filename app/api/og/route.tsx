@@ -139,28 +139,25 @@ export async function GET(req: NextRequest) {
                                 marginBottom: '50px',
                             }}
                         >
-                            {/* Avatar with glow */}
-                            {pfpUrl && (
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        borderRadius: '50%',
-                                        border: '4px solid rgba(0, 217, 255, 0.6)',
-                                        padding: '4px',
-                                        boxShadow: '0 0 30px rgba(0, 217, 255, 0.5)',
-                                    }}
-                                >
-                                    <img
-                                        src={pfpUrl}
-                                        alt="avatar"
-                                        width="120"
-                                        height="120"
-                                        style={{
-                                            borderRadius: '50%',
-                                        }}
-                                    />
-                                </div>
-                            )}
+                            {/* Avatar - Use initials instead of external image for reliability */}
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: '128px',
+                                    height: '128px',
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(135deg, #00d9ff 0%, #00ffcc 100%)',
+                                    border: '4px solid rgba(0, 217, 255, 0.6)',
+                                    boxShadow: '0 0 30px rgba(0, 217, 255, 0.5)',
+                                    fontSize: '48px',
+                                    fontWeight: 900,
+                                    color: '#0a0e27',
+                                }}
+                            >
+                                {displayName.substring(0, 2).toUpperCase()}
+                            </div>
 
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                 <div
