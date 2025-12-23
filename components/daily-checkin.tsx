@@ -8,21 +8,34 @@ import { CalendarCheck, Loader2, Check, ExternalLink, Zap } from "lucide-react"
 import { useAccount, useConnect, useSendTransaction, useSwitchChain, useChainId, useWriteContract } from "wagmi"
 import { base, celo, mainnet } from "wagmi/chains"
 
-// Base Check-In Contract Configuration
+// Base Check-In Contract Configuration (Production - Mainnet)
 const BASE_CHECKIN_CONTRACT = {
-  address: "0x25797Cd733ef592f4c0Bf44b01Ef9f4882A30D2E" as `0x${string}`,
+  address: "0xBD3aDb162D1C5c211075C75DFe3dCD14b549433A" as `0x${string}`,
+  checkInFee: BigInt(1_000_000_000_000), // 0.000001 ETH in wei
   abi: [
     {
       inputs: [],
       name: "checkIn",
       outputs: [],
-      stateMutability: "nonpayable",
+      stateMutability: "payable",
       type: "function",
     },
     {
-      inputs: [{ internalType: "address", name: "user", type: "address" }],
-      name: "getCheckInCount",
+      inputs: [],
+      name: "checkInFeeWei",
       outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [{ internalType: "address", name: "", type: "address" }],
+      name: "users",
+      outputs: [
+        { internalType: "uint64", name: "totalCheckIns", type: "uint64" },
+        { internalType: "uint64", name: "currentStreak", type: "uint64" },
+        { internalType: "uint64", name: "lastCheckInDay", type: "uint64" },
+        { internalType: "uint256", name: "reputation", type: "uint256" },
+      ],
       stateMutability: "view",
       type: "function",
     },
@@ -30,7 +43,10 @@ const BASE_CHECKIN_CONTRACT = {
       anonymous: false,
       inputs: [
         { indexed: true, internalType: "address", name: "user", type: "address" },
-        { indexed: false, internalType: "uint256", name: "timestamp", type: "uint256" },
+        { indexed: false, internalType: "uint64", name: "dayIndex", type: "uint64" },
+        { indexed: false, internalType: "uint64", name: "totalCheckIns", type: "uint64" },
+        { indexed: false, internalType: "uint64", name: "currentStreak", type: "uint64" },
+        { indexed: false, internalType: "uint256", name: "reputation", type: "uint256" },
       ],
       name: "CheckedIn",
       type: "event",
@@ -91,13 +107,14 @@ export function DailyCheckin() {
 
       let result: `0x${string}` | undefined
 
-      // For Base network, call the smart contract
+      // For Base network, call the smart contract with fee
       if (selectedNetwork.id === "base") {
         result = await writeContractAsync({
           address: BASE_CHECKIN_CONTRACT.address,
           abi: BASE_CHECKIN_CONTRACT.abi,
           functionName: "checkIn",
           chainId: selectedNetwork.chainId,
+          value: BASE_CHECKIN_CONTRACT.checkInFee, // 0.000001 ETH anti-spam fee
         })
       } else {
         // For other networks, send self-transaction as check-in proof (0 value to self)
@@ -190,7 +207,12 @@ export function DailyCheckin() {
             <p className="text-xs text-purple-200">Earn on-chain proof 🎯</p>
           </div>
         </div>
-
+        {network === "base" && (
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
+            <Zap className="h-3 w-3 text-cyan-400" />
+            <span className="text-[10px] font-semibold text-cyan-300">0.000001 ETH fee</span>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-3">
