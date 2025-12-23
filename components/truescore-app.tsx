@@ -230,6 +230,12 @@ export function TrueScoreApp() {
           <header className="opacity-0 animate-fade-in text-center">
             <ClickSpark />
 
+            {/* TrueScore Title with Neon Glow */}
+            <h1 className="text-4xl font-bold mb-2 neon-glow-aqua letter-space-wide">
+              TRUESCORE
+            </h1>
+            <p className="text-sm text-cyan-200/80 mb-6">Your Farcaster Reputation</p>
+
             {/* Profile Picture & Theme Toggle */}
             <div className="flex items-center justify-between mb-4 px-4">
               <div className="relative group cursor-pointer neon-ring" onClick={() => setActiveTab("profile")}>
