@@ -2,6 +2,7 @@ import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
+// Full-screen vibrant OG image with user photo and decimal score
 
 export async function GET(req: NextRequest) {
     try {
