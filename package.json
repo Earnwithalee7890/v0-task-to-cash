@@ -8,6 +8,10 @@
     "lint": "eslint .",
     "start": "next start"
   },
+  "engines": {
+    "node": ">=18.x",
+    "npm": ">=9.x"
+  },
   "dependencies": {
     "@farcaster/frame-sdk": "latest",
     "@farcaster/miniapp-sdk": "latest",
