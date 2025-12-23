@@ -1,7 +1,6 @@
 "use client"
 
 import { ReactNode } from "react"
-import { NeonStarsBackground } from "./neon-stars-background"
 
 interface AnimatedBackgroundProps {
     children: ReactNode
@@ -10,10 +9,7 @@ interface AnimatedBackgroundProps {
 
 export function AnimatedBackground({ children, theme = "dark" }: AnimatedBackgroundProps) {
     return (
-        <div className="relative min-h-screen overflow-hidden neon-space-bg">
-            {/* Neon Star Field Background */}
-            <NeonStarsBackground density={120} />
-
+        <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950/50 to-slate-900">
             {/* Content layer */}
             <div className="relative z-10">
                 {children}

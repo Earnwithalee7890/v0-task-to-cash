@@ -1,10 +1,10 @@
 "use client"
 
-import { Home, User, Search } from "lucide-react"
+import { Home, User, Search, Sparkles } from "lucide-react"
 
 interface NavigationProps {
-    activeTab: "home" | "profile" | "search"
-    onTabChange: (tab: "home" | "profile" | "search") => void
+    activeTab: "home" | "profile" | "search" | "ai"
+    onTabChange: (tab: "home" | "profile" | "search" | "ai") => void
 }
 
 export function Navigation({ activeTab, onTabChange }: NavigationProps) {
@@ -28,6 +28,16 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
                     <Search className={`h-6 w-6 ${activeTab === "search" ? "icon-glow-active" : "icon-glow-inactive"}`} />
                     <span className={`text-xs font-medium ${activeTab === "search" ? "text-cyan-300" : "text-cyan-200/50"}`}>
                         Search
+                    </span>
+                </button>
+
+                <button
+                    onClick={() => onTabChange("ai")}
+                    className="flex flex-col items-center gap-1 px-4 py-2 transition-all duration-300"
+                >
+                    <Sparkles className={`h-6 w-6 ${activeTab === "ai" ? "icon-glow-active" : "icon-glow-inactive"}`} />
+                    <span className={`text-xs font-medium ${activeTab === "ai" ? "text-cyan-300" : "text-cyan-200/50"}`}>
+                        AI
                     </span>
                 </button>
 
