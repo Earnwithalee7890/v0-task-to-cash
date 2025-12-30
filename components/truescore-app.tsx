@@ -114,10 +114,27 @@ export function TrueScoreApp() {
     sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(shareUrl)}`)
   }, [userData])
 
-  const shareOnBase = useCallback(() => {
-    const text = `Just checked in on Base! 🔵\n\nEarning rewards daily with TrueScore Mini App 🎯\n\nJoin me:`
+  const shareOnBase = useCallback(async () => {
+    const text = `Just checked in on Base! 🔵\n\nEarning rewards daily with TrueScore Mini App 🎯\n\nJoin me: https://v0-task-to-cash-seven.vercel.app`
     const baseUrl = "https://v0-task-to-cash-seven.vercel.app"
-    sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(baseUrl)}`)
+
+    // Try native share API first (works on mobile/Base app)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'TrueScore on Base',
+          text: text,
+          url: baseUrl
+        })
+      } catch (err) {
+        console.log('Share cancelled or failed:', err)
+      }
+    } else {
+      // Fallback: Open Base app composer if available, otherwise Warpcast
+      // Base app uses custom URL scheme or fallback to web
+      const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(baseUrl)}`
+      sdk.actions.openUrl(shareUrl)
+    }
   }, [])
 
   useEffect(() => {
