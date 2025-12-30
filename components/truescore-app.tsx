@@ -114,11 +114,26 @@ export function TrueScoreApp() {
     sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(shareUrl)}`)
   }, [userData])
 
-  const shareOnBase = useCallback(() => {
-    const text = `Track your Farcaster reputation with TrueScore! 🎯\n\nReal-time Neynar scores & analytics 📊\n\nJoin me on Base:`
+  const shareOnBase = useCallback(async () => {
+    const text = `Track your Farcaster reputation with TrueScore! 🎯\n\nReal-time Neynar scores & analytics 📊\n\nJoin me on Base: https://base.app/app/v0-task-to-cash-seven.vercel.app`
     const baseAppUrl = "https://base.app/app/v0-task-to-cash-seven.vercel.app"
-    // Share Base app link so it opens directly in Base app
-    sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(baseAppUrl)}`)
+
+    // Use native share so users can choose Base app, Farcaster, or other apps
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'TrueScore - Track Your Reputation',
+          text: text
+        })
+      } catch (err) {
+        // User cancelled or share failed, fallback to Warpcast
+        console.log('Share cancelled, opening Warpcast as fallback')
+        sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(baseAppUrl)}`)
+      }
+    } else {
+      // No native share, use Warpcast
+      sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(baseAppUrl)}`)
+    }
   }, [])
 
   useEffect(() => {
