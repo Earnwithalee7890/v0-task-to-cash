@@ -116,9 +116,9 @@ export function TrueScoreApp() {
 
   const shareOnBase = useCallback(() => {
     const text = `Just checked in on Base! 🔵\n\nEarning rewards daily with TrueScore Mini App 🎯\n\nJoin me:`
-    const baseUrl = "https://v0-task-to-cash-seven.vercel.app"
-    // Base app uses Farcaster protocol - open compose in Warpcast/Base app
-    sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(baseUrl)}`)
+    const baseAppUrl = "https://base.app/app/v0-task-to-cash-seven.vercel.app"
+    // Share Base app link so it opens directly in Base app
+    sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(baseAppUrl)}`)
   }, [])
 
   useEffect(() => {
