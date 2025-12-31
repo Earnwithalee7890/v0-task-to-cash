@@ -110,6 +110,7 @@ export async function GET(request: NextRequest) {
                 }
             })
 
+
             // Find peak time
             let maxHourCount = -1
             hoursByCount.forEach((count, h) => {
@@ -118,6 +119,8 @@ export async function GET(request: NextRequest) {
                     peakHour = h
                 }
             })
+            // Ensure valid hour
+            peakHour = peakHour >= 0 && peakHour <= 23 ? peakHour : 12
 
             // Find peak day
             let maxDayCount = -1

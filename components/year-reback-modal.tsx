@@ -186,7 +186,7 @@ export function YearRebackModal({ isOpen, onClose, data, onShare }: YearRebackMo
                 <div className="flex flex-col items-center gap-4 mt-2">
                     <button
                         onClick={onShare}
-                        className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2"
+                        className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg"
                     >
                         <Share2 className="h-5 w-5" />
                         Share Reback
