@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ChevronRight, ChevronLeft, Calendar, Trophy, Heart, Star, Share2, Users, Mic, Sparkles, Compass, Zap } from "lucide-react"
+import { X, ChevronRight, ChevronLeft, Calendar, Trophy, Heart, Star, Share2, Users, Mic, Sparkles, Compass, Zap, Clock } from "lucide-react"
 
 interface YearRebackData {
     username: string
@@ -14,6 +14,8 @@ interface YearRebackData {
     totalLikes: number
     followers: number
     castsCount: number
+    peakHour?: number
+    peakDay?: string
     topCast: {
         text: string
         likes: number

@@ -22,6 +22,9 @@ export async function GET(request: NextRequest) {
             followers: 1205, // Mock follower count
             activeDays: 245,
             totalLikes: 1250,
+            castsCount: 342,
+            peakHour: 20,
+            peakDay: "Friday",
             topCast: {
                 text: "This is a demo cast text for the 2025 year review!",
                 likes: 45,
@@ -62,17 +65,32 @@ export async function GET(request: NextRequest) {
         let totalCastsInSample = 0
         let bestCast = null
         let maxEngagement = -1
+        let peakHour = 12 // Default noon
+        let peakDay = "Wednesday" // Default
 
         if (castsResponse.ok) {
             const castsData = await castsResponse.json()
             const casts = castsData.casts || []
             totalCastsInSample = casts.length
 
+            // Time analysis buckets
+            const hoursByCount = new Array(24).fill(0)
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            const daysByCount = new Array(7).fill(0)
+
             // Aggregation on sample
             casts.forEach((cast: any) => {
                 const likes = cast.reactions?.likes_count || 0
                 const replies = cast.replies?.count || 0
                 const engagement = likes + replies
+
+                // Time analysis
+                const date = new Date(cast.timestamp)
+                const hour = date.getUTCHours() // Using UTC for consistency
+                const day = date.getUTCDay()
+
+                hoursByCount[hour]++
+                daysByCount[day]++
 
                 totalLikesInSample += likes
 
@@ -87,6 +105,26 @@ export async function GET(request: NextRequest) {
                     }
                 }
             })
+
+            // Find peak time
+            let maxHourCount = -1
+            hoursByCount.forEach((count, h) => {
+                if (count > maxHourCount) {
+                    maxHourCount = count
+                    peakHour = h
+                }
+            })
+
+            // Find peak day
+            let maxDayCount = -1
+            let peakDayIndex = 0
+            daysByCount.forEach((count, d) => {
+                if (count > maxDayCount) {
+                    maxDayCount = count
+                    peakDayIndex = d
+                }
+            })
+            peakDay = dayNames[peakDayIndex]
         }
 
         const score = Math.round((user.experimental?.neynar_user_score ?? 0) * 100)
@@ -112,7 +150,9 @@ export async function GET(request: NextRequest) {
             activeDays: Math.min(totalCastsInSample, 365), // Proxy for activity
             totalLikes: totalLikesInSample, // Explicitly labeled as sample or "2025 Impact"
             topCast: bestCast,
-            castsCount: totalCastsInSample
+            castsCount: totalCastsInSample,
+            peakHour: peakHour,
+            peakDay: peakDay
         })
 
     } catch (error) {
