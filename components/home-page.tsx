@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { ScoreDisplay } from "./score-display"
 import { ReputationBadge } from "./reputation-badge"
 import { QuotientScoreCard } from "./quotient-score-card"
@@ -12,20 +11,31 @@ import { ShareCard } from "./share-card"
 
 import { Plus, Share2, User } from "lucide-react"
 import sdk from "@farcaster/frame-sdk"
-import type { UserData } from "./truescore-app"
-
-interface HomePageProps {
-    userData: UserData
-    onAddToMiniApp: () => void
-    onShare: () => void
-    onShareBase: () => void
+onShareBase: () => void
     onShowYearReback: () => void
 }
 
+import { useEffect, useState } from "react"
+import { Confetti } from "./confetti"
+
 export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onShowYearReback }: HomePageProps) {
+    const [showConfetti, setShowConfetti] = useState(false)
+
+    // Feature 8: Confetti for High Scores
+    useEffect(() => {
+        if (userData.score >= 80) {
+            const hasSeenConfetti = sessionStorage.getItem(`confetti_seen_${userData.fid}`)
+            if (!hasSeenConfetti) {
+                setShowConfetti(true)
+                sessionStorage.setItem(`confetti_seen_${userData.fid}`, "true")
+            }
+        }
+    }, [userData.score, userData.fid])
 
     return (
-        <div className="space-y-6 pb-2">
+        <div className="space-y-6 pb-2 relative">
+            {showConfetti && <Confetti />}
+
             {/* DEBUG: Show FID being used (Click to Copy) */}
             <div className="opacity-0 animate-slide-up stagger-0 text-center">
                 <button
