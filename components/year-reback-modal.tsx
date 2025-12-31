@@ -31,6 +31,15 @@ interface YearRebackModalProps {
     onShare: () => void
 }
 
+interface Step {
+    title: string
+    description: string
+    content?: React.ReactNode
+    icon: React.ReactNode
+    color: string
+    accent: string
+}
+
 export function YearRebackModal({ isOpen, onClose, data, onShare }: YearRebackModalProps) {
     const [currentStep, setCurrentStep] = useState(0)
 
