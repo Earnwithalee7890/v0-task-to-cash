@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { ScoreDisplay } from "./score-display"
 import { ReputationBadge } from "./reputation-badge"
 import { QuotientScoreCard } from "./quotient-score-card"
@@ -8,20 +9,24 @@ import { StatsGrid } from "./stats-grid"
 import { DailyCheckin } from "./daily-checkin"
 import { BadgesList } from "./badges-list"
 import { ShareCard } from "./share-card"
+import { Confetti } from "./confetti"
 
 import { Plus, Share2, User } from "lucide-react"
 import sdk from "@farcaster/frame-sdk"
-onShareBase: () => void
+import type { UserData } from "./truescore-app"
+
+interface HomePageProps {
+    userData: UserData
+    onAddToMiniApp: () => void
+    onShare: () => void
+    onShareBase: () => void
     onShowYearReback: () => void
 }
-
-import { useEffect, useState } from "react"
-import { Confetti } from "./confetti"
 
 export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onShowYearReback }: HomePageProps) {
     const [showConfetti, setShowConfetti] = useState(false)
 
-    // Feature 8: Confetti for High Scores
+    // Feature 8: Confetti for High Scores (Trigger logic)
     useEffect(() => {
         if (userData.score >= 80) {
             const hasSeenConfetti = sessionStorage.getItem(`confetti_seen_${userData.fid}`)
