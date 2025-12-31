@@ -109,6 +109,17 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSho
                         </div>
                         <div className="relative px-3 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-400 text-[10px] font-bold text-black letter-space-wide">PRO</div>
                     </button>
+
+                    {/* Feature 5: Twitter Share */}
+                    <button
+                        onClick={() => {
+                            const text = `I just checked my Farcaster Reputation on TrueScore! 🎯\n\nMy Score: ${userData.score}\n\nCheck yours here: https://v0-task-to-cash-seven.vercel.app`
+                            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
+                        }}
+                        className="w-full flex items-center justify-center gap-2 h-10 rounded-xl bg-black/40 border border-white/10 hover:bg-black/60 transition-colors"
+                    >
+                        <span className="text-sm font-medium text-white/80">Share on X</span>
+                    </button>
                 </div>
             </div>
         </div>
