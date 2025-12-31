@@ -19,19 +19,20 @@ export async function GET(request: NextRequest) {
             pfpUrl: "",
             score: 92,
             rank: "Top 1%",
+            followers: 1205, // Mock follower count
             activeDays: 245,
             totalLikes: 1250,
             topCast: {
-                text: "This is a demo cast text for the year review!",
+                text: "This is a demo cast text for the 2025 year review!",
                 likes: 45,
                 replies: 12,
-                date: "2024-06-15"
+                date: "2025-06-15"
             }
         })
     }
 
     try {
-        // 1. Fetch User Details for Score
+        // 1. Fetch User Details for Score and Followers
         const userResponse = await fetch(`https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`, {
             headers: {
                 accept: "application/json",
@@ -46,10 +47,9 @@ export async function GET(request: NextRequest) {
 
         if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 })
 
-        // 2. Fetch Recent Casts (limit 100 to estimate yearly activity)
-        // Note: Fetching deeper history requires pagination which might be slow for a mini-app load
+        // 2. Fetch Recent Casts (limit 150 for better sample of 2025)
         const castsResponse = await fetch(
-            `https://api.neynar.com/v2/farcaster/feed/user/${fid}?limit=100`,
+            `https://api.neynar.com/v2/farcaster/feed/user/${fid}?limit=150`,
             {
                 headers: {
                     accept: "application/json",
@@ -58,21 +58,23 @@ export async function GET(request: NextRequest) {
             }
         )
 
-        let totalLikes = 0
+        let totalLikesInSample = 0
+        let totalCastsInSample = 0
         let bestCast = null
         let maxEngagement = -1
 
         if (castsResponse.ok) {
             const castsData = await castsResponse.json()
             const casts = castsData.casts || []
+            totalCastsInSample = casts.length
 
-            // Simple aggregation
+            // Aggregation on sample
             casts.forEach((cast: any) => {
                 const likes = cast.reactions?.likes_count || 0
                 const replies = cast.replies?.count || 0
                 const engagement = likes + replies
 
-                totalLikes += likes
+                totalLikesInSample += likes
 
                 if (engagement > maxEngagement) {
                     maxEngagement = engagement
@@ -89,11 +91,14 @@ export async function GET(request: NextRequest) {
 
         const score = Math.round((user.experimental?.neynar_user_score ?? 0) * 100)
 
-        // Estimate Rank based on score (heuristic)
-        let rank = "Top 50%"
-        if (score >= 90) rank = "Top 1%"
+        // Exact follower count from user object (Accurate)
+        const followers = user.follower_count || 0
+
+        // Rank based on Power Badge or Score
+        let rank = "Explorer"
+        if (user.power_badge) rank = "Power User"
+        else if (score >= 90) rank = "Top 1%"
         else if (score >= 80) rank = "Top 5%"
-        else if (score >= 70) rank = "Top 10%"
         else if (score >= 50) rank = "Top 25%"
 
         return NextResponse.json({
@@ -103,9 +108,11 @@ export async function GET(request: NextRequest) {
             pfpUrl: user.pfp_url,
             score: score,
             rank: rank,
-            activeDays: Math.floor(Math.random() * 100) + 150, // Mocking active days as it requires complex analysis
-            totalLikes: totalLikes * 5, // Multiplying by 5 to estimate full year from 100 casts sample
-            topCast: bestCast
+            followers: followers, // Accurate
+            activeDays: Math.min(totalCastsInSample, 365), // Proxy for activity
+            totalLikes: totalLikesInSample, // Explicitly labeled as sample or "2025 Impact"
+            topCast: bestCast,
+            castsCount: totalCastsInSample
         })
 
     } catch (error) {
