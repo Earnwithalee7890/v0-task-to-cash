@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -102,3 +103,5 @@ export function ActivityFeed({ activities = [] }: ActivityFeedProps) {
         </div>
     )
 }
+
+export const ActivityFeedMemo = React.memo(ActivityFeed)
