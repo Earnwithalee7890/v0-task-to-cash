@@ -95,12 +95,20 @@ export function ScoreDisplay({ score }: ScoreDisplayProps) {
 
         {/* Score number with aqua neon glow */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span
-            className="text-7xl font-bold tabular-nums neon-glow-aqua animate-pulse"
-            style={{ animationDuration: "3s" }}
-          >
-            {animatedScore}
-          </span>
+          <div className="relative flex flex-col items-center">
+            <span
+              className="text-7xl font-bold tabular-nums neon-glow-aqua animate-pulse"
+              style={{ animationDuration: "3s" }}
+            >
+              {animatedScore}
+            </span>
+            {/* Elite Badge */}
+            {score >= 90 && (
+              <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-400 to-amber-600 text-[10px] font-black text-black px-2 py-0.5 rounded-full shadow-lg border border-yellow-200 animate-pulse">
+                ELITE
+              </div>
+            )}
+          </div>
           <span className="text-sm text-cyan-300/80 mt-2 letter-space-wide">NEYNAR SCORE</span>
         </div>
       </div>
