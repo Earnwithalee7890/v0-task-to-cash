@@ -3,16 +3,15 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, ChevronRight, ChevronLeft, Calendar, Trophy, Heart, Star, Share2, Users, Mic, Sparkles, Compass, Zap, Clock, Link as LinkIcon, Check } from "lucide-react"
-
-import { X, ChevronRight, ChevronLeft, Calendar, Trophy, Heart, Star, Share2, Users, Mic, Sparkles, Compass, Zap, Clock, Link as LinkIcon, Check } from "lucide-react"
 import type { YearRebackData } from "@/lib/types"
 import { formatNumber } from "@/lib/utils"
 
 // Modal props definition
-isOpen: boolean
-onClose: () => void
+interface YearRebackModalProps {
+    isOpen: boolean
+    onClose: () => void
     data: YearRebackData | null
-onShare: () => void
+    onShare: () => void
 }
 
 interface Step {

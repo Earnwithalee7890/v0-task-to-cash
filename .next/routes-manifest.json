@@ -76,6 +76,12 @@
       "namedRegex": "^/api/neynar/user(?:/)?$"
     },
     {
+      "page": "/api/neynar/year-review",
+      "regex": "^/api/neynar/year\\-review(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/neynar/year\\-review(?:/)?$"
+    },
+    {
       "page": "/api/og",
       "regex": "^/api/og(?:/)?$",
       "routeKeys": {},

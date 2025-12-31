@@ -7,6 +7,7 @@
   "/api/generate-post/route": "/api/generate-post",
   "/api/neynar/search/route": "/api/neynar/search",
   "/api/neynar/user/route": "/api/neynar/user",
+  "/api/neynar/year-review/route": "/api/neynar/year-review",
   "/api/og/route": "/api/og",
   "/api/quotient/route": "/api/quotient",
   "/api/send-notification-action/route": "/api/send-notification-action",

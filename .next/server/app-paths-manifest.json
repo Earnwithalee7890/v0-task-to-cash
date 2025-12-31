@@ -7,6 +7,7 @@
   "/api/generate-post/route": "app/api/generate-post/route.js",
   "/api/neynar/search/route": "app/api/neynar/search/route.js",
   "/api/neynar/user/route": "app/api/neynar/user/route.js",
+  "/api/neynar/year-review/route": "app/api/neynar/year-review/route.js",
   "/api/og/route": "app-edge-has-no-entrypoint",
   "/api/quotient/route": "app/api/quotient/route.js",
   "/api/send-notification-action/route": "app/api/send-notification-action/route.js",
