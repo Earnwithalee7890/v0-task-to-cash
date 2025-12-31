@@ -60,8 +60,8 @@ export function ActivityFeed({ activities = [] }: ActivityFeedProps) {
     }
 
     return (
-        <div className="glass-card-strong p-5 space-y-4">
-            <div className="flex items-center justify-between">
+        <div className="glass-card-strong p-5 space-y-5">
+            <div className="flex items-center justify-between border-b border-white/5 pb-2">
                 <h3 className="font-bold text-foreground">Recent Activity</h3>
                 <span className="text-xs text-muted-foreground">Last 24h</span>
             </div>
