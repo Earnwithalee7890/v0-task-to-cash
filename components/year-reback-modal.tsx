@@ -175,6 +175,10 @@ export function YearRebackModal({ isOpen, onClose, data, onShare }: YearRebackMo
             description: "Keep building your reputation and connecting with the community!",
             content: (
                 <div className="flex flex-col gap-3 w-full">
+                    <div className="bg-white/5 p-4 rounded-xl border border-white/10 text-center mb-2">
+                        <span className="text-sm text-white/60 uppercase tracking-widest block mb-1">Neynar Score</span>
+                        <span className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">{data.score}</span>
+                    </div>
                     <button
                         onClick={onShare}
                         className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg"
