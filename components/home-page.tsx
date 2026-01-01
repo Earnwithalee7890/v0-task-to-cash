@@ -10,6 +10,8 @@ import { DailyCheckin } from "./daily-checkin"
 import { BadgesList } from "./badges-list"
 import { ShareCard } from "./share-card"
 import { Confetti } from "./confetti"
+import { LevelProgress } from "./level-progress"
+import { LuckySpin } from "./lucky-spin"
 
 import { Plus, Share2, User } from "lucide-react"
 import sdk from "@farcaster/frame-sdk"
@@ -39,7 +41,7 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSho
 
     return (
         <div className="space-y-6 pb-2 relative">
-            {showConfetti && <Confetti />}
+            <Confetti trigger={showConfetti} onComplete={() => setShowConfetti(false)} />
 
             {/* DEBUG: Show FID being used (Click to Copy) */}
             <div className="opacity-0 animate-slide-up stagger-0 text-center">
@@ -57,7 +59,10 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSho
 
             {/* Neynar Score Display */}
             <div className="opacity-0 animate-slide-up stagger-1">
-                <ScoreDisplay score={userData.score} />
+                <LevelProgress score={userData.score} />
+                <div className="mt-4">
+                    <ScoreDisplay score={userData.score} />
+                </div>
             </div>
 
 
@@ -69,7 +74,8 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSho
             </div>
 
             {/* Daily Check-in */}
-            <div className="opacity-0 animate-slide-up stagger-3">
+            <div className="opacity-0 animate-slide-up stagger-3 space-y-4">
+                <LuckySpin />
                 <DailyCheckin />
             </div>
 
