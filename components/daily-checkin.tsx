@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CalendarCheck, Loader2, Check, ExternalLink, Zap } from "lucide-react"
+import { CalendarCheck, Loader2, Check, ExternalLink, Zap, Shield } from "lucide-react"
 import { useAccount, useConnect, useSendTransaction, useSwitchChain, useChainId, useWriteContract } from "wagmi"
 import { base, celo, mainnet } from "wagmi/chains"
 
@@ -213,6 +213,15 @@ export function DailyCheckin() {
             <span className="text-[10px] font-semibold text-cyan-300">0.000001 ETH fee</span>
           </div>
         )}
+      </div>
+
+      {/* Streak Protection Badge */}
+      <div className="flex items-center justify-between bg-black/20 rounded-lg p-2 border border-white/5">
+        <div className="flex items-center gap-2">
+          <Shield className="h-4 w-4 text-green-400" />
+          <span className="text-xs text-green-200 font-medium">Streak Protection Active</span>
+        </div>
+        <span className="text-[10px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full border border-green-500/30">Free</span>
       </div>
 
       <div className="flex gap-3">
