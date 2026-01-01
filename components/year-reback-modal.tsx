@@ -135,6 +135,14 @@ export function YearRebackModal({ isOpen, onClose, data, onShare }: YearRebackMo
                             </span>
                         </div>
                     </div>
+
+                    <div className="w-full h-px bg-white/10 my-2" />
+
+                    <div className="p-3 bg-white/5 rounded-xl border border-white/10 w-full">
+                        <p className="text-xs text-white/60 text-center italic">
+                            "Most Farcaster users are active around 14:00 UTC. Try casting then!"
+                        </p>
+                    </div>
                 </div>
             ),
             icon: <Clock className="h-10 w-10 text-blue-400" />,
