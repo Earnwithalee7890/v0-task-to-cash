@@ -91,12 +91,12 @@ export function YearRebackModal({ isOpen, onClose, data, onShare }: YearRebackMo
 
                     <div className="mt-4 grid grid-cols-2 gap-3 w-full">
                         <div className="bg-white/5 rounded-lg p-2 text-center border border-white/10">
-                            <span className="block text-xl font-bold text-green-400">{data.castsCount}</span>
-                            <span className="text-[10px] text-white/50 uppercase tracking-widest">Casts</span>
+                            <span className="block text-xl font-bold text-green-400">{data.castsCount > 0 ? data.castsCount : "Ready"}</span>
+                            <span className="text-[10px] text-white/50 uppercase tracking-widest">{data.castsCount > 0 ? "Casts" : "to Cast"}</span>
                         </div>
                         <div className="bg-white/5 rounded-lg p-2 text-center border border-white/10">
-                            <span className="block text-xl font-bold text-purple-400">{data.activeDays}</span>
-                            <span className="text-[10px] text-white/50 uppercase tracking-widest">Active Days</span>
+                            <span className="block text-xl font-bold text-purple-400">{data.activeDays > 0 ? data.activeDays : "Day 1"}</span>
+                            <span className="text-[10px] text-white/50 uppercase tracking-widest">{data.activeDays > 0 ? "Active Days" : "Loading..."}</span>
                         </div>
                     </div>
                 </div>
