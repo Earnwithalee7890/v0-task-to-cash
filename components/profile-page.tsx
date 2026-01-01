@@ -1,9 +1,14 @@
 "use client"
 
+import { useState } from "react"
 import { UserStats } from "./user-stats"
 import { DailyCheckin } from "./daily-checkin"
 import { CreatorTip } from "./creator-tip"
 import { ScoreHistory } from "./score-history"
+import { RivalComparisonModal } from "./rival-comparison-modal"
+import { BioGenerator } from "./bio-generator"
+import { PowerCard } from "./power-card"
+import { Swords } from "lucide-react"
 import type { UserData } from "./truescore-app"
 
 interface ProfilePageProps {
@@ -11,6 +16,8 @@ interface ProfilePageProps {
 }
 
 export function ProfilePage({ userData }: ProfilePageProps) {
+    const [showRivalModal, setShowRivalModal] = useState(false)
+
     return (
         <div className="space-y-6 pb-24">
             {/* User Info */}
@@ -27,12 +34,25 @@ export function ProfilePage({ userData }: ProfilePageProps) {
                     <p className="font-semibold text-xl text-foreground">{userData.displayName}</p>
                     <p className="text-sm text-muted-foreground mb-2">@{userData.username}</p>
                     {userData.bio && (
-                        <p className="text-xs text-center text-muted-foreground/80 max-w-[250px] leading-relaxed line-clamp-3">
+                        <p className="text-xs text-center text-muted-foreground/80 max-w-[250px] leading-relaxed line-clamp-3 mb-3">
                             {userData.bio}
                         </p>
                     )}
+                    <button
+                        onClick={() => setShowRivalModal(true)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/20 transition-colors"
+                    >
+                        <Swords className="h-3 w-3" />
+                        Battle a Friend
+                    </button>
                 </div>
             </div>
+
+            <RivalComparisonModal
+                isOpen={showRivalModal}
+                onClose={() => setShowRivalModal(false)}
+                currentUser={userData}
+            />
 
             {/* Followers/Following Stats */}
             <div className="opacity-0 animate-slide-up stagger-2">
@@ -52,6 +72,16 @@ export function ProfilePage({ userData }: ProfilePageProps) {
             {/* Feature 6: Score History */}
             <div className="opacity-0 animate-slide-up stagger-5">
                 <ScoreHistory currentScore={userData.score} />
+            </div>
+
+            {/* Feature 5: Bio Generator */}
+            <div className="opacity-0 animate-slide-up stagger-5">
+                <BioGenerator score={userData.score} rank={userData.score * 10} followers={userData.followers} />
+            </div>
+
+            {/* Feature 8: Power Card */}
+            <div className="opacity-0 animate-slide-up stagger-5">
+                <PowerCard userData={userData} />
             </div>
         </div>
     )
