@@ -375,6 +375,7 @@ export function TrueScoreApp() {
                 onShare={shareApp}
                 onShareBase={shareOnBase}
                 onShowYearReback={() => setShowYearReback(true)}
+                onRefresh={() => fetchUserData(userData.fid)}
               />
             )
           ) : activeTab === "search" ? (

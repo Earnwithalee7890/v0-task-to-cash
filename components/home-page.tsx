@@ -13,7 +13,7 @@ import { Confetti } from "./confetti"
 import { LevelProgress } from "./level-progress"
 import { LuckySpin } from "./lucky-spin"
 
-import { Plus, Share2, User } from "lucide-react"
+import { Plus, Share2, User, RefreshCw } from "lucide-react"
 import sdk from "@farcaster/frame-sdk"
 import type { UserData } from "./truescore-app"
 
@@ -23,10 +23,12 @@ interface HomePageProps {
     onShare: () => void
     onShareBase: () => void
     onShowYearReback: () => void
+    onRefresh: () => void
 }
 
-export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onShowYearReback }: HomePageProps) {
+export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onShowYearReback, onRefresh }: HomePageProps) {
     const [showConfetti, setShowConfetti] = useState(false)
+    const [isRefreshing, setIsRefreshing] = useState(false)
 
     // Feature 8: Confetti for High Scores (Trigger logic)
     useEffect(() => {
@@ -39,21 +41,34 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSho
         }
     }, [userData.score, userData.fid])
 
+    const handleRefresh = async () => {
+        setIsRefreshing(true)
+        await onRefresh()
+        setTimeout(() => setIsRefreshing(false), 1000)
+    }
+
     return (
         <div className="space-y-6 pb-2 relative">
             <Confetti trigger={showConfetti} onComplete={() => setShowConfetti(false)} />
 
             {/* DEBUG: Show FID being used (Click to Copy) */}
-            <div className="opacity-0 animate-slide-up stagger-0 text-center">
+            <div className="opacity-0 animate-slide-up stagger-0 text-center flex justify-center items-center gap-4">
                 <button
                     onClick={() => {
                         navigator.clipboard.writeText(userData.fid.toString())
-                        // Could add a toast here, but for now simple visual feedback via active state is fine
                     }}
                     className="text-xs text-muted-foreground/60 hover:text-cyan-400 transition-colors cursor-pointer active:scale-95"
                     title="Click to copy FID"
                 >
                     FID: {userData.fid} 📋
+                </button>
+                <button
+                    onClick={handleRefresh}
+                    disabled={isRefreshing}
+                    className="text-xs text-muted-foreground/60 hover:text-cyan-400 transition-colors flex items-center gap-1 active:scale-95 disabled:opacity-50"
+                >
+                    <RefreshCw className={`h-3 w-3 ${isRefreshing ? "animate-spin" : ""}`} />
+                    Refresh
                 </button>
             </div>
 
