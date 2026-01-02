@@ -1,16 +1,18 @@
 "use client"
 import { useState } from "react"
 import { AboutModal } from "./about-modal"
+import { TOSModal } from "./tos-modal"
 
 export function AppFooter() {
   const [showAbout, setShowAbout] = useState(false)
+  const [showTOS, setShowTOS] = useState(false)
 
   return (
     <>
       <footer className="py-6 text-center space-y-4">
-        <div className="flex gap-4 text-xs text-muted-foreground/60">
-          <a href="/privacy" className="hover:text-cyan-400 transition-colors">Privacy</a>
-          <a href="/terms" className="hover:text-cyan-400 transition-colors">Terms</a>
+        <div className="flex gap-4 text-xs text-muted-foreground/60 justify-center">
+          <button onClick={() => setShowAbout(true)} className="hover:text-cyan-400 transition-colors">Privacy</button>
+          <button onClick={() => setShowTOS(true)} className="hover:text-cyan-400 transition-colors">Terms</button>
           <a
             href="mailto:support@truescore.xyz?subject=TrueScore%20Feedback"
             className="hover:text-cyan-400 transition-colors"
@@ -25,6 +27,7 @@ export function AppFooter() {
         </p>
       </footer>
       <AboutModal isOpen={showAbout} onClose={() => setShowAbout(false)} />
+      <TOSModal isOpen={showTOS} onClose={() => setShowTOS(false)} />
     </>
   )
 }
