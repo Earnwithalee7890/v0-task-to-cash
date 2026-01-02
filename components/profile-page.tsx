@@ -8,7 +8,7 @@ import { ScoreHistory } from "./score-history"
 import { RivalComparisonModal } from "./rival-comparison-modal"
 import { BioGenerator } from "./bio-generator"
 import { PowerCard } from "./power-card"
-import { Swords, Copy, Check } from "lucide-react"
+import { Swords, Copy, Check, Download } from "lucide-react"
 import { toast } from "sonner"
 import type { UserData } from "./truescore-app"
 
@@ -33,6 +33,47 @@ function CopyButton({ address }: { address: string }) {
             title="Copy Address"
         >
             {copied ? <Check className="h-3 w-3 text-green-400" /> : <Copy className="h-3 w-3" />}
+        </button>
+    )
+}
+
+function ExportButton({ userData }: { userData: UserData }) {
+    const handleExport = () => {
+        const headers = ["FID", "Username", "Display Name", "Score", "Reputation", "Followers", "Following"]
+        const values = [
+            userData.fid,
+            userData.username,
+            userData.displayName,
+            userData.score,
+            userData.reputation,
+            userData.followers,
+            userData.following
+        ]
+
+        const csvContent = [
+            headers.join(","),
+            values.join(",")
+        ].join("\n")
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement("a")
+        link.setAttribute("href", url)
+        link.setAttribute("download", `truescore_${userData.username}_${new Date().toISOString().split('T')[0]}.csv`)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+
+        toast.success("Stats exported to CSV")
+    }
+
+    return (
+        <button
+            onClick={handleExport}
+            className="mt-2 text-[10px] text-muted-foreground/60 hover:text-cyan-400 transition-colors flex items-center gap-1"
+        >
+            <Download className="h-3 w-3" />
+            Export Stats
         </button>
     )
 }
@@ -77,6 +118,9 @@ export function ProfilePage({ userData }: ProfilePageProps) {
                             <CopyButton address={userData.verifiedAddresses[0]} />
                         </div>
                     )}
+
+                    {/* Export Stats Button */}
+                    <ExportButton userData={userData} />
                 </div>
             </div>
 
