@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { AboutModal } from "./about-modal"
 import { TOSModal } from "./tos-modal"
+import { NetworkStatus } from "./network-status"
 
 export function AppFooter() {
   const [showAbout, setShowAbout] = useState(false)
@@ -25,6 +26,7 @@ export function AppFooter() {
           <span className="w-1 h-1 rounded-full bg-muted-foreground/40" />
           <span>v0.1.0</span>
         </p>
+        <NetworkStatus />
       </footer>
       <AboutModal isOpen={showAbout} onClose={() => setShowAbout(false)} />
       <TOSModal isOpen={showTOS} onClose={() => setShowTOS(false)} />
