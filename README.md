@@ -246,7 +246,7 @@ Created with ❤️ by [@aleekhoso](https://warpcast.com/aleekhoso)
 
 ## 🏆 Talent Protocol - Base Builder Event
 
-This project is participating in the **Top Base Builders: December** event on Talent Protocol.
+This project is participating in the **Top Base Builders: January** event on Talent Protocol.
 
 ### Tracking Metrics
 
@@ -263,7 +263,7 @@ This project is participating in the **Top Base Builders: December** event on Ta
 #### ✅ GitHub Contributions
 - Public repository with verified commits
 - Author email: `earnwithalee@gmail.com`
-- Regular contributions tracked Dec 1-31
+- Regular contributions tracked **Jan 1 - Jan 31**
 
 ### Smart Contracts
 
