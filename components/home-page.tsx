@@ -157,15 +157,27 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSho
                     </button>
 
                     {/* Feature 5: Twitter Share */}
-                    <button
-                        onClick={() => {
-                            const text = `I just checked my Farcaster Reputation on TrueScore! 🎯\n\nMy Score: ${userData.score}\n\nCheck yours here: https://v0-task-to-cash-seven.vercel.app`
-                            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
-                        }}
-                        className="w-full flex items-center justify-center gap-2 h-10 rounded-xl bg-black/40 border border-white/10 hover:bg-black/60 transition-colors"
-                    >
-                        <span className="text-sm font-medium text-white/80">Share on X</span>
-                    </button>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={() => {
+                                const text = `I just checked my Farcaster Reputation on TrueScore! 🎯\n\nMy Score: ${userData.score}\n\nCheck yours here: https://v0-task-to-cash-seven.vercel.app`
+                                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
+                            }}
+                            className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl bg-black/40 border border-white/10 hover:bg-black/60 transition-colors"
+                        >
+                            <span className="text-sm font-medium text-white/80">Share on X</span>
+                        </button>
+
+                        <button
+                            onClick={() => {
+                                const text = `I just checked my Farcaster Reputation on TrueScore! 🎯\n\nMy Score: ${userData.score}\n\nCheck yours here: https://v0-task-to-cash-seven.vercel.app`
+                                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+                            }}
+                            className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl bg-green-500/20 border border-green-500/30 hover:bg-green-500/30 transition-colors"
+                        >
+                            <span className="text-sm font-medium text-green-300">WhatsApp</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
