@@ -8,11 +8,33 @@ import { ScoreHistory } from "./score-history"
 import { RivalComparisonModal } from "./rival-comparison-modal"
 import { BioGenerator } from "./bio-generator"
 import { PowerCard } from "./power-card"
-import { Swords } from "lucide-react"
+import { Swords, Copy, Check } from "lucide-react"
+import { toast } from "sonner"
 import type { UserData } from "./truescore-app"
 
 interface ProfilePageProps {
     userData: UserData
+}
+
+function CopyButton({ address }: { address: string }) {
+    const [copied, setCopied] = useState(false)
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(address)
+        setCopied(true)
+        toast.success("Address copied to clipboard")
+        setTimeout(() => setCopied(false), 2000)
+    }
+
+    return (
+        <button
+            onClick={handleCopy}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            title="Copy Address"
+        >
+            {copied ? <Check className="h-3 w-3 text-green-400" /> : <Copy className="h-3 w-3" />}
+        </button>
+    )
 }
 
 export function ProfilePage({ userData }: ProfilePageProps) {
@@ -45,6 +67,16 @@ export function ProfilePage({ userData }: ProfilePageProps) {
                         <Swords className="h-3 w-3" />
                         Battle a Friend
                     </button>
+
+                    {/* Wallet Address Copy Feature */}
+                    {userData.verifiedAddresses && userData.verifiedAddresses.length > 0 && (
+                        <div className="mt-3 flex items-center gap-2 px-3 py-1.5 bg-secondary/30 rounded-full border border-white/5">
+                            <span className="text-xs text-muted-foreground font-mono">
+                                {userData.verifiedAddresses[0].slice(0, 6)}...{userData.verifiedAddresses[0].slice(-4)}
+                            </span>
+                            <CopyButton address={userData.verifiedAddresses[0]} />
+                        </div>
+                    )}
                 </div>
             </div>
 
