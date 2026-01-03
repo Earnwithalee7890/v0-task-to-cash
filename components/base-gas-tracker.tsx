@@ -49,9 +49,15 @@ export function BaseGasTracker() {
                 {isLoading && displayGas === "0.00" ? (
                     <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
                 ) : (
-                    <span className={`text-xs font-mono font-bold ${getGasColor(Number(displayGas))}`}>
-                        {displayGas} Gwei
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                        <span className="relative flex h-2 w-2">
+                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${Number(displayGas) < 0.1 ? 'bg-green-400' : 'bg-yellow-400'}`}></span>
+                            <span className={`relative inline-flex rounded-full h-2 w-2 ${Number(displayGas) < 0.1 ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
+                        </span>
+                        <span className={`text-xs font-mono font-bold ${getGasColor(Number(displayGas))}`}>
+                            {displayGas} Gwei
+                        </span>
+                    </div>
                 )}
             </div>
         </div>
