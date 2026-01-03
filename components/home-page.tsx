@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { toast } from "sonner"
 import { ScoreDisplay } from "./score-display"
 import { ReputationBadge } from "./reputation-badge"
 import { QuotientScoreCard } from "./quotient-score-card"
@@ -59,6 +60,7 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSho
                     <button
                         onClick={() => {
                             navigator.clipboard.writeText(userData.fid.toString())
+                            toast.success("FID Copied to clipboard!")
                         }}
                         className="text-xs text-muted-foreground/60 hover:text-cyan-400 transition-colors cursor-pointer active:scale-95"
                         title="Click to copy FID"
