@@ -70,7 +70,7 @@ export function LevelProgress({ score }: LevelProgressProps) {
             <div className={`absolute top-0 right-0 w-32 h-32 ${barColor} opacity-5 blur-[60px] rounded-full`} />
 
             <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 pt-1">
                     <Trophy className={`h-4 w-4 ${color}`} />
                     <span className={`font-bold ${color}`}>{rankTitle}</span>
                 </div>
