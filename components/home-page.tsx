@@ -13,6 +13,7 @@ import { Confetti } from "./confetti"
 import { LevelProgress } from "./level-progress"
 import { LuckySpin } from "./lucky-spin"
 import { BaseGasTracker } from "./base-gas-tracker"
+import { ScoreHistory } from "./score-history" // New Import
 
 import { Plus, Share2, User, RefreshCw } from "lucide-react"
 import sdk from "@farcaster/frame-sdk"
@@ -93,6 +94,10 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSho
                 <LevelProgress score={userData.score} />
                 <div className="mt-4">
                     <ScoreDisplay score={userData.score} />
+                </div>
+                {/* Feature 2: 7 Day Trend */}
+                <div className="mt-4">
+                    <ScoreHistory currentScore={userData.score} />
                 </div>
             </div>
 
