@@ -83,24 +83,17 @@ export function PowerCard({ userData }: PowerCardProps) {
 
                     {/* Stats Grid */}
                     <div className="grid grid-cols-2 gap-2 text-xs mb-auto">
-                        <div className="bg-white/5 rounded p-2 text-center">
-                            <span className="block text-gray-400 text-[10px]">Followers</span>
-                            <span className="font-bold">{userData.followers.toLocaleString()}</span>
-                        </div>
-                        <div className="bg-white/5 rounded p-2 text-center">
-                            <span className="block text-gray-400 text-[10px]">Status</span>
-                            <span className="font-bold capitalize">
-                                {userData.activeStatus ? userData.activeStatus : "Unknown"}
-                            </span>
-                        </div>
-                        <div className="bg-white/5 rounded p-2 text-center">
-                            <span className="block text-gray-400 text-[10px]">Power User</span>
-                            <span className="font-bold">{userData.powerBadge ? "Yes" : "No"}</span>
-                        </div>
-                        <div className="bg-white/5 rounded p-2 text-center">
-                            <span className="block text-gray-400 text-[10px]">Casts</span>
-                            <span className="font-bold">{userData.casts !== undefined ? userData.casts.toLocaleString() : 0}</span>
-                        </div>
+                        {[
+                            { label: "Followers", value: userData.followers.toLocaleString() },
+                            { label: "Status", value: userData.activeStatus ? userData.activeStatus : "Unknown", capitalize: true },
+                            { label: "Power User", value: userData.powerBadge ? "Yes" : "No" },
+                            { label: "Casts", value: userData.casts !== undefined ? userData.casts.toLocaleString() : "0" }
+                        ].map((stat, i) => (
+                            <div key={i} className="bg-white/5 rounded p-2 text-center backdrop-blur-md border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:shadow-[0_0_10px_rgba(255,255,255,0.1)] group/stat cursor-default">
+                                <span className="block text-gray-400 text-[10px] uppercase tracking-wider group-hover/stat:text-white/70 transition-colors">{stat.label}</span>
+                                <span className={`font-bold block ${stat.capitalize ? 'capitalize' : ''} group-hover/stat:scale-105 transition-transform`}>{stat.value}</span>
+                            </div>
+                        ))}
                     </div>
 
                     {/* Footer */}
