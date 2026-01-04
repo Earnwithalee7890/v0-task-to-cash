@@ -16,6 +16,7 @@ import { OnboardingModal } from "./onboarding-modal"
 import { AboutModal } from "./about-modal"
 import { YearRebackModal } from "./year-reback-modal"
 import { MatrixRain } from "./matrix-rain"
+import { NewsModal } from "./news-modal"
 import { Skeleton } from "@/components/ui/skeleton"
 import { PowerCardSkeleton } from "@/components/power-card-skeleton"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -53,18 +54,38 @@ export function TrueScoreApp() {
   const [isZenMode, setIsZenMode] = useState(false)
   const [matrixClicks, setMatrixClicks] = useState(0)
   const [showMatrix, setShowMatrix] = useState(false)
+
   const [showAboutModal, setShowAboutModal] = useState(false)
+  const [showNewsModal, setShowNewsModal] = useState(false)
 
   useEffect(() => {
     const hasSeenOnboarding = localStorage.getItem("truescore_onboarding_seen")
     if (!hasSeenOnboarding) {
       setShowOnboarding(true)
     }
+
+    // Check for News Modal
+    const hasSeenNews = localStorage.getItem("truescore_news_seen_v1")
+    if (!hasSeenNews && hasSeenOnboarding) { // Only show if onboarding is done/already seen
+      // Small delay to not overwhelm
+      setTimeout(() => setShowNewsModal(true), 1500)
+    }
   }, [])
 
   const handleCloseOnboarding = () => {
     localStorage.setItem("truescore_onboarding_seen", "true")
     setShowOnboarding(false)
+
+    // Show news after onboarding if not seen
+    const hasSeenNews = localStorage.getItem("truescore_news_seen_v1")
+    if (!hasSeenNews) {
+      setTimeout(() => setShowNewsModal(true), 500)
+    }
+  }
+
+  const handleCloseNews = () => {
+    localStorage.setItem("truescore_news_seen_v1", "true")
+    setShowNewsModal(false)
   }
 
   const handleCloseYearReback = () => {
@@ -382,6 +403,13 @@ export function TrueScoreApp() {
                 >
                   <Info className="h-5 w-5" />
                 </button>
+                <button
+                  onClick={() => setShowNewsModal(true)}
+                  className="p-2 rounded-full bg-secondary/20 hover:bg-secondary/40 text-muted-foreground hover:text-cyan-400 transition-colors"
+                  title="What's New"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>
+                </button>
                 <ThemeToggle theme={theme} onToggle={toggleTheme} />
               </div>
             </div>
@@ -429,6 +457,11 @@ export function TrueScoreApp() {
         <AboutModal
           isOpen={showAboutModal}
           onClose={() => setShowAboutModal(false)}
+        />
+
+        <NewsModal
+          isOpen={showNewsModal}
+          onClose={handleCloseNews}
         />
 
         <YearRebackModal
