@@ -8,10 +8,13 @@ A beautiful, futuristic Farcaster Mini App that displays your real Neynar score,
 
 ### 🔮 Core Features
 - **Real-Time Neynar Score** - View your authentic Neynar reputation score
+- **Updates Hub** - Stay informed with a dedicated "What's New" modal
 - **Dynamic OG Images** - Share your score with beautiful, auto-generated images
 - **AI Post Generator** - Create engaging Farcaster posts with AI assistance
 - **Daily Check-In** - Earn rewards with daily engagement on Base
+- **Lucky Spin** - Win XP and rewards with the daily spin wheel 🎰
 - **Streak Counter** - Track your check-in streak with fire emoji indicators 🔥
+- **Gas Tracker** - Monitor Base network gas prices in real-time ⛽
 - **Achievement Badges** - Unlock achievements as you progress
 - **Activity Feed** - See your recent check-ins and milestones
 - **Quick Stats Dashboard** - Visual metrics for your engagement
