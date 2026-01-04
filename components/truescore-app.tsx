@@ -345,7 +345,7 @@ export function TrueScoreApp() {
                   }, 5000)
                 }
               }}
-              className="text-4xl font-bold mb-2 neon-glow-aqua letter-space-wide select-none cursor-pointer active:scale-95 transition-transform"
+              className="text-4xl font-bold mb-2 neon-glow-aqua letter-space-wide select-none cursor-pointer active:scale-95 transition-transform animate-pulse"
             >
               TRUESCORE
             </h1>
