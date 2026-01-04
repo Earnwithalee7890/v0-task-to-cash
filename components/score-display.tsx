@@ -109,7 +109,16 @@ export function ScoreDisplay({ score }: ScoreDisplayProps) {
               </div>
             )}
           </div>
-          <span className="text-sm text-cyan-300/80 mt-2 letter-space-wide">NEYNAR SCORE</span>
+          <div className="flex items-center gap-1.5 mt-2 group relative">
+            <span className="text-sm text-cyan-300/80 letter-space-wide">NEYNAR SCORE</span>
+            <div className="relative">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-cyan-400/50 hover:text-cyan-300 cursor-help transition-colors"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>
+              {/* Custom Tooltip */}
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 p-2 rounded-lg bg-black/90 border border-cyan-500/20 text-[10px] text-gray-300 text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 backdrop-blur-sm">
+                A measure of your Farcaster reputation based on engagement and activity.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
