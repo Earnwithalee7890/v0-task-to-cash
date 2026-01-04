@@ -14,7 +14,8 @@ import { Confetti } from "./confetti"
 import { LevelProgress } from "./level-progress"
 import { LuckySpin } from "./lucky-spin"
 import { BaseGasTracker } from "./base-gas-tracker"
-import { ScoreHistory } from "./score-history" // New Import
+import { ScoreHistory } from "./score-history"
+import { SocialShareButtons } from "./social-share-buttons"
 
 import { Plus, Share2, User, RefreshCw } from "lucide-react"
 import sdk from "@farcaster/frame-sdk"
@@ -171,36 +172,10 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSha
                     </button>
 
                     {/* Feature 5: Twitter, WhatsApp & LinkedIn Share */}
-                    <div className="grid grid-cols-3 gap-2">
-                        <button
-                            onClick={() => {
-                                const text = `I just checked my Farcaster Reputation on TrueScore! 🎯\n\nMy Score: ${userData.score}\n\nCheck yours here: https://v0-task-to-cash-seven.vercel.app`
-                                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
-                            }}
-                            className="flex items-center justify-center gap-1.5 h-10 rounded-xl bg-black/40 border border-white/10 hover:bg-black/60 transition-colors"
-                        >
-                            <span className="text-xs font-medium text-white/80">Share on X</span>
-                        </button>
-
-                        <button
-                            onClick={() => {
-                                const text = `I just checked my Farcaster Reputation on TrueScore! 🎯\n\nMy Score: ${userData.score}\n\nCheck yours here: https://v0-task-to-cash-seven.vercel.app`
-                                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
-                            }}
-                            className="flex items-center justify-center gap-1.5 h-10 rounded-xl bg-green-500/20 border border-green-500/30 hover:bg-green-500/30 transition-colors"
-                        >
-                            <span className="text-xs font-medium text-green-300">WhatsApp</span>
-                        </button>
-
-                        {onShareLinkedIn && (
-                            <button
-                                onClick={onShareLinkedIn}
-                                className="flex items-center justify-center gap-1.5 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 transition-colors"
-                            >
-                                <span className="text-xs font-medium text-blue-300">LinkedIn</span>
-                            </button>
-                        )}
-                    </div>
+                    <SocialShareButtons
+                        userData={userData}
+                        onShareLinkedIn={onShareLinkedIn}
+                    />
                 </div>
             </div>
         </div>
