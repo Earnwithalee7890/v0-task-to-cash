@@ -15,9 +15,9 @@ export async function generateMetadata(
     const fid = searchParams.fid ? String(searchParams.fid) : "338060"
     const ts = searchParams._ ? String(searchParams._) : Date.now().toString()
 
-    // Use static OG image (more reliable than dynamic generation)
+    // Use dynamic OG image
     const appUrl = "https://v0-task-to-cash-seven.vercel.app"
-    const imageUrl = `${appUrl}/og-image.png`
+    const imageUrl = `${appUrl}/api/og?fid=${fid}&date=${ts}`
 
     return {
         title: "TrueScore",
