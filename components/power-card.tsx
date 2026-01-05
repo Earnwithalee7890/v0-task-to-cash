@@ -88,7 +88,7 @@ export function PowerCard({ userData }: PowerCardProps) {
                             { label: "Followers", value: userData.followers.toLocaleString() },
                             { label: "Status", value: userData.activeStatus ? userData.activeStatus : "Unknown", capitalize: true },
                             { label: "Power User", value: userData.powerBadge ? "Yes" : "No" },
-                            { label: "Casts", value: userData.casts !== undefined ? userData.casts.toLocaleString() : "0" }
+                            { label: "FID", value: userData.fid.toString() }
                         ].map((stat, i) => (
                             <div key={i} className="bg-white/5 rounded p-2 text-center backdrop-blur-md border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:shadow-[0_0_10px_rgba(255,255,255,0.1)] group/stat cursor-default">
                                 <span className="block text-gray-400 text-[10px] uppercase tracking-wider group-hover/stat:text-white/70 transition-colors">{stat.label}</span>

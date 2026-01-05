@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 50%, #A78BFA 100%)',
+                    background: 'linear-gradient(135deg, #09090b 0%, #1e1b4b 50%, #312e81 100%)',
                     padding: '0',
                     margin: '0',
                 }}

@@ -99,10 +99,6 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSha
                 <div className="mt-4">
                     <ScoreDisplay score={userData.score} />
                 </div>
-                {/* Feature 2: 7 Day Trend */}
-                <div className="mt-4">
-                    <ScoreHistory currentScore={userData.score} />
-                </div>
             </div>
 
 

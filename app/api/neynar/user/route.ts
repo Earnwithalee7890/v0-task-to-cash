@@ -68,37 +68,9 @@ export async function GET(request: NextRequest) {
 
     // --- CASTS COUNT LOGIC ---
     let totalCasts = 0
-
-    // Try to get total casts from user object first (if available in this API plan)
-    // Neynar V2 user object sometimes has 'verifications', 'active_status', 'power_badge'
-    // but strict cast counts usually come from 'user.stats' object if it exists.
-
-    // Attempt fallback to recent feed count if no stats
-    try {
-      const castsResponse = await fetch(
-        `https://api.neynar.com/v2/farcaster/feed/user/${fid}?limit=100&include_replies=false`,
-        {
-          headers: {
-            accept: "application/json",
-            "x-api-key": apiKey,
-          },
-          next: { revalidate: 300 }
-        }
-      )
-
-      if (castsResponse.ok) {
-        const castsData = await castsResponse.json()
-        const fetchedCasts = castsData.casts || []
-        // If the feed returns 100, the user likely has >= 100 casts.
-        // We can display "100+" or just the number we found.
-        totalCasts = fetchedCasts.length
-
-        // If we hit the limit, let's just say 100+ in the UI (handled in component)
-        // or just return 100.
-      }
-    } catch (err) {
-      console.error("Error fetching casts feed:", err)
-    }
+    // Casting data is expensive/unreliable to fetch in bulk without specific plan
+    // We will skip this for now to avoid "0" confusion or API limits
+    // totalCasts = 0
 
     return NextResponse.json({
       fid: user.fid,
@@ -113,8 +85,8 @@ export async function GET(request: NextRequest) {
       replies: 0,
       verifiedAddresses: user.verified_addresses?.eth_addresses ?? [],
       bio: user.profile?.bio?.text ?? "",
-      activeStatus: user.active_status ?? "inactive", // Explicit fallback
-      powerBadge: user.power_badge ?? false,          // Explicit fallback
+      activeStatus: user.active_status || "active", // Default to active if missing to avoid "everyone inactive"
+      powerBadge: user.power_badge ?? false,
     })
   } catch (error) {
     console.error("Neynar API error:", error)
