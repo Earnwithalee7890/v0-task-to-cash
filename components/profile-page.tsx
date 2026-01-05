@@ -146,10 +146,7 @@ export function ProfilePage({ userData }: ProfilePageProps) {
                 <CreatorTip />
             </div>
 
-            {/* Feature 6: Score History */}
-            <div className="opacity-0 animate-slide-up stagger-5">
-                <ScoreHistory currentScore={userData.score} />
-            </div>
+
 
             {/* Feature 5: Bio Generator */}
             <div className="opacity-0 animate-slide-up stagger-5">

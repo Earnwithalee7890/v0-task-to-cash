@@ -1,17 +1,18 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CalendarCheck, Loader2, Check, ExternalLink, Zap, Shield } from "lucide-react"
-import { useAccount, useConnect, useSendTransaction, useSwitchChain, useChainId, useWriteContract } from "wagmi"
+import { CalendarCheck, Loader2, Check, ExternalLink, Zap, Shield, Gift, Lock } from "lucide-react"
+import { useAccount, useConnect, useSendTransaction, useSwitchChain, useChainId, useWriteContract, useReadContract, usePublicClient } from "wagmi"
 import { base, celo, mainnet } from "wagmi/chains"
+import { formatEther } from "viem"
 
 // Base Check-In Contract Configuration (Production - Mainnet)
 const BASE_CHECKIN_CONTRACT = {
-  address: "0xBD3aDb162D1C5c211075C75DFe3dCD14b549433A" as `0x${string}`,
-  checkInFee: BigInt(1_000_000_000_000), // 0.000001 ETH in wei
+  address: "0x911603d80C689564B638d418a15f9EE438294a2a" as `0x${string}`,
+  checkInFee: BigInt(1000_000_000_000), // 0.000001 ETH (1000 Gwei)
   abi: [
     {
       inputs: [],
@@ -22,34 +23,29 @@ const BASE_CHECKIN_CONTRACT = {
     },
     {
       inputs: [],
-      name: "checkInFeeWei",
+      name: "claimReward",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "checkInFee",
       outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
       stateMutability: "view",
       type: "function",
     },
     {
-      inputs: [{ internalType: "address", name: "", type: "address" }],
-      name: "users",
+      inputs: [{ internalType: "address", name: "_user", type: "address" }],
+      name: "getUserStats",
       outputs: [
-        { internalType: "uint64", name: "totalCheckIns", type: "uint64" },
-        { internalType: "uint64", name: "currentStreak", type: "uint64" },
-        { internalType: "uint64", name: "lastCheckInDay", type: "uint64" },
-        { internalType: "uint256", name: "reputation", type: "uint256" },
+        { internalType: "uint256", name: "totalCheckIns", type: "uint256" },
+        { internalType: "uint256", name: "lastCheckInTime", type: "uint256" },
+        { internalType: "uint256", name: "nextCheckInTime", type: "uint256" },
+        { internalType: "uint256", name: "claimableReward", type: "uint256" },
       ],
       stateMutability: "view",
       type: "function",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        { indexed: true, internalType: "address", name: "user", type: "address" },
-        { indexed: false, internalType: "uint64", name: "dayIndex", type: "uint64" },
-        { indexed: false, internalType: "uint64", name: "totalCheckIns", type: "uint64" },
-        { indexed: false, internalType: "uint64", name: "currentStreak", type: "uint64" },
-        { indexed: false, internalType: "uint256", name: "reputation", type: "uint256" },
-      ],
-      name: "CheckedIn",
-      type: "event",
     },
   ],
 } as const
@@ -61,85 +57,59 @@ const NETWORKS = [
     chainId: base.id,
     explorerUrl: "https://basescan.org/tx/",
   },
-  {
-    id: "celo",
-    name: "Celo",
-    chainId: celo.id,
-    explorerUrl: "https://celoscan.io/tx/",
-  },
-  {
-    id: "ethereum",
-    name: "Ethereum",
-    chainId: mainnet.id,
-    explorerUrl: "https://etherscan.io/tx/",
-  },
-  {
-    id: "monad",
-    name: "Monad",
-    chainId: 10143,
-    explorerUrl: "https://testnet.monadexplorer.com/tx/",
-  },
 ]
 
 export function DailyCheckin() {
   const [network, setNetwork] = useState("base")
-  const [status, setStatus] = useState<"idle" | "switching" | "loading" | "success" | "error">("idle")
+  const [status, setStatus] = useState<"idle" | "switching" | "loading" | "success" | "claiming" | "error">("idle")
   const [txHash, setTxHash] = useState<string | null>(null)
-  const [lastCheckin, setLastCheckin] = useState<string | null>(null)
+
+  // Contract State
+  const [nextCheckIn, setNextCheckIn] = useState<number>(0)
+  const [claimableReward, setClaimableReward] = useState<bigint>(BigInt(0))
+  const [canCheckIn, setCanCheckIn] = useState(true)
 
   const { address, isConnected } = useAccount()
   const { connect, connectors } = useConnect()
-  const { sendTransactionAsync, reset: resetTransaction } = useSendTransaction()
   const { writeContractAsync } = useWriteContract()
   const { switchChainAsync } = useSwitchChain()
   const currentChainId = useChainId()
+  const publicClient = usePublicClient()
 
   const selectedNetwork = NETWORKS.find((n) => n.id === network)
 
-  const sendCheckinTransaction = async () => {
-    if (!address || !selectedNetwork) return
+  // Fetch User Stats
+  const fetchStats = useCallback(async () => {
+    if (!address || !publicClient) return
 
     try {
-      setStatus("loading")
+      const data = await publicClient.readContract({
+        address: BASE_CHECKIN_CONTRACT.address,
+        abi: BASE_CHECKIN_CONTRACT.abi,
+        functionName: "getUserStats",
+        args: [address],
+      }) as [bigint, bigint, bigint, bigint]
 
-      // Reset any previous transaction state
-      resetTransaction()
+      const nextTime = Number(data[2]) * 1000
+      const reward = data[3]
 
-      let result: `0x${string}` | undefined
-
-      // For Base network, call the smart contract with fee
-      if (selectedNetwork.id === "base") {
-        result = await writeContractAsync({
-          address: BASE_CHECKIN_CONTRACT.address,
-          abi: BASE_CHECKIN_CONTRACT.abi,
-          functionName: "checkIn",
-          chainId: selectedNetwork.chainId,
-          value: BASE_CHECKIN_CONTRACT.checkInFee, // 0.000001 ETH anti-spam fee
-        })
-      } else {
-        // For other networks, send self-transaction as check-in proof (0 value to self)
-        result = await sendTransactionAsync({
-          to: address,
-          value: BigInt(0),
-          data: "0x436865636b496e" as `0x${string}`, // "CheckIn" in hex
-          chainId: selectedNetwork.chainId,
-        })
-      }
-
-      if (result) {
-        setTxHash(result)
-        setLastCheckin(new Date().toLocaleDateString())
-        setStatus("success")
-      } else {
-        setStatus("error")
-        setTimeout(() => setStatus("idle"), 3000)
-      }
-    } catch (error) {
-      console.error("Transaction failed:", error)
-      setStatus("error")
-      setTimeout(() => setStatus("idle"), 3000)
+      setNextCheckIn(nextTime)
+      setClaimableReward(reward)
+      setCanCheckIn(Date.now() >= nextTime)
+    } catch (e) {
+      console.error("Error fetching stats:", e)
     }
-  }
+  }, [address, publicClient])
+
+  useEffect(() => {
+    if (isConnected && address) {
+      fetchStats()
+      // Refresh every minute
+      const interval = setInterval(fetchStats, 60000)
+      return () => clearInterval(interval)
+    }
+  }, [isConnected, address, fetchStats])
+
 
   const handleCheckin = async () => {
     if (!isConnected) {
@@ -148,32 +118,38 @@ export function DailyCheckin() {
         return
       } catch (err) {
         console.error("Connection failed:", err)
-        setStatus("error")
-        setTimeout(() => setStatus("idle"), 3000)
         return
       }
     }
 
-    if (!address || !selectedNetwork) {
-      setStatus("error")
-      setTimeout(() => setStatus("idle"), 3000)
-      return
-    }
+    if (!address || !selectedNetwork) return
 
     setTxHash(null)
 
     try {
-      if (currentChainId === selectedNetwork.chainId) {
-        // Already on correct chain, send transaction directly
-        await sendCheckinTransaction()
-      } else {
-        // Need to switch chain first
+      if (currentChainId !== selectedNetwork.chainId) {
         setStatus("switching")
         await switchChainAsync({ chainId: selectedNetwork.chainId })
-        // Small delay to ensure chain switch is propagated
         await new Promise((resolve) => setTimeout(resolve, 500))
-        await sendCheckinTransaction()
       }
+
+      setStatus("loading")
+
+      const hash = await writeContractAsync({
+        address: BASE_CHECKIN_CONTRACT.address,
+        abi: BASE_CHECKIN_CONTRACT.abi,
+        functionName: "checkIn",
+        chainId: selectedNetwork.chainId,
+        value: BASE_CHECKIN_CONTRACT.checkInFee,
+      })
+
+      setTxHash(hash)
+      setStatus("success")
+
+      // Refresh stats after short delay
+      setTimeout(fetchStats, 2000)
+      setTimeout(fetchStats, 5000)
+
     } catch (error) {
       console.error("Check-in failed:", error)
       setStatus("error")
@@ -181,91 +157,132 @@ export function DailyCheckin() {
     }
   }
 
-  const getExplorerUrl = () => {
-    if (!txHash) return ""
-    const net = NETWORKS.find((n) => n.id === network)
-    return net ? `${net.explorerUrl}${txHash}` : ""
+  const handleClaim = async () => {
+    if (!address) return
+
+    try {
+      setStatus("claiming")
+      const hash = await writeContractAsync({
+        address: BASE_CHECKIN_CONTRACT.address,
+        abi: BASE_CHECKIN_CONTRACT.abi,
+        functionName: "claimReward",
+        chainId: base.id,
+      })
+
+      setTxHash(hash)
+      setStatus("success")
+      setTimeout(fetchStats, 2000)
+    } catch (error) {
+      console.error("Claim failed:", error)
+      setStatus("error")
+      setTimeout(() => setStatus("idle"), 3000)
+    }
   }
 
-  const getButtonText = () => {
-    if (!isConnected) return "Connect"
-    if (status === "switching") return "Switching..."
-    if (status === "loading") return "Sending..."
-    if (status === "success") return "Done!"
-    return "Check In"
+  const getExplorerUrl = () => {
+    if (!txHash) return ""
+    return `https://basescan.org/tx/${txHash}`
+  }
+
+  // Format countdown
+  const getCountdown = () => {
+    if (canCheckIn) return null
+    const diff = nextCheckIn - Date.now()
+    if (diff <= 0) return null
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+    return `${hours}h ${minutes}m`
   }
 
   return (
     <Card className="glass-card-strong p-5 space-y-4 bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-fuchsia-500/20 border-2 border-purple-400/40 box-glow-aqua">
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center shadow-lg neon-glow-purple">
-            <CalendarCheck className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h3 className="font-bold text-foreground text-lg">Daily Check-In</h3>
-            <p className="text-xs text-purple-200">Earn on-chain proof 🎯</p>
-          </div>
+        <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center shadow-lg neon-glow-purple">
+          <CalendarCheck className="h-6 w-6 text-white" />
+        </div>
+        <div>
+          <h3 className="font-bold text-foreground text-lg">Daily Reward</h3>
+          <p className="text-xs text-purple-200">Check in & Earn USDC 💰</p>
         </div>
         {network === "base" && (
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 ml-auto">
             <Zap className="h-3 w-3 text-cyan-400" />
-            <span className="text-[10px] font-semibold text-cyan-300">0.000001 ETH fee</span>
+            <span className="text-[10px] font-semibold text-cyan-300">0.000001 ETH</span>
           </div>
         )}
       </div>
 
-      {/* Streak Protection Badge */}
-      <div className="flex items-center justify-between bg-black/20 rounded-lg p-2 border border-white/5">
-        <div className="flex items-center gap-2">
-          <Shield className="h-4 w-4 text-green-400" />
-          <span className="text-xs text-green-200 font-medium">Streak Protection Active</span>
+      <div className="grid grid-cols-2 gap-3">
+        {/* Status Box */}
+        <div className="bg-black/20 rounded-lg p-3 border border-white/5 text-center">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-widest block mb-1">Status</span>
+          {canCheckIn ? (
+            <span className="text-green-400 font-bold text-sm flex items-center justify-center gap-1">
+              <Check className="h-3 w-3" /> Ready
+            </span>
+          ) : (
+            <span className="text-orange-400 font-bold text-sm flex items-center justify-center gap-1">
+              <Lock className="h-3 w-3" /> {getCountdown()}
+            </span>
+          )}
         </div>
-        <span className="text-[10px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full border border-green-500/30">Free</span>
+
+        {/* Reward Box */}
+        <div className="bg-black/20 rounded-lg p-3 border border-white/5 text-center relative overflow-hidden">
+          {claimableReward > 0 && <div className="absolute inset-0 bg-yellow-500/10 animate-pulse" />}
+          <span className="text-[10px] text-muted-foreground uppercase tracking-widest block mb-1">Claimable</span>
+          <span className="text-yellow-400 font-bold text-sm">
+            {claimableReward > 0 ? "0.005 USDC" : "0.00 USDC"}
+          </span>
+        </div>
       </div>
 
-      <div className="flex gap-3">
-        <Select value={network} onValueChange={setNetwork}>
-          <SelectTrigger className="flex-1 bg-secondary/50 border-border/50 h-12 transition-all hover:bg-secondary/70">
-            <SelectValue placeholder="Select network" />
-          </SelectTrigger>
-          <SelectContent>
-            {NETWORKS.map((net) => (
-              <SelectItem key={net.id} value={net.id} className="cursor-pointer">
-                <span className="font-medium">{net.name}</span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Button
-          onClick={handleCheckin}
-          disabled={status === "loading" || status === "switching" || status === "success"}
-          className={`h-12 px-6 font-semibold transition-all duration-300 ${status === "success"
-            ? "bg-primary text-primary-foreground"
-            : "bg-gradient-to-r from-primary to-chart-2 text-primary-foreground hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
-            }`}
-        >
-          {(status === "loading" || status === "switching") && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {status === "success" && <Check className="mr-2 h-4 w-4" />}
-          {getButtonText()}
-        </Button>
+      <div className="space-y-2">
+        {/* Main Action Button */}
+        {claimableReward > 0 ? (
+          <Button
+            onClick={handleClaim}
+            disabled={status === "claiming" || status === "loading"}
+            className="w-full h-12 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold text-lg shadow-[0_0_20px_rgba(234,179,8,0.4)] animate-pulse"
+          >
+            {status === "claiming" ? (
+              <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Claiming...</>
+            ) : (
+              <><Gift className="mr-2 h-5 w-5" /> Claim Reward</>
+            )}
+          </Button>
+        ) : (
+          <Button
+            onClick={handleCheckin}
+            disabled={!canCheckIn || status === "loading" || status === "success"}
+            className={`w-full h-12 font-semibold transition-all duration-300 ${canCheckIn
+                ? "bg-gradient-to-r from-primary to-chart-2 text-primary-foreground hover:opacity-90 hover:scale-[1.02]"
+                : "bg-muted text-muted-foreground cursor-not-allowed"
+              }`}
+          >
+            {status === "loading" || status === "switching" ? (
+              <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
+            ) : !canCheckIn ? (
+              "Available in " + getCountdown()
+            ) : (
+              "Check In Now"
+            )}
+          </Button>
+        )}
       </div>
 
       {status === "success" && txHash && (
-        <a
-          href={getExplorerUrl()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline transition-all hover:gap-2"
-        >
-          <span>View transaction</span>
-          <ExternalLink className="h-3.5 w-3.5" />
-        </a>
-      )}
-
-      {status === "error" && (
-        <p className="text-sm text-destructive flex items-center gap-2">Check-in failed. Please try again.</p>
+        <div className="text-center animate-fade-in">
+          <a
+            href={getExplorerUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm text-green-400 hover:text-green-300 hover:underline transition-all"
+          >
+            <span>Transaction Successful! View on Explorer</span>
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        </div>
       )}
     </Card>
   )
