@@ -20,6 +20,7 @@ export function ActionCard({ userData, onAddToMiniApp, onShareLinkedIn }: Action
             <button
                 onClick={onAddToMiniApp}
                 className="glass-neon-button glossy-overlay w-full flex items-center justify-center gap-2 h-14 rounded-2xl font-semibold text-white"
+                aria-label="Add application to Farcaster client"
             >
                 <Plus className="h-5 w-5" />
                 Add App
@@ -29,6 +30,7 @@ export function ActionCard({ userData, onAddToMiniApp, onShareLinkedIn }: Action
             <button
                 onClick={() => sdk.actions.openUrl("https://warpcast.com/aleekhoso")}
                 className="group relative w-full flex items-center justify-center gap-3 h-14 rounded-full neon-border bg-secondary/20 backdrop-blur-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden"
+                aria-label="Follow developer on Warpcast"
             >
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-cyan-500/10" />
                 <User className="h-6 w-6 text-cyan-300 relative" />
