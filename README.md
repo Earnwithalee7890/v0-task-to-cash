@@ -20,6 +20,8 @@ A beautiful, futuristic Farcaster Mini App that displays your real Neynar score,
 - **Quick Stats Dashboard** - Visual metrics for your engagement
 - **Creator Tips** - Support the project with easy tipping
 - **Profile Analytics** - Track your casts, replies, and engagement
+- **Accessibility Optimized** - Enhanced screen reader support and navigation
+- **Performance Tuned** - Optimized skeletons and image loading priorities
 
 ### 🎨 Design
 - **Neon-Blue Sci-Fi Theme** - Stunning dark mode with glowing effects
