@@ -1,6 +1,6 @@
 "use client"
 
-import { Trophy, Star, ChevronRight } from "lucide-react"
+import { Trophy, ChevronRight } from "lucide-react"
 
 interface LevelProgressProps {
     score: number
