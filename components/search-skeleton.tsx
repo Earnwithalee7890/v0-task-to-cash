@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card"
 export function SearchSkeleton() {
     return (
         <div className="space-y-4 opacity-0 animate-slide-up stagger-2">
-            <Card className="glass-card-strong p-5 border-2 border-white/5 bg-gradient-to-br from-white/5 to-transparent">
+            <Card className="glass-card-strong p-5 border-2 border-white/5 bg-gradient-to-br from-white/5 to-transparent shadow-lg">
                 <div className="flex items-center gap-4 mb-4">
                     <div className="h-16 w-16 rounded-full bg-white/10 animate-pulse relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skeleton-shimmer" />
