@@ -9,7 +9,7 @@ import path from 'path'
 export async function GET() {
     try {
         const manifestPath = path.join(process.cwd(), 'public', '.well-known', 'farcaster.json')
-        const manifestData = fs.readFileSync(manifestPath, 'utf8')
+        const manifestData = await fs.promises.readFile(manifestPath, 'utf8')
         const manifest = JSON.parse(manifestData)
 
         return NextResponse.json(manifest, {
