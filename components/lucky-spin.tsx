@@ -42,6 +42,7 @@ export function LuckySpin() {
             <button
                 onClick={() => setIsOpen(true)}
                 className="w-full relative overflow-hidden group rounded-xl p-4 border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-900/40 to-purple-900/40 hover:from-fuchsia-800/50 hover:to-purple-800/50 transition-all duration-300"
+                aria-label="Open daily bonus spin"
             >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
 
