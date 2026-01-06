@@ -19,9 +19,9 @@ export async function GET() {
             },
         })
     } catch (error) {
-        console.error('Error serving Farcaster manifest:', error)
+        console.error('[Farcaster Manifest] Error serving manifest:', error)
         return NextResponse.json(
-            { error: 'Manifest not found' },
+            { error: 'Manifest not found or invalid' },
             { status: 404 }
         )
     }
