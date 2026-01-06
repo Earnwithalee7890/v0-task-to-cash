@@ -92,6 +92,7 @@ export function ProfilePage({ userData }: ProfilePageProps) {
                         src={userData.pfpUrl || "/placeholder.svg"}
                         alt={userData.displayName}
                         className="relative h-20 w-20 rounded-full border-2 border-primary/50 ring-2 ring-primary/20 ring-offset-2 ring-offset-background transition-transform hover:scale-105"
+                        loading="eager"
                     />
                 </div>
                 <div className="flex flex-col items-center">
