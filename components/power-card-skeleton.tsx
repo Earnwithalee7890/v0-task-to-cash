@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 export function PowerCardSkeleton() {
     return (
         <div className="mt-8">
-            <div className="h-4 w-32 mx-auto mb-4 bg-white/10 rounded animate-pulse" />
+            <div className="h-5 w-48 mx-auto mb-4 bg-white/10 rounded animate-pulse" />
 
             <div className="relative aspect-[3/4] max-w-[280px] mx-auto rounded-3xl p-1 bg-white/5 border border-white/10 shadow-2xl">
                 <div className="h-full bg-black/80 backdrop-blur-sm rounded-[20px] p-4 flex flex-col relative overflow-hidden">
