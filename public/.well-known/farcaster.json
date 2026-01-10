@@ -5,7 +5,7 @@
     "homeUrl": "https://v0-task-to-cash-seven.vercel.app",
     "splashImageUrl": "https://v0-task-to-cash-seven.vercel.app/splash.png",
     "splashBackgroundColor": "#1a1a2e",
-    "webhookUrl": "https://v0-task-to-cash-seven.vercel.app/api/webhook",
+    "webhookUrl": "https://v0-task-to-cash-seven.vercel.app/api/webhook/notifications",
     "subtitle": "Your Real Neynar Reputation",
     "description": "View your real Neynar score, engagement analytics, and account reputation on Farcaster. Includes daily check-in and tip features.",
     "primaryCategory": "social",

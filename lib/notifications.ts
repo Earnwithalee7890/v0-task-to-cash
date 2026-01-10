@@ -1,76 +1,134 @@
 /**
- * Neynar Notification Utility
- * Provides functions to send push notifications to Mini App users
+ * Farcaster Mini App Notification Service
  */
 
-const NEYNAR_API_BASE = "https://api.neynar.com/f/app"
+const FARCASTER_NOTIFICATIONS_API = 'https://api.farcaster.xyz/v1/miniapps/notifications';
 
-interface NotificationPayload {
-    target_fids?: number[]
-    notification: {
-        title: string
-        body: string
-        target_url: string
-    }
+export interface SendNotificationParams {
+    notificationId: string;
+    title: string;
+    body: string;
+    targetUrl: string;
+    tokens: string[];
+}
+
+export interface NotificationResponse {
+    success: boolean;
+    message?: string;
+    error?: string;
 }
 
 /**
- * Send a notification to specific users (or all users if target_fids is empty)
+ * Send notification to Farcaster users
  */
-export async function sendNeynarNotification(payload: NotificationPayload) {
+export async function sendNotification(
+    params: SendNotificationParams
+): Promise<NotificationResponse> {
     try {
-        const apiKey = process.env.NEYNAR_API_KEY
-        const clientId = process.env.NEYNAR_CLIENT_ID
-
-        if (!apiKey || !clientId) {
-            console.warn("NEYNAR_API_KEY or NEYNAR_CLIENT_ID is not set")
-            return null
-        }
-
-        const response = await fetch(`${NEYNAR_API_BASE}/${clientId}/notifications`, {
-            method: "POST",
+        const response = await fetch(FARCASTER_NOTIFICATIONS_API, {
+            method: 'POST',
             headers: {
-                "x-api-key": apiKey,
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                target_fids: payload.target_fids || [], // Empty array targets all users who enabled notifications
-                notification: payload.notification
-            })
-        })
+                notificationId: params.notificationId,
+                title: params.title.slice(0, 32), // Max 32 chars
+                body: params.body.slice(0, 128), // Max 128 chars
+                targetUrl: params.targetUrl,
+                tokens: params.tokens.slice(0, 100), // Max 100 tokens
+            }),
+        });
 
         if (!response.ok) {
-            const errorData = await response.json()
-            console.error("Neynar Notification error:", errorData)
-            return null
+            const error = await response.text();
+            console.error('[Notifications] Send failed:', error);
+            return {
+                success: false,
+                error: `HTTP ${response.status}: ${error}`,
+            };
         }
 
-        return await response.json()
+        const result = await response.json();
+        console.log('[Notifications] Sent successfully:', params.notificationId);
+
+        return {
+            success: true,
+            message: result.message || 'Notification sent',
+        };
     } catch (error) {
-        console.error("Error sending Neynar notification:", error)
-        return null
+        console.error('[Notifications] Error:', error);
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error',
+        };
     }
 }
 
 /**
- * Convenience function to notify about a score change
+ * Notification Templates
  */
-export async function notifyScoreChange(fid: number, oldScore: number, newScore: number, builderScore?: number, creatorScore?: number) {
-    const direction = newScore > oldScore ? "increased" : "decreased"
-    const diff = Math.abs(newScore - oldScore)
 
-    let body = `Your Neynar score ${direction} by ${diff} points.`
-    if (builderScore !== undefined || creatorScore !== undefined) {
-        body += `\nBuilder: ${builderScore || 0} | Creator: ${creatorScore || 0}`
-    }
-    body += `\nTap to see your full reputation report.`
+export const NotificationTemplates = {
+    /**
+     * Check your Neynar score notification
+     */
+    checkScore: (appUrl: string) => ({
+        title: 'Check Your Neynar Score! 🎯',
+        body: 'Open and see your latest reputation score',
+        targetUrl: `${appUrl}`,
+        notificationId: `score-check-${Date.now()}`,
+    }),
 
-    return sendNeynarNotification({
-        target_fids: [fid],
-        notification: {
-            title: "Your TrueScore Updated!",
-            body: body,
-            target_url: "https://v0-task-to-cash-seven.vercel.app/"
-        }
-    })
+    /**
+     * Claim rewards notification
+     */
+    claimRewards: (appUrl: string) => ({
+        title: 'Claim Your Rewards! 🎁',
+        body: 'Check in now and claim your daily rewards',
+        targetUrl: `${appUrl}`,
+        notificationId: `claim-rewards-${Date.now()}`,
+    }),
+
+    /**
+     * Score updated notification
+     */
+    scoreUpdated: (newScore: number, appUrl: string) => ({
+        title: 'Score Updated! 🎯',
+        body: `Your Neynar score is now ${newScore}!`,
+        targetUrl: `${appUrl}`,
+        notificationId: `score-update-${Date.now()}`,
+    }),
+
+    /**
+     * Achievement unlocked notification
+     */
+    achievementUnlocked: (achievement: string, appUrl: string) => ({
+        title: 'Achievement Unlocked! 🏆',
+        body: `You earned: ${achievement}`,
+        targetUrl: `${appUrl}`,
+        notificationId: `achievement-${Date.now()}`,
+    }),
+
+    /**
+     * Daily reminder notification
+     */
+    dailyReminder: (streak: number, appUrl: string) => ({
+        title: "Don't Break Your Streak! 🔥",
+        body: `Keep your ${streak}-day streak going!`,
+        targetUrl: `${appUrl}`,
+        notificationId: `reminder-${Date.now()}`,
+    }),
+};
+
+/**
+ * Send notification using a template
+ */
+export async function sendTemplateNotification(
+    template: ReturnType<typeof NotificationTemplates[keyof typeof NotificationTemplates]>,
+    tokens: string[]
+): Promise<NotificationResponse> {
+    return sendNotification({
+        ...template,
+        tokens,
+    });
 }
