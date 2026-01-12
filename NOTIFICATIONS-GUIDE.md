@@ -33,6 +33,27 @@ Body: "You earned: Week Warrior"
 
 ---
 
+## ⏰ Automated Scheduling (NEW!)
+
+The app now automatically sends notifications at scheduled intervals using Vercel Cron Jobs!
+
+### **Daily Notifications (9:00 AM UTC / 2:30 PM IST)**
+- **Check-In Reminder:** "Don't break your streak! 🔥"
+- **Morning Neynar Boost:** "Boost Your Score! 🎯 - Follow quality users"
+
+### **Afternoon Notification (3:00 PM UTC / 8:30 PM IST)**
+- **Neynar Engagement:** "Like & Engage! 💙 - Engage with content"
+
+### **Evening Notification (9:00 PM UTC / 2:30 AM IST)**
+- **Neynar Share:** "Recast & Share! 🔄 - Share quality content"
+
+### **Weekly Summary (Monday 10:00 AM UTC)**
+- **Score Summary:** "Your Weekly Score is Ready! 📊"
+
+> **Note:** These run automatically! No manual action required.
+
+---
+
 ## 🚀 How to Use
 
 ### For Users:
