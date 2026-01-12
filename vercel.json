@@ -1,4 +1,26 @@
 {
     "buildCommand": "npm run build",
-    "installCommand": "npm install"
+    "installCommand": "npm install",
+    "crons": [
+        {
+            "path": "/api/cron/daily-checkin",
+            "schedule": "0 9 * * *"
+        },
+        {
+            "path": "/api/cron/daily-neynar-morning",
+            "schedule": "0 9 * * *"
+        },
+        {
+            "path": "/api/cron/daily-neynar-afternoon",
+            "schedule": "0 15 * * *"
+        },
+        {
+            "path": "/api/cron/daily-neynar-evening",
+            "schedule": "0 21 * * *"
+        },
+        {
+            "path": "/api/cron/weekly-score",
+            "schedule": "0 10 * * 1"
+        }
+    ]
 }

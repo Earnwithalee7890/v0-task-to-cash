@@ -118,6 +118,76 @@ export const NotificationTemplates = {
         targetUrl: `${appUrl}`,
         notificationId: `reminder-${Date.now()}`,
     }),
+
+    /**
+     * Daily check-in notification
+     */
+    dailyCheckIn: (appUrl: string) => ({
+        title: "Don't break your streak! 🔥",
+        body: "Check in now and earn your daily rewards",
+        targetUrl: `${appUrl}`,
+        notificationId: `daily-checkin-${Date.now()}`,
+    }),
+
+    /**
+     * Morning Neynar engagement notification
+     */
+    neynarEngagementMorning: (appUrl: string) => ({
+        title: "Boost Your Score! 🎯",
+        body: "Follow quality users to improve your Neynar reputation",
+        targetUrl: `${appUrl}`,
+        notificationId: `neynar-morning-${Date.now()}`,
+    }),
+
+    /**
+     * Afternoon Neynar engagement notification
+     */
+    neynarEngagementAfternoon: (appUrl: string) => ({
+        title: "Like & Engage! 💙",
+        body: "Engage with content to boost your Neynar score",
+        targetUrl: `${appUrl}`,
+        notificationId: `neynar-afternoon-${Date.now()}`,
+    }),
+
+    /**
+     * Evening Neynar engagement notification
+     */
+    neynarEngagementEvening: (appUrl: string) => ({
+        title: "Recast & Share! 🔄",
+        body: "Share quality content to increase your reputation",
+        targetUrl: `${appUrl}`,
+        notificationId: `neynar-evening-${Date.now()}`,
+    }),
+
+    /**
+     * Weekly Neynar score summary
+     */
+    weeklyScoreSummary: (appUrl: string) => ({
+        title: "Your Weekly Score is Ready! 📊",
+        body: "Check your Neynar reputation and see how you rank",
+        targetUrl: `${appUrl}`,
+        notificationId: `weekly-score-${Date.now()}`,
+    }),
+
+    /**
+     * Scheduled reminder notification
+     */
+    scheduledReminder: (message: string, appUrl: string) => ({
+        title: 'Reminder! ⏰',
+        body: message,
+        targetUrl: `${appUrl}`,
+        notificationId: `scheduled-reminder-${Date.now()}`,
+    }),
+
+    /**
+     * Scheduled event notification
+     */
+    scheduledEvent: (eventName: string, eventTime: string, appUrl: string) => ({
+        title: `Event: ${eventName} is starting soon! 🗓️`,
+        body: `Join us for ${eventName} at ${eventTime}`,
+        targetUrl: `${appUrl}`,
+        notificationId: `scheduled-event-${Date.now()}`,
+    }),
 };
 
 /**
