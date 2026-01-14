@@ -11,7 +11,7 @@ import { DailyCheckin } from "./daily-checkin"
 import { BadgesList } from "./badges-list"
 import { ShareCard } from "./share-card"
 import { Confetti } from "./confetti"
-import { LevelProgress } from "./level-progress"
+
 
 import { BaseGasTracker } from "./base-gas-tracker"
 import { ScoreHistory } from "./score-history"
@@ -93,10 +93,7 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onRef
 
             {/* Neynar Score Display */}
             <div className="opacity-0 animate-slide-up stagger-1">
-                <LevelProgress score={userData.score} />
-                <div className="mt-4">
-                    <ScoreDisplay score={userData.score} />
-                </div>
+                <ScoreDisplay score={userData.score} />
             </div>
 
             {/* Reputation Badge */}
