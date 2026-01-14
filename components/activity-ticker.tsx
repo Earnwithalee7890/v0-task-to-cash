@@ -8,11 +8,11 @@ export function ActivityTicker() {
     // For demo, we just show mock data.
 
     const events = [
-        { icon: Trophy, text: "Alice reached Level 50!", color: "text-yellow-400" },
-        { icon: Star, text: "Bob just claimed a badge.", color: "text-purple-400" },
-        { icon: Zap, text: "Charlie checked in (Streak: 10)", color: "text-blue-400" },
-        { icon: Trophy, text: "Dave hit Top 10% Rank", color: "text-green-400" },
-        { icon: Star, text: "Eve verified wallet", color: "text-pink-400" },
+        { icon: Star, text: "User checked Neynar score - 87 points!", color: "text-cyan-400" },
+        { icon: Zap, text: "New score check - Reputation: SAFE", color: "text-green-400" },
+        { icon: Trophy, text: "Score verified - Top 15% ranking!", color: "text-yellow-400" },
+        { icon: Star, text: "Daily check-in completed successfully", color: "text-purple-400" },
+        { icon: Zap, text: "Score refreshed - 92 Neynar points!", color: "text-blue-400" },
     ]
 
     return (
