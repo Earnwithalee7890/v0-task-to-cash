@@ -403,7 +403,6 @@ export function TrueScoreApp() {
                 onAddToMiniApp={addToMiniApp}
                 onShare={shareApp}
                 onShareBase={shareOnBase}
-                onShareLinkedIn={shareOnLinkedIn}
                 onRefresh={() => fetchUserData(userData.fid)}
               />
             )
