@@ -12,7 +12,7 @@ import { BadgesList } from "./badges-list"
 import { ShareCard } from "./share-card"
 import { Confetti } from "./confetti"
 import { LevelProgress } from "./level-progress"
-import { LuckySpin } from "./lucky-spin"
+
 import { BaseGasTracker } from "./base-gas-tracker"
 import { ScoreHistory } from "./score-history"
 import { ActionCard } from "./action-card"
@@ -111,7 +111,6 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSha
 
             {/* Daily Check-in */}
             <div className="opacity-0 animate-slide-up stagger-3 space-y-4">
-                <LuckySpin />
                 <DailyCheckin />
             </div>
 
