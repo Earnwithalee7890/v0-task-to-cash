@@ -26,11 +26,10 @@ interface HomePageProps {
     onAddToMiniApp: () => void
     onShare: () => void
     onShareBase: () => void
-    onShareLinkedIn?: () => void
     onRefresh: () => void
 }
 
-export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onShareLinkedIn, onRefresh }: HomePageProps) {
+export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onRefresh }: HomePageProps) {
     const [showConfetti, setShowConfetti] = useState(false)
     const [isRefreshing, setIsRefreshing] = useState(false)
 
@@ -125,7 +124,6 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSha
                 <ActionCard
                     userData={userData}
                     onAddToMiniApp={onAddToMiniApp}
-                    onShareLinkedIn={onShareLinkedIn}
                 />
             </div>
         </div>
