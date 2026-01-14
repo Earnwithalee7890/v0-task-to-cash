@@ -74,10 +74,6 @@ export function LevelProgress({ score }: LevelProgressProps) {
                     <Trophy className={`h-4 w-4 ${color}`} />
                     <span className={`font-bold ${color}`}>{rankTitle}</span>
                 </div>
-                <div className="text-xs text-muted-foreground flex items-center gap-1">
-                    Next: <span className="text-white">{nextTitle}</span>
-                    <ChevronRight className="h-3 w-3" />
-                </div>
             </div>
 
             <div className="relative h-3 w-full bg-white/5 rounded-full overflow-hidden">
