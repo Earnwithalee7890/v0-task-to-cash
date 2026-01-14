@@ -173,12 +173,7 @@ export function TrueScoreApp() {
     }
   }, [])
 
-  const shareOnLinkedIn = useCallback(() => {
-    if (!userData) return
-    const text = `I just checked my Farcaster reputation on TrueScore! \n\nNeynar Score: ${userData.score}\nReputation: ${userData.reputation.toUpperCase()}\n\nCheck yours here: https://v0-task-to-cash-seven.vercel.app`
-    const linkedinUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`
-    window.open(linkedinUrl, '_blank')
-  }, [userData])
+
 
   useEffect(() => {
     const init = async () => {
