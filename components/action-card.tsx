@@ -10,10 +10,9 @@ interface ActionCardProps {
         score: number
     }
     onAddToMiniApp: () => void
-    onShareLinkedIn?: () => void
 }
 
-export function ActionCard({ userData, onAddToMiniApp, onShareLinkedIn }: ActionCardProps) {
+export function ActionCard({ userData, onAddToMiniApp }: ActionCardProps) {
     return (
         <div className="glass-card-strong p-5 rounded-2xl space-y-4 neon-border">
             {/* Add App Button */}
