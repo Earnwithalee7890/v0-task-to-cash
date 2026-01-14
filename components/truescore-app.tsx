@@ -437,9 +437,6 @@ export function TrueScoreApp() {
           onClose={handleCloseNews}
         />
 
-
-
-
         <ScrollToTop />
       </main>
     </AnimatedBackground>
