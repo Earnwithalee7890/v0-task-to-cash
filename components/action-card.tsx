@@ -1,7 +1,7 @@
 "use client"
 
 import { Plus, User } from "lucide-react"
-import { SocialShareButtons } from "./social-share-buttons"
+
 import sdk from "@farcaster/frame-sdk"
 
 interface ActionCardProps {
@@ -41,11 +41,6 @@ export function ActionCard({ userData, onAddToMiniApp, onShareLinkedIn }: Action
                 <div className="relative px-3 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-400 text-[10px] font-bold text-black letter-space-wide">PRO</div>
             </button>
 
-            {/* Social Buttons */}
-            <SocialShareButtons
-                userData={userData}
-                onShareLinkedIn={onShareLinkedIn}
-            />
         </div>
     )
 }
