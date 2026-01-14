@@ -87,9 +87,6 @@ export function TrueScoreApp() {
     setShowNewsModal(false)
   }
 
-
-
-
   const updateUserData = async (data: any, fid: number) => {
     // Explicitly ensure FID is in userData, even if API doesn't return it
     setUserData({ ...data, fid })
