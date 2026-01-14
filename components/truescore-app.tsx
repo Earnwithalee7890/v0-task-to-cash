@@ -441,16 +441,8 @@ export function TrueScoreApp() {
           onClose={handleCloseNews}
         />
 
-        <YearRebackModal
-          isOpen={showYearReback}
-          onClose={handleCloseYearReback}
-          data={yearRebackData}
-          onShare={() => {
-            const text = `Check out my 2025 Year in Reback on TrueScore! 🎯\n\nRank: ${yearRebackData?.rank}\nScore: ${yearRebackData?.score}\nFollowers: ${yearRebackData?.followers}\n\nSee yours 👇`
-            const shareUrl = "https://v0-task-to-cash-seven.vercel.app"
-            sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${encodeURIComponent(shareUrl)}`)
-          }}
-        />
+
+
 
         <ScrollToTop />
       </main>
