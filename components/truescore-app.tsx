@@ -87,27 +87,8 @@ export function TrueScoreApp() {
     setShowNewsModal(false)
   }
 
-  const handleCloseYearReback = () => {
-    localStorage.setItem("truescore_year_reback_seen_2025", "true")
-    setShowYearReback(false)
-  }
 
-  // Fetch Year Reback Data
-  const fetchYearReback = useCallback(async (fid: number) => {
-    const hasSeenReback = localStorage.getItem("truescore_year_reback_seen_2025")
-    if (hasSeenReback) return
 
-    try {
-      const response = await fetch(`/api/neynar/year-review?fid=${fid}`)
-      if (response.ok) {
-        const data = await response.json()
-        setYearRebackData(data)
-        setShowYearReback(true)
-      }
-    } catch (e) {
-      console.error("Failed to fetch year reback", e)
-    }
-  }, [])
 
   const updateUserData = async (data: any, fid: number) => {
     // Explicitly ensure FID is in userData, even if API doesn't return it
