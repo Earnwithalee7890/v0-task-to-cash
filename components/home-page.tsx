@@ -114,21 +114,8 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSha
                 <DailyCheckin />
             </div>
 
-            {/* Year Reback Banner */}
-            <div className="opacity-0 animate-slide-up stagger-4">
-                <button
-                    onClick={onShowYearReback}
-                    className="w-full py-5 px-5 rounded-2xl bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 border border-violet-500/30 flex items-center justify-between group hover:border-violet-500/50 hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-all duration-300"
-                >
-                    <div className="flex flex-col items-start gap-1">
-                        <span className="text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-200 to-fuchsia-200">2025 Year Reback</span>
-                        <span className="text-xs text-violet-300/60 group-hover:text-violet-200 transition-colors">Tap to replay your timeline ↺</span>
-                    </div>
-                    <div className="h-8 w-8 rounded-full bg-violet-500/20 flex items-center justify-center group-hover:bg-violet-500/30 transition-colors">
-                        <Share2 className="h-4 w-4 text-violet-300" />
-                    </div>
-                </button>
-            </div>
+
+
 
             {/* Share Card */}
             <div className="opacity-0 animate-slide-up stagger-5">
