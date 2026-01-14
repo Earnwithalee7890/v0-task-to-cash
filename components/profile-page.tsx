@@ -149,7 +149,7 @@ export function ProfilePage({ userData }: ProfilePageProps) {
 
             {/* Feature 5: Bio Generator */}
             <div className="opacity-0 animate-slide-up stagger-5">
-                <BioGenerator score={userData.score} rank={userData.score * 10} followers={userData.followers} />
+                <BioGenerator score={userData.score} followers={userData.followers} />
             </div>
 
             {/* Feature 8: Power Card */}

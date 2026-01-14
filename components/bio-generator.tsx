@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button"
 
 interface BioGeneratorProps {
     score: number
-    rank: string | number
     followers: number
 }
 
-export function BioGenerator({ score, rank, followers }: BioGeneratorProps) {
+export function BioGenerator({ score, followers }: BioGeneratorProps) {
     const [generatedBio, setGeneratedBio] = useState<string | null>(null)
     const [copied, setCopied] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -20,11 +19,11 @@ export function BioGenerator({ score, rank, followers }: BioGeneratorProps) {
 
         // Mock AI generation with templates logic
         const templates = [
-            `Neynar Score: ${score} 🚀 | Rank #${rank} | Building on Farcaster`,
+            `Neynar Score: ${score} 🚀 | Building on Farcaster`,
             `Crypto Native. Score: ${score}. Followed by ${followers} legends.`,
-            `Objective: Top 100. Current: #${rank}. TrueScore verified: ${score}.`,
+            `Objective: Top 100. TrueScore verified: ${score}.`,
             `Just here for the vibes and the ${score} score.`,
-            `Farcaster OG in training? Score: ${score} | Rank: #${rank}`,
+            `Farcaster OG in training? Score: ${score}`,
             `Certified degen with a ${score} credit score.`,
             `Building reputation onchain. ${score} points strong.`,
         ]
