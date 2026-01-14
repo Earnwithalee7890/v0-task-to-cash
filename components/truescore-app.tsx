@@ -14,7 +14,7 @@ import { ClickSpark } from "./click-spark"
 import { AnimatedBackground } from "./animated-background"
 import { OnboardingModal } from "./onboarding-modal"
 import { AboutModal } from "./about-modal"
-import { YearRebackModal } from "./year-reback-modal"
+
 import { MatrixRain } from "./matrix-rain"
 import { NewsModal } from "./news-modal"
 import { Skeleton } from "@/components/ui/skeleton"
