@@ -27,11 +27,10 @@ interface HomePageProps {
     onShare: () => void
     onShareBase: () => void
     onShareLinkedIn?: () => void
-    onShowYearReback: () => void
     onRefresh: () => void
 }
 
-export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onShareLinkedIn, onShowYearReback, onRefresh }: HomePageProps) {
+export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onShareLinkedIn, onRefresh }: HomePageProps) {
     const [showConfetti, setShowConfetti] = useState(false)
     const [isRefreshing, setIsRefreshing] = useState(false)
 
