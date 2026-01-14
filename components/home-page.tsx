@@ -100,9 +100,6 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSha
                 </div>
             </div>
 
-
-
-
             {/* Reputation Badge */}
             <div className="flex justify-center opacity-0 animate-slide-up stagger-2">
                 <ReputationBadge reputation={userData.reputation} />
@@ -112,9 +109,6 @@ export function HomePage({ userData, onAddToMiniApp, onShare, onShareBase, onSha
             <div className="opacity-0 animate-slide-up stagger-3 space-y-4">
                 <DailyCheckin />
             </div>
-
-
-
 
             {/* Share Card */}
             <div className="opacity-0 animate-slide-up stagger-5">
