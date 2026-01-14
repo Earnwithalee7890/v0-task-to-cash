@@ -49,8 +49,7 @@ export function TrueScoreApp() {
   const [showAddPrompt, setShowAddPrompt] = useState(false)
   const [activeTab, setActiveTab] = useState<"home" | "profile" | "search" | "ai">("home")
   const [showOnboarding, setShowOnboarding] = useState(false)
-  const [showYearReback, setShowYearReback] = useState(false)
-  const [yearRebackData, setYearRebackData] = useState<any | null>(null)
+
   const [isZenMode, setIsZenMode] = useState(false)
   const [matrixClicks, setMatrixClicks] = useState(0)
   const [showMatrix, setShowMatrix] = useState(false)
