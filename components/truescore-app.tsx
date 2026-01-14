@@ -408,7 +408,6 @@ export function TrueScoreApp() {
                 onShare={shareApp}
                 onShareBase={shareOnBase}
                 onShareLinkedIn={shareOnLinkedIn}
-                onShowYearReback={() => setShowYearReback(true)}
                 onRefresh={() => fetchUserData(userData.fid)}
               />
             )
