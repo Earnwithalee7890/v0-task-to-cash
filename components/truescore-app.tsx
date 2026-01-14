@@ -222,8 +222,6 @@ export function TrueScoreApp() {
 
         console.log('[INIT] Final FID to use:', fid)
         await fetchUserData(fid)
-        // Check for Year Reback
-        fetchYearReback(fid)
         await sdk.actions.ready()
         setIsSDKLoaded(true)
       } catch (e) {
