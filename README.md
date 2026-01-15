@@ -71,13 +71,19 @@ npm install
 
 3. **Configure environment variables**
 
-Create a `.env.local` file:
+Create a `.env.local` file in the root directory:
 ```env
-# Required
+# --- REQUIRED ---
+# Your Neynar API Key (get it from dev.neynar.com)
 NEYNAR_API_KEY=your_neynar_api_key_here
 
-# Optional (for AI post generation)
+# --- OPTIONAL ---
+# For AI post generation (get it from platform.openai.com)
 OPENAI_API_KEY=your_openai_api_key_here
+
+# For Supabase integration (if applicable)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 4. **Run the development server**
