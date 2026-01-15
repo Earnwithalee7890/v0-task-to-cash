@@ -14,3 +14,17 @@ export function formatNumber(num: number): string {
   }
   return num.toString()
 }
+export function formatDateTime(date: Date | string | number): string {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(date))
+}
+
+export function truncateAddress(address: string): string {
+  if (!address) return ""
+  return `${address.slice(0, 6)}...${address.slice(-4)}`
+}
