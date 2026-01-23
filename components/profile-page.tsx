@@ -9,6 +9,7 @@ import { RivalComparisonModal } from "./rival-comparison-modal"
 import { BioGenerator } from "./bio-generator"
 import { PowerCard } from "./power-card"
 import { BuilderResources } from "./builder-resources"
+import { TalentScoreCard } from "./talent-score-card"
 import { Swords, Copy, Check, Download } from "lucide-react"
 import { toast } from "sonner"
 import type { UserData } from "./truescore-app"
@@ -155,6 +156,14 @@ export function ProfilePage({ userData }: ProfilePageProps) {
             {/* Feature 8: Power Card */}
             <div className="opacity-0 animate-slide-up stagger-5">
                 <PowerCard userData={userData} />
+            </div>
+
+            {/* Talent Protocol Builder Score */}
+            <div className="opacity-0 animate-slide-up stagger-5">
+                <TalentScoreCard
+                    walletAddress={userData.verifiedAddresses?.[0]}
+                    fid={userData.fid}
+                />
             </div>
 
             {/* Feature 13: Build on Base Resources */}
